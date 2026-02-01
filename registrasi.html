@@ -1,27 +1,60 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register | Untung Bersama</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
 
 <div class="container">
   <h2>Register</h2>
-  <input type="email" id="regEmail" placeholder="Email">
-  <input type="password" id="regPassword" placeholder="Password">
+
+  <input
+    type="email"
+    id="regEmail"
+    placeholder="Email"
+    autocomplete="email"
+    required
+  />
+
+  <input
+    type="password"
+    id="regPassword"
+    placeholder="Password"
+    autocomplete="new-password"
+    required
+  />
+
   <button id="registerBtn">Daftar</button>
+
   <div class="message" id="regMessage"></div>
+
   <p style="text-align:center; margin-top:12px;">
-    Sudah punya akun? <a href="/login">Login</a>
+    Sudah punya akun?
+    <a href="/login">Login</a>
   </p>
 </div>
 
-<script src="/js/main.js"></script>
+<!-- MAIN JS -->
+<script src="/js/main.js" defer></script>
+
+<!-- FALLBACK SAFETY -->
 <script>
-  document.getElementById('registerBtn').addEventListener('click', registerUser);
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof registerUser !== "function") {
+      document.getElementById("regMessage").innerHTML =
+        "<span style='color:red'>❌ Sistem belum siap. Silakan refresh halaman.</span>";
+      return;
+    }
+
+    document
+      .getElementById("registerBtn")
+      .addEventListener("click", registerUser);
+  });
 </script>
 
 </body>
