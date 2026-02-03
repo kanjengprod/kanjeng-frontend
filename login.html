@@ -3,26 +3,146 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <title>Login - Untung Bersama</title>
+  
+  <!-- 🎨 MODULAR CSS -->
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  
+  <!-- 🔔 SweetAlert2 for Professional Alerts -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
+  <div class="login-container">
+    <!-- 📍 Top Gold Bar -->
+    <div class="top-bar"></div>
+    
+    <!-- 🖼️ Logo -->
+    <div class="logo">
+      <img src="https://ui-avatars.com/api/?name=Untung+Bersama&background=0f172a&color=fff" alt="Logo Untung Bersama">
+    </div>
+    
+    <!-- 📝 Title -->
+    <h2>🔐 Secure Login</h2>
+    <p class="subtitle">Untung Bersama Management</p>
+    
+    <!-- ⚠️ Alert Message -->
+    <div class="message" id="loginMessage"></div>
+    
+    <!-- 📋 Login Form -->
+    <form id="loginForm">
+      <input 
+        type="email" 
+        id="email" 
+        placeholder="Email" 
+        autocomplete="email"
+        required
+      >
+      
+      <input 
+        type="password" 
+        id="password" 
+        placeholder="Password"
+        autocomplete="current-password"
+        required
+      >
+      
+      <button type="submit" id="loginBtn">MASUK SEKARANG</button>
+      
+      <!-- ⏳ Loading Spinner -->
+      <div class="spinner" id="loadingSpinner"></div>
+    </form>
+    
+    <!-- 🔗 Register Link -->
+    <div class="register-link">
+      Belum punya akun? <a href="/registrasi">Daftar</a>
+    </div>
+  </div>
 
-<div class="container">
-  <h2>Login</h2>
-  <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Password">
-  <button id="loginBtn">Login</button>
-  <div class="message" id="loginMessage"></div>
-  <p style="text-align:center; margin-top:12px;">
-    Belum punya akun? <a href="/registrasi.html">Daftar</a>
-  </p>
-</div>
-
-<script src="/js/main.js"></script>
-<script>
-  document.getElementById('loginBtn').addEventListener('click', loginUser);
-</script>
-
+  <!-- 📜 MAIN JAVASCRIPT -->
+  <script src="/js/main.js"></script>
+  
+  <!-- 🎯 INLINE SCRIPT (Backward Compatible) -->
+  <script>
+    // Backup event binding jika main.js belum load
+    document.addEventListener('DOMContentLoaded', function() {
+      const loginBtn = document.getElementById('loginBtn');
+      const loginForm = document.getElementById('loginForm');
+      
+      // Check if loginUser function exists (from main.js)
+      if (typeof loginUser === 'function') {
+        console.log('✅ main.js loaded successfully');
+        
+        // Form submit handler
+        if (loginForm) {
+          loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            loginUser(e);
+            return false;
+          });
+        }
+        
+        // Button click handler (backup)
+        if (loginBtn) {
+          loginBtn.addEventListener('click', function(e) {
+            if (e.target.type !== 'submit') {
+              e.preventDefault();
+              loginUser(e);
+            }
+          });
+        }
+      } else {
+        console.warn('⚠️ main.js not loaded, using fallback');
+        
+        // Fallback jika main.js ga load
+        if (loginBtn) {
+          loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            handleLoginFallback();
+          });
+        }
+      }
+    });
+    
+    // Fallback login handler (tanpa SweetAlert)
+    function handleLoginFallback() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const messageDiv = document.getElementById('loginMessage');
+      
+      if (!email || !password) {
+        messageDiv.innerHTML = '<span style="color: #e11d48;">❌ Email dan Password wajib diisi!</span>';
+        messageDiv.style.display = 'block';
+        return;
+      }
+      
+      messageDiv.innerHTML = '<span style="color: #059669;">⏳ Memproses login...</span>';
+      messageDiv.style.display = 'block';
+      
+      // Call API
+      fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      })
+      .then(res => res.json())
+      .then(result => {
+        if (result.success) {
+          messageDiv.innerHTML = '<span style="color: #059669;">✅ Login berhasil! Mengalihkan...</span>';
+          setTimeout(() => {
+            window.location.href = result.redirectUrl || '/';
+          }, 1000);
+        } else {
+          messageDiv.innerHTML = '<span style="color: #e11d48;">❌ ' + (result.message || 'Login gagal!') + '</span>';
+        }
+      })
+      .catch(err => {
+        console.error('Login error:', err);
+        messageDiv.innerHTML = '<span style="color: #e11d48;">❌ Koneksi gagal. Silakan coba lagi.</span>';
+      });
+    }
+  </script>
 </body>
 </html>
