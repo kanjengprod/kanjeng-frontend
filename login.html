@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Untung Bersama</title>
+  <title>Register - Untung Bersama</title>
   
-  <!-- 🎨 SINGLE CSS FILE -->
-  <link rel="stylesheet" href="/css/style.css">
+  <!-- 🎨 MODULAR CSS (3 Files) -->
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/auth.css">
 </head>
 <body>
   <div class="login-container">
@@ -19,46 +21,39 @@
     </div>
     
     <!-- 📝 Title -->
-    <h2>🔐 Secure Login</h2>
+    <h2>📝 Daftar Sultan</h2>
     <p class="subtitle">Kanjeng Production Management</p>
     
     <!-- ⚠️ Alert Message -->
-    <div class="message" id="loginMessage"></div>
+    <div class="message" id="regMessage"></div>
     
-    <!-- 📋 Login Form -->
-    <form id="loginForm">
+    <!-- 📋 Register Form -->
+    <form id="registerForm">
       <input 
-        type="text" 
-        id="email" 
-        placeholder="Username atau Email" 
-        autocomplete="username"
+        type="email" 
+        id="regEmail" 
+        placeholder="Email" 
+        autocomplete="email"
         required
       >
       
       <input 
         type="password" 
-        id="password" 
-        placeholder="Password"
-        autocomplete="current-password"
+        id="regPassword" 
+        placeholder="Password (min. 6 karakter)"
+        autocomplete="new-password"
         required
       >
       
-      <button type="submit" id="loginBtn">MASUK SEKARANG</button>
+      <button type="submit" id="registerBtn">DAFTAR SEKARANG</button>
       
       <!-- ⏳ Loading Spinner -->
       <div class="spinner" id="loadingSpinner"></div>
     </form>
     
-    <!-- 🔗 Register Link -->
+    <!-- 🔗 Login Link -->
     <div class="register-link">
-      Belum punya akun? <a href="/registrasi">Daftar Sultan</a>
-    </div>
-    
-    <!-- 🔑 Forgot Password/Pin Links -->
-    <div class="register-link" style="margin-top: 8px;">
-      <a href="https://untungbersama.us/?page=forgot-password">Lupa Password</a>
-      <span>/</span>
-      <a href="https://untungbersama.us/?page=forgot-pin">Lupa Pin</a>
+      Sudah punya akun? <a href="/login">Login</a>
     </div>
   </div>
 
