@@ -1,6 +1,7 @@
 /* ============================================
    🏆 KANJENG PRODUCTION - SULTAN LOGIN CSS
    Professional & Modern Design
+   Optimized for Login/Register Pages
    ============================================ */
 
 /* 📌 GLOBAL RESET */
@@ -34,6 +35,7 @@ body {
   position: relative;
   overflow: hidden;
   border: 1px solid #e2e8f0;
+  animation: fadeIn 0.5s ease;
 }
 
 /* 📍 Top Bar Gold Accent */
@@ -119,6 +121,7 @@ input[type="password"] {
   margin-bottom: 20px;
 }
 
+/* Input focus state */
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus {
@@ -128,6 +131,7 @@ input[type="password"]:focus {
   box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.1);
 }
 
+/* Placeholder styling */
 input::placeholder {
   color: #94a3b8;
   font-weight: 500;
@@ -153,8 +157,10 @@ button[type="submit"],
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 10px 20px rgba(5, 150, 105, 0.2);
+  font-family: 'Segoe UI', sans-serif;
 }
 
+/* Button hover effect */
 .btn:hover:not(:disabled),
 button[type="submit"]:hover:not(:disabled),
 #loginBtn:hover:not(:disabled),
@@ -163,10 +169,18 @@ button[type="submit"]:hover:not(:disabled),
   box-shadow: 0 15px 30px rgba(5, 150, 105, 0.3);
 }
 
+/* Button active state */
+.btn:active:not(:disabled),
+button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Button disabled state */
 .btn:disabled,
 button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
 }
 
 /* ============================================
@@ -194,6 +208,25 @@ button:disabled {
   text-decoration: underline;
 }
 
+/* 🔑 Forgot Password/Pin Links - Special Styling */
+.register-link a[href*="forgot"] {
+  color: #64748b;
+  font-size: 10px;
+  text-transform: none;
+  font-weight: 600;
+}
+
+.register-link a[href*="forgot"]:hover {
+  color: #059669;
+}
+
+/* Separator between links */
+.register-link span {
+  color: #cbd5e1;
+  margin: 0 5px;
+  font-weight: 400;
+}
+
 /* ============================================
    ⚠️ ALERTS & MESSAGES
    ============================================ */
@@ -208,26 +241,43 @@ button:disabled {
   font-size: 13px;
   font-weight: 600;
   display: none;
+  text-align: center;
 }
 
-.alert-error {
+/* Error state */
+.alert-error,
+.message[style*="color: red"],
+.message[style*="color:#e11d48"] {
   background: #fff1f2;
-  color: #e11d48;
+  color: #e11d48 !important;
   border: 1px solid #fda4af;
   display: block;
 }
 
-.alert-success {
+/* Success state */
+.alert-success,
+.message[style*="color: green"],
+.message[style*="color:#059669"] {
   background: #f0fdf4;
-  color: #166534;
+  color: #166534 !important;
   border: 1px solid #bbf7d0;
+  display: block;
+}
+
+/* Info/Loading state */
+.message[style*="color: #555"],
+.message[style*="color:#555"] {
+  background: #f8fafc;
+  color: #64748b !important;
+  border: 1px solid #e2e8f0;
   display: block;
 }
 
 /* ============================================
    ⏳ LOADING SPINNER
    ============================================ */
-.spinner {
+.spinner,
+#loadingSpinner {
   display: none;
   width: 24px;
   height: 24px;
@@ -244,6 +294,37 @@ button:disabled {
 }
 
 /* ============================================
+   ✨ ANIMATIONS
+   ============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Container entrance animation */
+.login-container,
+.container {
+  animation: fadeIn 0.5s ease;
+}
+
+/* ============================================
    📱 RESPONSIVE DESIGN
    ============================================ */
 @media (max-width: 480px) {
@@ -255,6 +336,10 @@ button:disabled {
 
   h1, h2 {
     font-size: 20px;
+  }
+
+  .subtitle {
+    font-size: 10px;
   }
 
   .logo img {
@@ -274,52 +359,18 @@ button:disabled {
     padding: 14px;
     font-size: 13px;
   }
-}
 
-/* ============================================
-   🎭 SWEETALERT2 CUSTOM STYLING
-   ============================================ */
-.swal-compact-professional {
-  border-radius: 2rem !important;
-  font-family: 'Segoe UI', sans-serif !important;
-}
-
-.swal-btn-compact {
-  border-radius: 1rem !important;
-  font-weight: 900 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 1px !important;
-  padding: 12px 30px !important;
-}
-
-/* ============================================
-   ✨ ANIMATIONS
-   ============================================ */
-@keyframes zoomIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
+  .register-link {
+    font-size: 11px;
   }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+  .register-link a {
+    font-size: 10px;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-.login-container,
-.container {
-  animation: fadeIn 0.5s ease;
+  .register-link a[href*="forgot"] {
+    font-size: 9px;
+  }
 }
 
 /* ============================================
@@ -337,6 +388,10 @@ button:disabled {
   margin-bottom: 25px;
 }
 
+.mt-8 {
+  margin-top: 8px;
+}
+
 .mt-12 {
   margin-top: 12px;
 }
@@ -344,6 +399,8 @@ button:disabled {
 /* ============================================
    🔒 SECURITY & ACCESSIBILITY
    ============================================ */
+
+/* Autofill styling untuk browser Chrome/Safari */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
@@ -352,7 +409,7 @@ input:-webkit-autofill:focus {
   transition: background-color 5000s ease-in-out 0s;
 }
 
-/* Focus Accessibility */
+/* Focus accessibility */
 a:focus,
 button:focus,
 input:focus {
@@ -360,6 +417,55 @@ input:focus {
   outline-offset: 2px;
 }
 
+/* Remove default focus outline untuk button yang sudah ada custom */
+button:focus-visible {
+  outline: 2px solid #facc15;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   🎭 SWEETALERT2 CUSTOM STYLING (Optional)
+   Hanya aktif jika menggunakan SweetAlert2
+   ============================================ */
+.swal-compact-professional {
+  border-radius: 2rem !important;
+  font-family: 'Segoe UI', sans-serif !important;
+}
+
+.swal-btn-compact {
+  border-radius: 1rem !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  padding: 12px 30px !important;
+}
+
+/* ============================================
+   🎯 FORM SPECIFIC ENHANCEMENTS
+   ============================================ */
+
+/* Form container */
+form {
+  width: 100%;
+}
+
+/* Ensure consistent spacing for inputs */
+#email,
+#password,
+#regEmail,
+#regPassword {
+  margin-bottom: 20px;
+}
+
+/* Last input before button gets extra margin */
+#password,
+#regPassword {
+  margin-bottom: 25px;
+}
+
 /* ============================================
    END OF STYLESHEET
+   Version: 1.0.0
+   Last Updated: February 2026
+   Optimized for: Login & Register Pages
    ============================================ */
