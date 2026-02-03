@@ -1,53 +1,365 @@
+/* ============================================
+   🏆 KANJENG PRODUCTION - SULTAN LOGIN CSS
+   Professional & Modern Design
+   ============================================ */
+
+/* 📌 GLOBAL RESET */
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background: #f4f4f9;
-  margin: 0;
-  padding: 0;
-}
-
-.container {
-  max-width: 340px !important;
-  margin: 80px auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: radial-gradient(circle at top right, #1e293b, #0f172a);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 20px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-h2 {
+/* ============================================
+   🎨 CONTAINER UTAMA
+   ============================================ */
+.login-container,
+.container {
+  background: white;
+  padding: 40px;
+  border-radius: 2.5rem;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+/* 📍 Top Bar Gold Accent */
+.top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, #facc15, #fbce07);
+}
+
+/* ============================================
+   🖼️ LOGO SECTION
+   ============================================ */
+.logo {
   text-align: center;
-  margin-bottom: 20px;
-  color: #333;
+  margin-bottom: 25px;
 }
 
+.logo img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 4px solid white;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+  background: #f1f5f9;
+}
+
+/* ============================================
+   📝 TYPOGRAPHY
+   ============================================ */
+h1, h2 {
+  text-align: center;
+  color: #0f172a;
+  margin-bottom: 5px;
+  font-size: 22px;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-style: italic;
+}
+
+.subtitle {
+  text-align: center;
+  color: #64748b;
+  margin-bottom: 30px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ============================================
+   📋 FORM ELEMENTS
+   ============================================ */
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  color: #b8860b;
+  font-weight: 800;
+  font-size: 10px;
+  text-transform: uppercase;
+  font-style: italic;
+}
+
+/* 🎯 INPUT FIELDS */
+input[type="text"],
 input[type="email"],
 input[type="password"] {
   width: 100%;
-  padding: 12px;
-  margin: 8px 0 16px 0;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  padding: 14px 18px;
+  border: 2px solid #f1f5f9;
+  border-radius: 1rem;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  background: #f8fafc;
+  margin-bottom: 20px;
 }
 
-button {
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-color: #facc15;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.1);
+}
+
+input::placeholder {
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+/* ============================================
+   🔘 BUTTONS
+   ============================================ */
+.btn,
+button[type="submit"],
+#loginBtn,
+#registerBtn {
   width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  background: #4f46e5; /* biru keren */
+  padding: 16px;
+  background: linear-gradient(135deg, #059669 0%, #064e3b 100%);
   color: white;
-  font-weight: bold;
+  border: none;
+  border-radius: 1rem;
+  font-size: 14px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 20px rgba(5, 150, 105, 0.2);
 }
 
-button:hover {
-  background: #4338ca;
+.btn:hover:not(:disabled),
+button[type="submit"]:hover:not(:disabled),
+#loginBtn:hover:not(:disabled),
+#registerBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px rgba(5, 150, 105, 0.3);
 }
 
-.message {
+.btn:disabled,
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   🔗 LINKS & NAVIGATION
+   ============================================ */
+.register-link {
   text-align: center;
-  margin-top: 12px;
-  color: red;
-  font-size: 0.9rem;
+  margin-top: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
 }
 
+.register-link a {
+  color: #059669;
+  text-decoration: none;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 11px;
+  transition: color 0.3s ease;
+}
+
+.register-link a:hover {
+  color: #064e3b;
+  text-decoration: underline;
+}
+
+/* ============================================
+   ⚠️ ALERTS & MESSAGES
+   ============================================ */
+.alert,
+.message,
+#alertMessage,
+#loginMessage,
+#regMessage {
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  display: none;
+}
+
+.alert-error {
+  background: #fff1f2;
+  color: #e11d48;
+  border: 1px solid #fda4af;
+  display: block;
+}
+
+.alert-success {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+  display: block;
+}
+
+/* ============================================
+   ⏳ LOADING SPINNER
+   ============================================ */
+.spinner {
+  display: none;
+  width: 24px;
+  height: 24px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #facc15;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 15px auto 0;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ============================================
+   📱 RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 480px) {
+  .login-container,
+  .container {
+    padding: 30px 25px;
+    border-radius: 2rem;
+  }
+
+  h1, h2 {
+    font-size: 20px;
+  }
+
+  .logo img {
+    width: 75px;
+    height: 75px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+
+  .btn,
+  button[type="submit"] {
+    padding: 14px;
+    font-size: 13px;
+  }
+}
+
+/* ============================================
+   🎭 SWEETALERT2 CUSTOM STYLING
+   ============================================ */
+.swal-compact-professional {
+  border-radius: 2rem !important;
+  font-family: 'Segoe UI', sans-serif !important;
+}
+
+.swal-btn-compact {
+  border-radius: 1rem !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  padding: 12px 30px !important;
+}
+
+/* ============================================
+   ✨ ANIMATIONS
+   ============================================ */
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-container,
+.container {
+  animation: fadeIn 0.5s ease;
+}
+
+/* ============================================
+   🎨 UTILITY CLASSES
+   ============================================ */
+.text-center {
+  text-align: center;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+.mb-25 {
+  margin-bottom: 25px;
+}
+
+.mt-12 {
+  margin-top: 12px;
+}
+
+/* ============================================
+   🔒 SECURITY & ACCESSIBILITY
+   ============================================ */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 30px #f8fafc inset !important;
+  -webkit-text-fill-color: #0f172a !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Focus Accessibility */
+a:focus,
+button:focus,
+input:focus {
+  outline: 2px solid #facc15;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   END OF STYLESHEET
+   ============================================ */
