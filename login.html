@@ -25,7 +25,7 @@
     
     <!-- 📝 Title -->
     <h2>🔐 Secure Login</h2>
-    <p class="subtitle">Untung Bersama Management</p>
+    <p class="subtitle">Kanjeng Production Management</p>
     
     <!-- ⚠️ Alert Message -->
     <div class="message" id="loginMessage"></div>
@@ -33,10 +33,10 @@
     <!-- 📋 Login Form -->
     <form id="loginForm">
       <input 
-        type="email" 
+        type="text" 
         id="email" 
-        placeholder="Email" 
-        autocomplete="email"
+        placeholder="Username atau Email" 
+        autocomplete="username"
         required
       >
       
@@ -56,7 +56,14 @@
     
     <!-- 🔗 Register Link -->
     <div class="register-link">
-      Belum punya akun? <a href="/registrasi">Daftar</a>
+      Belum punya akun? <a href="/registrasi">Daftar Sultan</a>
+    </div>
+    
+    <!-- 🔑 Forgot Password/Pin Links -->
+    <div class="register-link" style="margin-top: 8px;">
+      <a href="https://untungbersama.us/?page=forgot-password" style="color: #64748b; font-size: 10px;">Lupa Password</a>
+      <span style="color: #cbd5e1; margin: 0 5px;">/</span>
+      <a href="https://untungbersama.us/?page=forgot-pin" style="color: #64748b; font-size: 10px;">Lupa Pin</a>
     </div>
   </div>
 
@@ -108,12 +115,12 @@
     
     // Fallback login handler (tanpa SweetAlert)
     function handleLoginFallback() {
-      const email = document.getElementById('email').value.trim();
+      const loginId = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const messageDiv = document.getElementById('loginMessage');
       
-      if (!email || !password) {
-        messageDiv.innerHTML = '<span style="color: #e11d48;">❌ Email dan Password wajib diisi!</span>';
+      if (!loginId || !password) {
+        messageDiv.innerHTML = '<span style="color: #e11d48;">❌ Username/Email dan Password wajib diisi!</span>';
         messageDiv.style.display = 'block';
         return;
       }
@@ -125,7 +132,10 @@
       fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ 
+          email: loginId,  // bisa username atau email
+          password: password 
+        })
       })
       .then(res => res.json())
       .then(result => {
