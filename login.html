@@ -5,13 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - Untung Bersama</title>
   
-  <!-- 🎨 MODULAR CSS -->
-  <link rel="stylesheet" href="/css/global.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/auth.css">
-  
-  <!-- 🔔 SweetAlert2 for Professional Alerts -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- 🎨 SINGLE CSS FILE -->
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
   <div class="login-container">
@@ -61,98 +56,13 @@
     
     <!-- 🔑 Forgot Password/Pin Links -->
     <div class="register-link" style="margin-top: 8px;">
-      <a href="https://untungbersama.us/?page=forgot-password" style="color: #64748b; font-size: 10px;">Lupa Password</a>
-      <span style="color: #cbd5e1; margin: 0 5px;">/</span>
-      <a href="https://untungbersama.us/?page=forgot-pin" style="color: #64748b; font-size: 10px;">Lupa Pin</a>
+      <a href="https://untungbersama.us/?page=forgot-password">Lupa Password</a>
+      <span>/</span>
+      <a href="https://untungbersama.us/?page=forgot-pin">Lupa Pin</a>
     </div>
   </div>
 
   <!-- 📜 MAIN JAVASCRIPT -->
   <script src="/js/main.js"></script>
-  
-  <!-- 🎯 INLINE SCRIPT (Backward Compatible) -->
-  <script>
-    // Backup event binding jika main.js belum load
-    document.addEventListener('DOMContentLoaded', function() {
-      const loginBtn = document.getElementById('loginBtn');
-      const loginForm = document.getElementById('loginForm');
-      
-      // Check if loginUser function exists (from main.js)
-      if (typeof loginUser === 'function') {
-        console.log('✅ main.js loaded successfully');
-        
-        // Form submit handler
-        if (loginForm) {
-          loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            loginUser(e);
-            return false;
-          });
-        }
-        
-        // Button click handler (backup)
-        if (loginBtn) {
-          loginBtn.addEventListener('click', function(e) {
-            if (e.target.type !== 'submit') {
-              e.preventDefault();
-              loginUser(e);
-            }
-          });
-        }
-      } else {
-        console.warn('⚠️ main.js not loaded, using fallback');
-        
-        // Fallback jika main.js ga load
-        if (loginBtn) {
-          loginBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            handleLoginFallback();
-          });
-        }
-      }
-    });
-    
-    // Fallback login handler (tanpa SweetAlert)
-    function handleLoginFallback() {
-      const loginId = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      const messageDiv = document.getElementById('loginMessage');
-      
-      if (!loginId || !password) {
-        messageDiv.innerHTML = '<span style="color: #e11d48;">❌ Username/Email dan Password wajib diisi!</span>';
-        messageDiv.style.display = 'block';
-        return;
-      }
-      
-      messageDiv.innerHTML = '<span style="color: #059669;">⏳ Memproses login...</span>';
-      messageDiv.style.display = 'block';
-      
-      // Call API
-      fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          email: loginId,  // bisa username atau email
-          password: password 
-        })
-      })
-      .then(res => res.json())
-      .then(result => {
-        if (result.success) {
-          messageDiv.innerHTML = '<span style="color: #059669;">✅ Login berhasil! Mengalihkan...</span>';
-          setTimeout(() => {
-            window.location.href = result.redirectUrl || '/';
-          }, 1000);
-        } else {
-          messageDiv.innerHTML = '<span style="color: #e11d48;">❌ ' + (result.message || 'Login gagal!') + '</span>';
-        }
-      })
-      .catch(err => {
-        console.error('Login error:', err);
-        messageDiv.innerHTML = '<span style="color: #e11d48;">❌ Koneksi gagal. Silakan coba lagi.</span>';
-      });
-    }
-  </script>
 </body>
 </html>
