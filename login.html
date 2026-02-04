@@ -3,12 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register - Untung Bersama</title>
+  <title>Login - Kanjeng Production</title>
   
-  <!-- 🎨 MODULAR CSS (3 Files) -->
+  <!-- 🎨 MODULAR CSS -->
   <link rel="stylesheet" href="/css/global.css">
   <link rel="stylesheet" href="/css/components.css">
   <link rel="stylesheet" href="/css/auth.css">
+  
+  <!-- 🔔 SweetAlert2 for Beautiful Modals -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
   <div class="login-container">
@@ -17,47 +20,276 @@
     
     <!-- 🖼️ Logo -->
     <div class="logo">
-      <img src="https://ui-avatars.com/api/?name=Untung+Bersama&background=0f172a&color=fff" alt="Logo Untung Bersama">
+      <img id="main_logo" src="https://ui-avatars.com/api/?name=Admin&background=0f172a&color=fff" alt="Logo">
     </div>
     
     <!-- 📝 Title -->
-    <h2>📝 Daftar Sultan</h2>
+    <h1>🔐 Secure Login</h1>
     <p class="subtitle">Kanjeng Production Management</p>
     
     <!-- ⚠️ Alert Message -->
-    <div class="message" id="regMessage"></div>
+    <div id="alertMessage"></div>
     
-    <!-- 📋 Register Form -->
-    <form id="registerForm">
+    <!-- 📋 Login Form -->
+    <form id="loginForm">
       <input 
-        type="email" 
-        id="regEmail" 
-        placeholder="Email" 
-        autocomplete="email"
-        required
+        type="text" 
+        id="login_id" 
+        name="login_id" 
+        placeholder="Username atau Email" 
+        required 
+        style="margin-bottom: 20px;"
       >
       
       <input 
         type="password" 
-        id="regPassword" 
-        placeholder="Password (min. 6 karakter)"
-        autocomplete="new-password"
-        required
+        id="password" 
+        name="password" 
+        placeholder="Password" 
+        required 
+        style="margin-bottom: 25px;"
       >
       
-      <button type="submit" id="registerBtn">DAFTAR SEKARANG</button>
-      
-      <!-- ⏳ Loading Spinner -->
+      <button type="submit" class="btn" id="btnLogin">MASUK SEKARANG</button>
       <div class="spinner" id="loadingSpinner"></div>
     </form>
     
-    <!-- 🔗 Login Link -->
+    <!-- 🔗 Register Link -->
     <div class="register-link">
-      Sudah punya akun? <a href="/login">Login</a>
+      Belum punya akun? <a href="/registrasi" target="_top">Daftar Sultan</a>
+    </div>
+    
+    <!-- 🔑 Forgot Password/Pin Links -->
+    <div class="register-link" style="margin-top: 8px;">
+      <a href="https://untungbersama.us/?page=forgot-password" target="_top" style="color: #64748b; font-size: 10px;">Lupa Password</a>
+      <span style="color: #cbd5e1; margin: 0 5px;">/</span>
+      <a href="https://untungbersama.us/?page=forgot-pin" target="_top" style="color: #64748b; font-size: 10px;">Lupa Pin</a>
     </div>
   </div>
 
   <!-- 📜 MAIN JAVASCRIPT -->
-  <script src="/js/main.js"></script>
+  <script>
+    // ================================
+    // CONFIG
+    // ================================
+    const API_URL = "https://untungbersama.us";
+    let isSubmitting = false;
+
+    console.log('🚀 Sultan Login System - Cloudflare Version Loaded');
+
+    // --- 🛡️ GLOBAL ERROR CATCHER ---
+    window.addEventListener('error', function(e) {
+      console.error('❌ GLOBAL ERROR:', e.message);
+    });
+
+    // --- 🎯 AUTO-BIND FORM SAAT DOM READY ---
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('📋 DOM Ready - Auto-binding form...');
+      
+      const loginForm = document.getElementById('loginForm');
+      if (loginForm) {
+        console.log('✅ Form found, binding submit event...');
+        
+        loginForm.onsubmit = function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          return handleLogin(e);
+        };
+        
+        loginForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          handleLogin(e);
+          return false;
+        });
+        
+        const btn = document.getElementById('btnLogin');
+        if (btn) {
+          btn.onclick = function(e) {
+            e.preventDefault();
+            handleLogin(e);
+            return false;
+          };
+        }
+      }
+    });
+
+    /**
+     * 🏆 SULTAN MODAL ENGINE (SweetAlert2)
+     */
+    function showSultanModal(title, message, type) {
+      console.log('🔔 Showing modal:', type, '-', title);
+      const isError = type === 'error';
+      
+      Swal.fire({
+        icon: isError ? 'error' : 'success',
+        title: `<div style="font-size: 18px; font-weight: 900; color: ${isError ? '#dc2626' : '#059669'}; text-transform: uppercase; letter-spacing: 0.5px;">${title}</div>`,
+        html: `<div style="font-size: 13px; font-weight: 600; color: #475569; line-height: 1.6; padding: 5px 15px;">${message}</div>`,
+        confirmButtonText: isError ? '🔄 ULANGI' : '✅ OK',
+        confirmButtonColor: isError ? '#dc2626' : '#059669',
+        allowOutsideClick: false,
+        background: '#ffffff',
+        backdrop: 'rgba(0, 0, 0, 0.4)',
+        width: '300px',
+        customClass: {
+          popup: 'swal-compact-professional',
+          confirmButton: 'swal-btn-compact'
+        }
+      });
+    }
+
+    /**
+     * ⏳ LOADING STATE HANDLER
+     */
+    function setLoadingState(isLoading) {
+      console.log('⏳ Setting loading state:', isLoading);
+      const btn = document.getElementById('btnLogin');
+      const spinner = document.getElementById('loadingSpinner');
+      
+      if (!btn) return;
+      
+      btn.disabled = isLoading;
+      btn.innerHTML = isLoading ? 
+        'MEMVERIFIKASI...' : 
+        'MASUK SEKARANG';
+      
+      if (spinner) spinner.style.display = isLoading ? 'block' : 'none';
+    }
+
+    /**
+     * 🏆 SULTAN LOGIN SUCCESS HANDLER
+     */
+    function handleLoginSuccess(result) {
+      console.log('═══════════════════════════════════════');
+      console.log('📡 SERVER RESPONSE RECEIVED');
+      console.log('═══════════════════════════════════════');
+      console.log('Full Result:', JSON.stringify(result, null, 2));
+      
+      setLoadingState(false);
+      isSubmitting = false;
+
+      if (!result) {
+        console.error('❌ Result NULL!');
+        showSultanModal('Koneksi Gagal', 'Server tidak merespon. Silakan coba beberapa saat lagi.', 'error');
+        return;
+      }
+
+      // LOGIN GAGAL
+      if (!result.success) {
+        console.log('❌ LOGIN FAILED');
+        showSultanModal('Akses Ditolak', result.message || 'Username atau Password salah!', 'error');
+        return;
+      }
+
+      // ✅ LOGIN SUCCESS
+      console.log('✅✅✅ LOGIN SUCCESS ✅✅✅');
+
+      // Simpan token jika ada
+      if (result.token) {
+        localStorage.setItem('auth_token', result.token);
+      }
+      
+      const targetUrl = result.redirectUrl || '/';
+      console.log('🎯 Target URL:', targetUrl);
+
+      // TRANSFORMASI FORM MENJADI KARTU OTORISASI
+      const loginForm = document.getElementById('loginForm');
+      if (loginForm) {
+        loginForm.innerHTML = `
+          <div style="text-align:center; padding: 30px 20px; border: 4px solid #facc15; border-radius: 3rem; background: #ffffff; animation: zoomIn 0.4s ease; box-shadow: 0 30px 60px rgba(0,0,0,0.15);">
+            <div style="color: #059669; font-size: 70px; margin-bottom: 20px;">✓</div>
+            <strong style="font-size:22px; color: #1e293b; text-transform: uppercase; display:block;">Otorisasi Sah!</strong>
+            <p style="font-size:13px; color: #64748b; margin: 10px 0 25px 0; font-weight:600;">Sultan <b>${result.nama || 'User'}</b> Terverifikasi.</p>
+            
+            <button onclick="window.location.href='${targetUrl}'" 
+                    style="width:100%; background: #059669; color: white; padding: 18px; border:none; border-radius: 1.5rem; font-weight: 900; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; cursor:pointer; box-shadow: 0 10px 20px rgba(5, 150, 105, 0.3);">
+              MASUK KE DASHBOARD SULTAN
+            </button>
+          </div>
+        `;
+      }
+      
+      // NOTIFIKASI SWEETALERT (PREMIUM LOOK)
+      Swal.fire({
+        icon: 'success',
+        title: '<div style="font-size: 18px; font-weight: 900; color: #059669; letter-spacing:1px;">AKSES DIBUKA</div>',
+        html: '<div style="font-size: 13px; font-weight: 600; color: #475569;">Menyiapkan Command Center Sultan...</div>',
+        timer: 1500,
+        timerProgressBar: true,
+        showConfirmButton: false,
+        width: '320px',
+        customClass: { popup: 'rounded-[2.5rem] border-b-8 border-emerald-500' }
+      }).then(() => {
+        console.log('🚀 Executing redirect...');
+        setTimeout(() => {
+          window.location.href = targetUrl;
+        }, 300);
+      });
+    }
+
+    /**
+     * 🔐 SULTAN LOGIN HANDLER (Cloudflare API Version)
+     */
+    async function handleLogin(event) {
+      console.log('═══════════════════════════════════════');
+      console.log('🔐 handleLogin() CALLED');
+      console.log('═══════════════════════════════════════');
+      
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      
+      if (isSubmitting) {
+        console.log('⚠️ Submitting in progress...');
+        return false;
+      }
+      
+      const inputLoginId = document.getElementById('login_id');
+      const inputPassword = document.getElementById('password');
+      
+      const loginId = inputLoginId ? inputLoginId.value.trim() : '';
+      const password = inputPassword ? inputPassword.value : '';
+
+      // VALIDASI INPUT
+      if (!loginId || !password) {
+        showSultanModal('DATA TIDAK LENGKAP', 'Username/Email dan Password wajib diisi!', 'error');
+        return false;
+      }
+
+      isSubmitting = true;
+      setLoadingState(true);
+
+      try {
+        console.log('📤 Sending login request to API...');
+        
+        const response = await fetch(`${API_URL}/api/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            email: loginId,
+            password: password 
+          })
+        });
+
+        console.log('📡 Response status:', response.status);
+        
+        const result = await response.json();
+        console.log('📋 Response data:', result);
+
+        handleLoginSuccess(result);
+
+      } catch (error) {
+        console.error('❌ REQUEST ERROR:', error);
+        setLoadingState(false);
+        isSubmitting = false;
+        showSultanModal('SISTEM SIBUK', 'Koneksi ke server pusat terputus!', 'error');
+      }
+
+      return false;
+    }
+
+    console.log('✅ All functions loaded successfully');
+  </script>
 </body>
 </html>
