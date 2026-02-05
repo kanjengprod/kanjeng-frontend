@@ -1,61 +1,122 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register | Untung Bersama</title>
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="/css/style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrasi - Kanjeng Production</title>
+  
+  <!-- LIBRARIES -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  <!-- CUSTOM CSS -->
+  <link rel="stylesheet" href="/css/register.css">
 </head>
 <body>
 
-<div class="container">
-  <h2>Register</h2>
+  <div class="sultan-card">
+    <!-- 1. HEADER SECTION (Sultan Photo Integration) -->
+    <div class="p-8 text-center bg-white relative overflow-hidden">
+      <!-- 👑 AKSEN MAHKOTA EMAS -->
+      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 via-yellow-200 to-yellow-500"></div>
+      
+      <div class="relative inline-block mb-2 mt-4">
+          <!-- 📸 FOTO/LOGO ADMIN MASTER -->
+          <img id="main_admin_logo" src="https://ui-avatars.com/api/?name=Admin&background=0f172a&color=fff" class="w-20 h-20 rounded-full border-4 border-white shadow-2xl object-cover bg-white mx-auto">
+          <!-- Badge Hijau Online -->
+          <div class="absolute bottom-1 right-1 w-5 h-5 bg-emerald-500 border-4 border-white rounded-full shadow-md"></div>
+      </div>
 
-  <input
-    type="email"
-    id="regEmail"
-    placeholder="Email"
-    autocomplete="email"
-    required
-  />
+      <h2 class="text-3xl font-black italic uppercase text-slate-800 tracking-tighter">Registrasi Mitra</h2>
+      <p class="text-slate-400 font-bold text-[10px] uppercase tracking-[0.3em] mt-1">Kanjeng Production Official</p>
+    </div>
 
-  <input
-    type="password"
-    id="regPassword"
-    placeholder="Password"
-    autocomplete="new-password"
-    required
-  />
+    <form id="registerForm" class="p-8 md:p-12">
+      
+      <!-- 2. REFERRAL INFO BOX -->
+      <div id="referralBox" class="hidden mb-8 p-6 bg-slate-50 border border-slate-200 rounded-[2rem] flex flex-col items-center">
+        <div class="relative mb-3">
+            <!-- 📸 FOTO ADMIN DALAM BOX SPONSOR -->
+            <img id="admin_avatar" src="https://ui-avatars.com/api/?name=Admin&background=0f172a&color=fff" class="w-16 h-16 rounded-full border-4 border-white shadow-lg object-cover bg-slate-200">
+            <div class="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></div>
+        </div>
+        <span class="label-sultan !mb-0">Direferensikan Oleh:</span>
+        <div id="sponsorDisplay" class="text-slate-800 font-black text-xl italic uppercase tracking-tighter">MENGHUBUNGKAN...</div>
+      </div>
 
-  <button id="registerBtn">Daftar</button>
+      <!-- Hidden Inputs -->
+      <input type="hidden" id="referred_by" value="Owner Bisnis">
+      <input type="hidden" id="lat">
+      <input type="hidden" id="lng">
+      <input type="hidden" id="city">
+      <input type="hidden" id="district">
+      <input type="hidden" id="province">
+      <input type="hidden" id="country">
+      <input type="hidden" id="zip">
+      <input type="hidden" id="full_addr">
 
-  <div class="message" id="regMessage"></div>
+      <!-- 2-COLUMN RESPONSIVE GRID -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- KOLOM KIRI -->
+        <div class="space-y-5">
+          <div class="form-group">
+            <label class="label-sultan">Username</label>
+            <input type="text" id="username" required placeholder="Hanya huruf & angka" class="input-sultan" pattern="[a-zA-Z0-9_]+">
+          </div>
+          <div class="form-group">
+            <label class="label-sultan">Nama Lengkap</label>
+            <input type="text" id="nama_user" required placeholder="Sesuai KTP" class="input-sultan">
+          </div>
+          <div class="form-group relative">
+            <label class="label-sultan"><i class="fas fa-map-marker-alt"></i> Cari Domisili</label>
+            <input type="text" id="location_search" required placeholder="Contoh: Pekanbaru" class="input-sultan" autocomplete="off">
+            <div id="search_results" class="absolute bg-white w-full z-50 rounded-xl shadow-2xl border hidden mt-1 max-h-40 overflow-y-auto"></div>
+            <div id="loc_status" class="hidden mt-2 text-[10px] font-black text-emerald-600 uppercase italic"><i class="fas fa-check-circle"></i> Lokasi Terverifikasi</div>
+          </div>
+          <div class="form-group">
+            <label class="label-sultan">Alamat Email</label>
+            <input type="email" id="email" required placeholder="email@sultan.com" class="input-sultan">
+          </div>
+        </div>
 
-  <p style="text-align:center; margin-top:12px;">
-    Sudah punya akun?
-    <a href="/login">Login</a>
-  </p>
-</div>
+        <!-- KOLOM KANAN -->
+        <div class="space-y-5">
+          <div class="form-group">
+            <label class="label-sultan">Nomor WhatsApp</label>
+            <input type="tel" id="nomor" required placeholder="0812xxxxxxxx" class="input-sultan">
+          </div>
+          <div class="form-group">
+            <label class="label-sultan">Password Login</label>
+            <input type="password" id="password" required minlength="6" placeholder="Min. 6 karakter" class="input-sultan">
+          </div>
+          <div class="form-group">
+            <label class="label-sultan">PIN Transaksi (6 Angka)</label>
+            <input type="number" id="pin" required placeholder="6 digit angka" class="input-sultan" oninput="if(this.value.length > 6) this.value = this.value.slice(0,6);">
+          </div>
+          <div class="form-group">
+            <label class="label-sultan">Pilih Lisensi Produk</label>
+            <select id="bidangUsaha" required class="input-sultan appearance-none">
+              <option value="">-- MENGHUBUNGKAN PUSAT DATA --</option>
+            </select>
+          </div>
+        </div>
+      </div>
 
-<!-- MAIN JS -->
-<script src="/js/main.js" defer></script>
+      <button type="submit" id="btnRegister" class="btn-sultan w-full mt-10 uppercase italic">
+        DAFTAR SEKARANG
+      </button>
+    </form>
 
-<!-- FALLBACK SAFETY -->
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    if (typeof registerUser !== "function") {
-      document.getElementById("regMessage").innerHTML =
-        "<span style='color:red'>❌ Sistem belum siap. Silakan refresh halaman.</span>";
-      return;
-    }
+    <div class="p-6 bg-slate-50 text-center border-t border-slate-100">
+      <p class="text-sm font-medium text-slate-500">
+        Sudah memiliki akun? <a href="/login" class="text-blue-600 font-black uppercase tracking-tighter hover:underline">Login Disini!</a>
+      </p>
+    </div>
+  </div>
 
-    document
-      .getElementById("registerBtn")
-      .addEventListener("click", registerUser);
-  });
-</script>
-
+  <!-- CUSTOM JAVASCRIPT -->
+  <script src="/js/register.js"></script>
 </body>
 </html>
