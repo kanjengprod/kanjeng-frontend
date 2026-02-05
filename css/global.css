@@ -163,3 +163,94 @@ h1, h2 {
 /* ============================================
    END OF GLOBAL.CSS
    ============================================ */
+
+
+/* ============================================
+   ✨ REGISTRASI - GLOBAL EXTENSIONS
+   Tambahan styling khusus halaman registrasi
+   ============================================ */
+
+/* Body override untuk Inter font (registrasi) */
+body.register-page {
+  font-family: 'Inter', sans-serif;
+}
+
+/* Sultan Card - Container khusus registrasi */
+.sultan-card {
+  background: rgba(255, 255, 255, 1);
+  border-radius: 2.5rem;
+  box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.6);
+  width: 100%;
+  max-width: 900px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: fadeIn 0.5s ease;
+}
+
+/* Avatar images - registrasi */
+.sultan-card img.w-20,
+.sultan-card img.w-16 {
+  transition: transform 0.3s ease;
+}
+
+.sultan-card img.w-20:hover,
+.sultan-card img.w-16:hover {
+  transform: scale(1.05);
+}
+
+/* Badge online pulse effect */
+.bg-emerald-500 {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Referral Box Animation */
+#referralBox {
+  animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Location status fade in */
+#loc_status {
+  animation: fadeInUp 0.3s ease-in;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive untuk Sultan Card */
+@media (max-width: 768px) {
+  .sultan-card {
+    border-radius: 1.5rem;
+  }
+}
+
+/* ============================================
+   END OF REGISTRASI GLOBAL EXTENSIONS
+   ============================================ */
