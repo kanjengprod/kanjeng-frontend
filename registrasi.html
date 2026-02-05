@@ -1,286 +1,124 @@
-/* =======================================
-   💻 REGISTER.JS - Kanjeng Production
-   JavaScript untuk halaman registrasi
-======================================= */
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrasi - Kanjeng Production</title>
+  
+  <!-- LIBRARIES -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  <!-- CUSTOM CSS - MODULAR -->
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body>
 
-// ============================================
-// 🔧 CONFIGURATION
-// ============================================
-// NOTE: Ini akan diganti dengan environment variables setelah backend ready
-var APP_CONFIG = {
-  baseUrl: window.location.origin,
-  refToken: new URLSearchParams(window.location.search).get('ref') || '',
-  clientKey: 'KANJENG_PRODUCTION_2026'
-};
+  <div class="sultan-card">
+    <!-- 1. HEADER SECTION (Sultan Photo Integration) -->
+    <div class="p-8 text-center bg-white relative overflow-hidden">
+      <!-- 👑 AKSEN MAHKOTA EMAS -->
+      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 via-yellow-200 to-yellow-500"></div>
+      
+      <div class="relative inline-block mb-2 mt-4">
+          <!-- 📸 FOTO/LOGO ADMIN MASTER -->
+          <img id="main_admin_logo" src="https://ui-avatars.com/api/?name=Admin&background=0f172a&color=fff" class="w-20 h-20 rounded-full border-4 border-white shadow-2xl object-cover bg-white mx-auto">
+          <!-- Badge Hijau Online -->
+          <div class="absolute bottom-1 right-1 w-5 h-5 bg-emerald-500 border-4 border-white rounded-full shadow-md"></div>
+      </div>
 
-// ============================================
-// 🌐 GET REAL IP ADDRESS
-// ============================================
-async function getRealIPAddress() {
-  try {
-    const response = await fetch('https://api.ipify.org?format=json');
-    const data = await response.json();
-    console.log('✅ IP Address Detected:', data.ip);
-    return data.ip;
-  } catch (e) {
-    console.error('❌ Failed to get IP:', e);
-    // Fallback: Coba API alternatif
-    try {
-      const response2 = await fetch('https://api.my-ip.io/ip');
-      const ip = await response2.text();
-      return ip.trim();
-    } catch (e2) {
-      console.error('❌ Fallback IP failed:', e2);
-      return 'Unknown IP';
-    }
-  }
-}
+      <h2 class="text-3xl font-black italic uppercase text-slate-800 tracking-tighter">Registrasi Mitra</h2>
+      <p class="text-slate-400 font-bold text-[10px] uppercase tracking-[0.3em] mt-1">Kanjeng Production Official</p>
+    </div>
 
-// ============================================
-// 📡 API CALLS - TEMPORARY (GOOGLE APPS SCRIPT)
-// TODO: Ganti dengan Worker API setelah backend ready
-// ============================================
+    <form id="registerForm" class="p-8 md:p-12">
+      
+      <!-- 2. REFERRAL INFO BOX -->
+      <div id="referralBox" class="hidden mb-8 p-6 bg-slate-50 border border-slate-200 rounded-[2rem] flex flex-col items-center">
+        <div class="relative mb-3">
+            <!-- 📸 FOTO ADMIN DALAM BOX SPONSOR -->
+            <img id="admin_avatar" src="https://ui-avatars.com/api/?name=Admin&background=0f172a&color=fff" class="w-16 h-16 rounded-full border-4 border-white shadow-lg object-cover bg-slate-200">
+            <div class="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></div>
+        </div>
+        <span class="label-sultan !mb-0">Direferensikan Oleh:</span>
+        <div id="sponsorDisplay" class="text-slate-800 font-black text-xl italic uppercase tracking-tighter">MENGHUBUNGKAN...</div>
+      </div>
 
-// GET ACTIVE PRODUCTS
-function loadActiveProducts() {
-  var productSelect = document.getElementById('bidangUsaha');
+      <!-- Hidden Inputs -->
+      <input type="hidden" id="referred_by" value="Owner Bisnis">
+      <input type="hidden" id="lat">
+      <input type="hidden" id="lng">
+      <input type="hidden" id="city">
+      <input type="hidden" id="district">
+      <input type="hidden" id="province">
+      <input type="hidden" id="country">
+      <input type="hidden" id="zip">
+      <input type="hidden" id="full_addr">
 
-  if (productSelect) {
-    productSelect.innerHTML = '<option value="">-- MENGHUBUNGKAN PUSAT DATA --</option>';
+      <!-- 2-COLUMN RESPONSIVE GRID -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- KOLOM KIRI -->
+        <div class="space-y-5">
+          <div class="form-group">
+            <label class="label-sultan">Username</label>
+            <input type="text" id="username" required placeholder="Hanya huruf & angka" class="input-sultan" pattern="[a-zA-Z0-9_]+">
+          </div>
+          <div class="form-group">
+            <label class="label-sultan">Nama Lengkap</label>
+            <input type="text" id="nama_user" required placeholder="Sesuai KTP" class="input-sultan">
+          </div>
+          <div class="form-group relative">
+            <label class="label-sultan"><i class="fas fa-map-marker-alt"></i> Cari Domisili</label>
+            <input type="text" id="location_search" required placeholder="Contoh: Pekanbaru" class="input-sultan" autocomplete="off">
+            <div id="search_results" class="absolute bg-white w-full z-50 rounded-xl shadow-2xl border hidden mt-1 max-h-40 overflow-y-auto"></div>
+            <div id="loc_status" class="hidden mt-2 text-[10px] font-black text-emerald-600 uppercase italic"><i class="fas fa-check-circle"></i> Lokasi Terverifikasi</div>
+          </div>
+          <div class="form-group">
+            <label class="label-sultan">Alamat Email</label>
+            <input type="email" id="email" required placeholder="email@sultan.com" class="input-sultan">
+          </div>
+        </div>
 
-    // TODO: Ganti dengan fetch ke Worker API
-    // fetch('/api/products')
-    //   .then(res => res.json())
-    //   .then(data => { ... })
+        <!-- KOLOM KANAN -->
+        <div class="space-y-5">
+          <div class="form-group">
+            <label class="label-sultan">Nomor WhatsApp</label>
+            <input type="tel" id="nomor" required placeholder="0812xxxxxxxx" class="input-sultan">
+          </div>
+          <div class="form-group">
+            <label class="label-sultan">Password Login</label>
+            <input type="password" id="password" required minlength="6" placeholder="Min. 6 karakter" class="input-sultan">
+          </div>
+          <div class="form-group">
+            <label class="label-sultan">PIN Transaksi (6 Angka)</label>
+            <input type="number" id="pin" required placeholder="6 digit angka" class="input-sultan" oninput="if(this.value.length > 6) this.value = this.value.slice(0,6);">
+          </div>
+          <div class="form-group">
+            <label class="label-sultan">Pilih Lisensi Produk</label>
+            <select id="bidangUsaha" required class="input-sultan appearance-none">
+              <option value="">-- MENGHUBUNGKAN PUSAT DATA --</option>
+            </select>
+          </div>
+        </div>
+      </div>
 
-    google.script.run
-      .withSuccessHandler(function (res) {
-        if (res.success && res.data.length > 0) {
-          productSelect.innerHTML = '<option value="">-- Pilih Produk --</option>';
-          res.data.forEach(function (p) {
-            var opt = document.createElement('option');
-            opt.value = p.id;
-            opt.text = p.usahaId + ': ' + p.nama;
-            productSelect.add(opt);
-          });
-        } else {
-          productSelect.innerHTML =
-            '<option value="">-- BELUM ADA PRODUK TERSEDIA --</option>';
-        }
-      })
-      .getActiveProducts();
-  }
-}
+      <button type="submit" id="btnRegister" class="btn-sultan w-full mt-10 uppercase italic">
+        DAFTAR SEKARANG
+      </button>
+    </form>
 
-// GET SPONSOR INFO
-function loadSponsorInfo(token) {
-  // TODO: Ganti dengan fetch ke Worker API
-  // fetch('/api/sponsor', {
-  //   method: 'POST',
-  //   body: JSON.stringify({ token })
-  // })
+    <div class="p-6 bg-slate-50 text-center border-t border-slate-100">
+      <p class="text-sm font-medium text-slate-500">
+        Sudah memiliki akun? <a href="/login" class="text-blue-600 font-black uppercase tracking-tighter hover:underline">Login Disini!</a>
+      </p>
+    </div>
+  </div>
 
-  google.script.run
-    .withSuccessHandler(function (res) {
-      if (res) {
-        document.getElementById('sponsorDisplay').innerText = res.sponsorName;
-        document.getElementById('referred_by').value = res.sponsorId;
-
-        var logoAtas = document.getElementById('main_admin_logo');
-        if (logoAtas) {
-          logoAtas.src =
-            res.adminPhoto && res.adminPhoto !== ''
-              ? res.adminPhoto
-              : 'https://ui-avatars.com/api/?name=Admin&background=0f172a&color=fff';
-        }
-
-        var avatarSponsor = document.getElementById('admin_avatar');
-        if (avatarSponsor) {
-          avatarSponsor.src =
-            res.sponsorPhoto && res.sponsorPhoto !== ''
-              ? res.sponsorPhoto
-              : 'https://ui-avatars.com/api/?name=' +
-                encodeURIComponent(res.sponsorName) +
-                '&background=059669&color=fff';
-        }
-
-        console.log('✅ Photo System Synced');
-      }
-    })
-    .getSponsorName(token);
-}
-
-// ============================================
-// 📍 LOCATION SEARCH (OpenStreetMap Nominatim)
-// ============================================
-var searchInput = document.getElementById('location_search');
-var resultsDiv = document.getElementById('search_results');
-var searchTimeout = null;
-
-function setupLocationSearch() {
-  searchInput.addEventListener('input', function () {
-    var query = this.value;
-    clearTimeout(searchTimeout);
-
-    if (query.length < 3) {
-      resultsDiv.classList.add('hidden');
-      return;
-    }
-
-    searchTimeout = setTimeout(function () {
-      var url =
-        'https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&countrycodes=id&q=' +
-        encodeURIComponent(query);
-
-      fetch(url)
-        .then((res) => res.json())
-        .then((data) => {
-          resultsDiv.innerHTML = '';
-          if (data && data.length > 0) {
-            resultsDiv.classList.remove('hidden');
-            data.forEach((item) => {
-              var div = document.createElement('div');
-              div.className =
-                'p-3 hover:bg-amber-50 cursor-pointer text-xs border-b border-slate-100';
-              div.innerText = item.display_name;
-              div.onclick = function () {
-                searchInput.value = item.display_name;
-                resultsDiv.classList.add('hidden');
-                document.getElementById('loc_status').classList.remove('hidden');
-                document.getElementById('lat').value = item.lat;
-                document.getElementById('lng').value = item.lon;
-                document.getElementById('full_addr').value = item.display_name;
-
-                var a = item.address || {};
-                document.getElementById('city').value =
-                  a.city || a.town || a.city_district || '-';
-                document.getElementById('district').value =
-                  a.suburb || a.village || a.district || '-';
-                document.getElementById('province').value = a.state || '-';
-                document.getElementById('country').value = a.country || '-';
-                document.getElementById('zip').value = a.postcode || '-';
-              };
-              resultsDiv.appendChild(div);
-            });
-          }
-        })
-        .catch((err) => {
-          console.error('Location search error:', err);
-        });
-    }, 700);
-  });
-}
-
-// ============================================
-// 📝 FORM SUBMISSION HANDLER
-// ============================================
-async function handleFormSubmit(e) {
-  e.preventDefault();
-
-  // Validasi lokasi
-  if (!document.getElementById('lat').value) {
-    return Swal.fire({
-      icon: 'warning',
-      title: 'Lokasi Belum Valid',
-      text: 'Cari domisili Anda dan PILIH dari daftar.',
-      confirmButtonColor: '#b8860b'
-    });
-  }
-
-  var btn = document.getElementById('btnRegister');
-  btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Mendaftarkan...';
-
-  // GET IP ADDRESS
-  console.log('🌐 Getting IP Address...');
-  const userIP = await getRealIPAddress();
-  console.log('✅ User IP:', userIP);
-
-  // PREPARE FORM DATA
-  var formData = {
-    username: document.getElementById('username').value.trim(),
-    nama_user: document.getElementById('nama_user').value.trim(),
-    email: document.getElementById('email').value.trim(),
-    nomor: document.getElementById('nomor').value.trim(),
-    password: document.getElementById('password').value,
-    pin: document.getElementById('pin').value.trim(),
-    bidangUsahaValue: document.getElementById('bidangUsaha').value,
-    referred_by: document.getElementById('referred_by').value,
-    locationData: {
-      lat: document.getElementById('lat').value,
-      lng: document.getElementById('lng').value,
-      city: document.getElementById('city').value,
-      district: document.getElementById('district').value,
-      province: document.getElementById('province').value,
-      country: document.getElementById('country').value,
-      zip: document.getElementById('zip').value,
-      address: document.getElementById('full_addr').value,
-      ua: navigator.userAgent,
-      ip_address: userIP
-    }
-  };
-
-  // TODO: Ganti dengan fetch ke Worker API
-  // fetch('/api/register-new', {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify(formData)
-  // })
-  //   .then(res => res.json())
-  //   .then(handleRegistrationResponse)
-  //   .catch(handleRegistrationError)
-
-  google.script.run
-    .withSuccessHandler(function (res) {
-      if (res.success) {
-        Swal.fire({
-          title: 'SUKSES!',
-          text: res.message,
-          icon: 'success',
-          confirmButtonText: 'MASUK LOGIN',
-          confirmButtonColor: '#059669'
-        }).then(() => {
-          window.top.location.href = APP_CONFIG.baseUrl + '/login';
-        });
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Gagal',
-          text: res.message,
-          confirmButtonColor: '#ef4444'
-        });
-        btn.disabled = false;
-        btn.innerHTML = 'DAFTAR SEKARANG';
-      }
-    })
-    .registerNewUserFixed(formData, APP_CONFIG.clientKey);
-}
-
-// ============================================
-// 🚀 INITIALIZATION
-// ============================================
-document.addEventListener('DOMContentLoaded', function () {
-  console.log('🚀 Register Page Initialized');
-
-  var rawToken = APP_CONFIG.refToken || '';
-  var token = rawToken.trim();
-
-  // Show referral box
-  document.getElementById('referralBox').classList.remove('hidden');
-
-  // Load products
-  loadActiveProducts();
-
-  // Load sponsor info
-  if (token) {
-    loadSponsorInfo(token);
-  }
-
-  // Setup location search
-  setupLocationSearch();
-
-  // Setup form submission
-  document.getElementById('registerForm').addEventListener('submit', handleFormSubmit);
-
-  console.log('✅ All systems ready');
-});
+  <!-- CUSTOM JAVASCRIPT -->
+  <script src="/js/register.js"></script>
+</body>
+</html>
