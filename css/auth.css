@@ -30,6 +30,7 @@ form {
 /* ============================================
    🎭 SWEETALERT2 CUSTOM STYLING
    ============================================ */
+
 .swal-compact-professional {
   border-radius: 2rem !important;
   font-family: 'Segoe UI', sans-serif !important;
@@ -85,6 +86,7 @@ form {
 /* ============================================
    🎨 FORM TRANSITION EFFECTS
    ============================================ */
+
 input[type="text"],
 input[type="email"],
 input[type="password"] {
@@ -109,6 +111,7 @@ input[type="password"]:focus {
 /* ============================================
    🔒 LOADING STATE FOR AUTH FORMS
    ============================================ */
+
 .form-loading {
   pointer-events: none;
   opacity: 0.7;
@@ -122,6 +125,7 @@ input[type="password"]:focus {
 /* ============================================
    ✨ SUCCESS STATE ANIMATION
    ============================================ */
+
 .auth-success {
   animation: successBounce 0.6s ease-out;
 }
@@ -141,6 +145,7 @@ input[type="password"]:focus {
 /* ============================================
    🎯 ERROR SHAKE ANIMATION
    ============================================ */
+
 .auth-error {
   animation: errorShake 0.5s ease-out;
 }
@@ -159,4 +164,216 @@ input[type="password"]:focus {
 
 /* ============================================
    END OF AUTH.CSS
+   ============================================ */
+
+
+/* ============================================
+   ✨ REGISTRASI - AUTH EXTENSIONS
+   Tambahan styling khusus untuk halaman registrasi
+   ============================================ */
+
+/* SweetAlert2 customization untuk registrasi */
+.swal2-popup {
+  border-radius: 2rem !important;
+  border: 4px solid #facc15 !important;
+}
+
+.swal2-title {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 900 !important;
+  font-style: italic !important;
+}
+
+.swal2-confirm {
+  border-radius: 1rem !important;
+  padding: 12px 32px !important;
+  font-weight: 800 !important;
+  letter-spacing: 1px !important;
+}
+
+/* Registrasi form - 2 column grid responsiveness */
+@media (min-width: 768px) {
+  #registerForm .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 767px) {
+  #registerForm .grid {
+    display: block;
+  }
+
+  #registerForm .grid > div {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Input focus animation untuk registrasi */
+.input-sultan:focus {
+  animation: inputFocusSultan 0.3s ease-out;
+}
+
+@keyframes inputFocusSultan {
+  0% {
+    box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.4);
+    transform: translateY(0);
+  }
+  100% {
+    box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.1);
+    transform: translateY(-1px);
+  }
+}
+
+/* Registrasi specific form loading state */
+#registerForm.form-loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+#registerForm.form-loading .input-sultan,
+#registerForm.form-loading .btn-sultan {
+  cursor: not-allowed;
+}
+
+/* Success animation untuk registrasi */
+.sultan-card.auth-success {
+  animation: successZoom 0.6s ease-out;
+}
+
+@keyframes successZoom {
+  0% {
+    transform: scale(0.95);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Error animation untuk registrasi form */
+#registerForm.auth-error {
+  animation: formShake 0.5s ease-out;
+}
+
+@keyframes formShake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-8px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(8px);
+  }
+}
+
+/* Input validation states */
+.input-sultan:invalid:not(:placeholder-shown) {
+  border-color: #fca5a5;
+  background: #fef2f2;
+}
+
+.input-sultan:valid:not(:placeholder-shown) {
+  border-color: #86efac;
+  background: #f0fdf4;
+}
+
+/* Location search active state */
+#location_search:focus ~ #search_results:not(.hidden) {
+  animation: dropdownSlide 0.3s ease-out;
+}
+
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Referral box entrance animation */
+#referralBox:not(.hidden) {
+  animation: referralEntrance 0.5s ease-out;
+}
+
+@keyframes referralEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Submit button loading state */
+.btn-sultan:disabled {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-sultan:disabled::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Location status indicator animation */
+#loc_status:not(.hidden) {
+  animation: statusBounce 0.5s ease-out;
+}
+
+@keyframes statusBounce {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.8);
+  }
+  50% {
+    transform: translateY(0) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive adjustments untuk registrasi */
+@media (max-width: 768px) {
+  .sultan-card {
+    max-width: 100%;
+  }
+
+  #registerForm {
+    padding: 1.5rem;
+  }
+
+  .label-sultan {
+    font-size: 9px;
+  }
+}
+
+/* ============================================
+   END OF REGISTRASI AUTH EXTENSIONS
    ============================================ */
