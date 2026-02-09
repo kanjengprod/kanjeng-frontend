@@ -261,11 +261,11 @@
       try {
         console.log('📤 Sending login request to API...');
         
-        const response = await fetch(`${API_URL}/api/login`, {
+        const response = await fetch(`${API_URL}/api/login-firestore`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
-            email: loginId,
+            login_id: loginId, // Gunakan 'login_id' agar Worker paham ini bisa email/user
             password: password 
           })
         });
