@@ -325,27 +325,34 @@
     }
 
     // 7. LOGOUT (Menggunakan API Worker)
-    function confirmLogout() {
-        Swal.fire({
-            title: 'Logout Admin',
-            text: "Yakin ingin keluar?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3b82f6',
-            confirmButtonText: 'Iya, Keluar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetch('/api/admin/logout', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ ref: ADMIN_REF, logId: CURRENT_LOG_ID })
-                }).finally(() => {
-                    sessionStorage.clear();
-                    window.location.href = '/login';
-                });
-            }
-        });
-    }
+   function confirmLogout() {
+    Swal.fire({
+        title: 'Logout Admin',
+        text: "Yakin ingin keluar?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#10b981',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Iya, Keluar',
+        cancelButtonText: 'Batal',
+        // Tambahkan custom class di sini
+        customClass: {
+            title: 'swal-header-hijau', // Class untuk judul
+            popup: 'swal-popup-no-padding' // Class untuk menghilangkan padding default
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('/api/admin/logout', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ ref: ADMIN_REF, logId: CURRENT_LOG_ID })
+            }).finally(() => {
+                sessionStorage.clear();
+                window.location.href = '/login';
+            });
+        }
+    });
+}
 
     // 8. BOOTSTRAP SYSTEM
     window.onload = function() {
