@@ -327,21 +327,19 @@
     // 7. LOGOUT (Menggunakan API Worker)
    function confirmLogout() {
     Swal.fire({
-        title: 'Logout Admin', // Ini yang akan jadi header hijau
+        title: 'Logout Admin', 
         text: "Yakin ingin keluar dari sistem?",
         icon: 'warning',
-        iconColor: '#059669', // Warna icon senada hijau
+        iconColor: '#facc15', // Warna kuning biar kontras sama hijau
         showCancelButton: true,
-        confirmButtonColor: '#059669', // Warna tombol konfirmasi (hijau)
-        cancelButtonColor: '#64748b',  // Warna tombol batal (abu-abu)
+        confirmButtonColor: '#059669',
+        cancelButtonColor: '#64748b',
         confirmButtonText: 'Iya, Keluar',
         cancelButtonText: 'Batal',
-        reverseButtons: true, // Opsional: Batal di kiri, Keluar di kanan
-        
-        // PENTING: Panggil class CSS yang kita buat tadi
         customClass: {
-            title: 'swal-header-hijau',
-            popup: 'swal-popup-no-padding'
+            container: 'my-swal-container',
+            popup: 'swal-popup-no-padding',
+            title: 'swal-header-hijau'
         }
     }).then((result) => {
         if (result.isConfirmed) {
