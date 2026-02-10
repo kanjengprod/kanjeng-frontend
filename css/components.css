@@ -52,7 +52,7 @@ input::placeholder {
 }
 
 /* ============================================
-   📘 BUTTONS
+   🔘 BUTTONS
    ============================================ */
 .btn,
 button[type="submit"],
@@ -124,7 +124,7 @@ button:disabled {
   text-decoration: underline;
 }
 
-/* 🔒 Forgot Password/Pin Links - Special Styling */
+/* 🔑 Forgot Password/Pin Links - Special Styling */
 .register-link a[href*="forgot"] {
   color: #64748b;
   font-size: 10px;
