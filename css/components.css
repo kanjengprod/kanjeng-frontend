@@ -437,7 +437,40 @@ input[type="tel"].input-sultan {
    👑 DASHBOARD ADMIN - COMPONENTS EXTENSIONS
    Tambahan component khusus dashboard admin
    ============================================ */
+/* ============================================
+   🟢 SWEETALERT CUSTOM HEADER (ADMIN)
+   ============================================ */
 
+/* Menghilangkan padding agar header bisa full ke pinggir */
+.swal-popup-no-padding {
+  padding: 0 0 1.5em 0 !important;
+  overflow: hidden !important;
+  border-radius: 1.25rem !important; /* Biar lengkungannya sama dengan button kamu */
+}
+
+/* Header warna hijau */
+.swal-header-hijau {
+  background: linear-gradient(135deg, #059669 0%, #064e3b 100%) !important; /* Pakai gradient biar senada sama button .btn-sultan kamu */
+  color: white !important;
+  width: 100%;
+  margin: 0 0 1em 0 !important;
+  padding: 25px 0 !important;
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Perbaikan jarak konten karena padding popup di-nol-kan */
+.swal2-html-container {
+  margin: 1em 1.5em 0.5em !important;
+  font-weight: 600 !important;
+  color: #475569 !important;
+}
+
+.swal2-icon {
+  margin-top: 1.5em !important;
+}
 /* ============================================
    🎨 SIDEBAR COMPONENTS (ADMIN)
    ============================================ */
