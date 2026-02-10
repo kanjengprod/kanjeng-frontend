@@ -11,26 +11,20 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
-    <!-- Custom CSS Modular -->
+    <!-- Modular CSS Files -->
     <link rel="stylesheet" href="/css/global.css">
     <link rel="stylesheet" href="/css/components.css">
     <link rel="stylesheet" href="/css/auth.css">
 </head>
-<body class="dashboard-page">
+<body class="member-page">
 
     <div class="flex h-screen overflow-hidden">
-        
         <!-- SIDEBAR -->
         <aside id="sidebar" class="sidebar w-[300px] flex-shrink-0 flex flex-col z-50 shadow-2xl overflow-y-auto">
-            
-            <!-- User Profile Section -->
             <div class="p-8 text-center border-b border-gray-800">
                 <div class="relative inline-block">
-                    <img id="side_avatar" 
-                         class="h-16 w-16 rounded-full border-2 border-emerald-500 mx-auto object-cover bg-gray-800 shadow-lg" 
-                         src="https://ui-avatars.com/api/?name=User&background=059669&color=fff"
-                         alt="User Avatar">
-                    <div class="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-gray-900 rounded-full animate-pulse"></div>
+                    <img id="side_avatar" class="h-16 w-16 rounded-full border-2 border-emerald-500 mx-auto object-cover bg-gray-800 shadow-lg" src="https://ui-avatars.com/api/?name=User&background=059669&color=fff">
+                    <div class="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-gray-900 rounded-full"></div>
                 </div>
                 <h2 id="side_nama" class="mt-4 text-white font-black text-xs tracking-widest uppercase truncate">LOADING...</h2>
                 <div class="inline-block px-3 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full mt-2">
@@ -38,27 +32,21 @@
                 </div>
             </div>
 
-            <!-- Navigation Menu -->
             <nav class="flex-1 px-3 py-6 space-y-1.5">
-                
-                <!-- Dashboard Resources -->
-                <div class="category-label">Dashboard Resources</div>
+                <!-- CATEGORY 1: Dashboard Resources -->
+                <div class="px-4 py-2 mt-4 text-[9px] font-black text-gray-600 uppercase tracking-widest">Dashboard Resources</div>
                 <button onclick="toggleSubmenu('sub_res')" class="menu-item w-full flex items-center justify-between py-2.5 px-4 rounded-xl transition">
-                    <span class="text-xs font-bold uppercase">
-                        <i class="fas fa-layer-group w-5 text-emerald-500"></i> Dashboard Resources
-                    </span>
+                    <span class="text-xs font-bold uppercase"><i class="fas fa-layer-group w-5 text-emerald-500"></i> Dashboard Resources</span>
                     <i class="fas fa-chevron-right text-[8px]"></i>
                 </button>
                 <div id="sub_res" class="submenu overflow-hidden">
                     <a href="javascript:void(0)" onclick="changePageSultan('dayatahanmem')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">1. Daya Tahan Bisnis</a>
                 </div>
 
-                <!-- Produk & Jaringan -->
-                <div class="category-label">Produk & Jaringan</div>
+                <!-- CATEGORY 2: Produk & Jaringan -->
+                <div class="px-4 py-2 text-[9px] font-black text-gray-600 uppercase tracking-widest">Produk & Jaringan</div>
                 <button onclick="toggleSubmenu('sub_ref')" class="menu-item w-full flex items-center justify-between py-2.5 px-4 rounded-xl transition">
-                    <span class="text-xs font-bold uppercase">
-                        <i class="fas fa-sitemap w-5 text-emerald-500"></i> Dashboard Referral
-                    </span>
+                    <span class="text-xs font-bold uppercase"><i class="fas fa-sitemap w-5 text-emerald-500"></i> Dashboard Referral</span>
                     <i class="fas fa-chevron-right text-[8px]"></i>
                 </button>
                 <div id="sub_ref" class="submenu overflow-hidden">
@@ -69,12 +57,10 @@
                     <a href="javascript:void(0)" onclick="changePageSultan('withdrawal')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">5. Proses Withdrawal</a>
                 </div>
 
-                <!-- Promosi & IKLAN -->
-                <div class="category-label">Promosi & IKLAN</div>
+                <!-- CATEGORY 3: Promosi & IKLAN -->
+                <div class="px-4 py-2 mt-4 text-[9px] font-black text-gray-600 uppercase tracking-widest">Promosi & IKLAN</div>
                 <button onclick="toggleSubmenu('sub_ads')" class="menu-item w-full flex items-center justify-between py-2.5 px-4 rounded-xl transition">
-                    <span class="text-xs font-bold uppercase">
-                        <i class="fas fa-bullhorn w-5 text-emerald-500"></i> Dashboard Iklan
-                    </span>
+                    <span class="text-xs font-bold uppercase"><i class="fas fa-bullhorn w-5 text-emerald-500"></i> Dashboard Iklan</span>
                     <i class="fas fa-chevron-right text-[8px]"></i>
                 </button>
                 <div id="sub_ads" class="submenu overflow-hidden">
@@ -84,12 +70,10 @@
                     <a href="javascript:void(0)" onclick="changePageSultan('ads_katalog')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">4. Katalog Quote</a>
                 </div>
 
-                <!-- Statistic & Topup -->
-                <div class="category-label">Statistic & Topup</div>
+                <!-- CATEGORY 4: Statistic & Topup -->
+                <div class="px-4 py-2 mt-4 text-[9px] font-black text-gray-600 uppercase tracking-widest">Statistic & Topup</div>
                 <button onclick="toggleSubmenu('sub_topup')" class="menu-item w-full flex items-center justify-between py-2.5 px-4 rounded-xl transition">
-                    <span class="text-xs font-bold uppercase">
-                        <i class="fas fa-wallet w-5 text-emerald-500"></i> Dashboard Topup
-                    </span>
+                    <span class="text-xs font-bold uppercase"><i class="fas fa-wallet w-5 text-emerald-500"></i> Dashboard Topup</span>
                     <i class="fas fa-chevron-right text-[8px]"></i>
                 </button>
                 <div id="sub_topup" class="submenu overflow-hidden">
@@ -98,16 +82,12 @@
                     <a href="javascript:void(0)" onclick="changePageSultan('topup_withqris')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">3. Topup (Menggunakan QRIS)</a>
                 </div>
 
-                <!-- Program Komunitas -->
-                <div class="category-label">Program Komunitas</div>
-                <button class="btn-take-give">
-                    <i class="fas fa-hand-holding-heart mr-2"></i> JOIN TAKE & GIVE
-                </button>
+                <!-- CATEGORY 5: Program Komunitas -->
+                <div class="px-4 py-2 mt-4 text-[9px] font-black text-gray-600 uppercase tracking-widest">Program Komunitas</div>
+                <button class="btn-take-give"><i class="fas fa-hand-holding-heart mr-2"></i> JOIN TAKE & GIVE</button>
 
                 <button id="mavro_main_btn" onclick="startMavroGuard()" class="menu-item w-full flex items-center justify-between py-2.5 px-4 rounded-xl transition">
-                    <span class="text-xs font-bold uppercase">
-                        <i class="fas fa-heart w-5 text-emerald-500"></i> Dashboard Partisipan
-                    </span>
+                    <span class="text-xs font-bold uppercase"><i class="fas fa-heart w-5 text-emerald-500"></i> Dashboard Partisipan</span>
                     <i id="mavro_lock_icon" class="fas fa-lock text-[8px] text-yellow-500"></i>
                 </button>
                 <div id="sub_mavro" class="submenu overflow-hidden text-[10px]" style="display:none !important;">
@@ -116,12 +96,10 @@
                     <a href="javascript:void(0)" onclick="changePageSultan('user_agreement')" class="block py-2 px-5 text-gray-400 hover:text-white">3. Persetujuan Anda</a>
                 </div>
 
-                <!-- System -->
-                <div class="category-label">System</div>
+                <!-- CATEGORY 6: System -->
+                <div class="px-4 py-2 mt-4 text-[9px] font-black text-gray-600 uppercase tracking-widest">System</div>
                 <button onclick="toggleSubmenu('sub_set')" class="menu-item w-full flex items-center justify-between py-2.5 px-4 rounded-xl transition">
-                    <span class="text-xs font-bold uppercase">
-                        <i class="fas fa-cog w-5 text-emerald-500"></i> Pengaturan
-                    </span>
+                    <span class="text-xs font-bold uppercase"><i class="fas fa-cog w-5 text-emerald-500"></i> Pengaturan</span>
                     <i class="fas fa-chevron-right text-[8px]"></i>
                 </button>
                 <div id="sub_set" class="submenu overflow-hidden">
@@ -130,24 +108,300 @@
             </nav>
         </aside>
 
-        <!-- MAIN CONTENT AREA -->
+        <!-- MAIN AREA -->
         <div class="flex-1 flex flex-col min-w-0 bg-slate-50 overflow-hidden">
-            
-            <!-- Header -->
+            <!-- HEADER -->
             <header class="bg-white border-b h-14 flex items-center justify-between px-6 shadow-sm z-40">
-                <button onclick="toggleSidebar()" class="text-gray-500 p-2 hover:bg-slate-100 transition rounded-lg">
-                    <i class="fas fa-bars text-lg"></i>
-                </button>
+                <button onclick="toggleSidebar()" class="text-gray-500 p-2 hover:bg-slate-100 transition rounded-lg"><i class="fas fa-bars text-lg"></i></button>
                 <div id="header_user_name" class="text-[10px] font-black text-emerald-600 uppercase tracking-widest italic">MEMBER AREA</div>
-                <div id="live_clock" class="text-xs font-bold text-gray-600"></div>
             </header>
             
-            <!-- Dynamic Content Area -->
+            <!-- DYNAMIC CONTENT AREA -->
             <div id="dynamic_content_area" class="flex-1 overflow-y-auto"></div>
         </div>
     </div>
 
-    <!-- External JavaScript -->
-    <script src="/js/dashboard.js"></script>
+    <!-- JAVASCRIPT -->
+    <script>
+        console.log("🚀 SULTAN ENGINE v9.1 LOADED - TOMBOL LOGIN DI KIRI");
+        var USER_REF = '<?= userRef ?>';
+        var USER_NAMA = '<?= userNama ?>';
+        var USER_PHOTO = '<?= userPhoto ?>';
+        var IS_MAVRO_UNLOCKED = false;
+        var SULTAN_HEARTBEAT = null;
+
+        window.onload = function() { 
+            document.getElementById('side_nama').innerText = USER_NAMA.toUpperCase();
+            if (USER_PHOTO !== "") {
+                document.getElementById('side_avatar').src = USER_PHOTO;
+            }      
+            changePageSultan('dayatahanmem'); 
+        };
+
+        function startMavroGuard() {
+            if(IS_MAVRO_UNLOCKED) { toggleSubmenu('sub_mavro'); return; }
+            Swal.fire({ title: 'Verifikasi Kualifikasi...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+            google.script.run.withSuccessHandler(function(res) {
+                Swal.close();
+                if(res) { renderMavroEligibilityModal(res); }
+            }).getMavroGuardStatus(USER_REF);
+        }
+
+        function getTooltipText(no, d) {
+            const targetMember = d.minMember || 0;
+            const targetAgree = d.totAgreeLimit || 0;
+            const targetRecruit = d.minRecruit || 0;
+            const targetSaldo = d.minSaldo || 0;
+            const feeJoin = d.joinFee || 0;
+
+            switch(no) {
+                case 1: return `Member Komunitas minimal ${targetMember} orang.`;
+                case 2: return `Total Member Agreement minimal ${targetAgree} orang.`;
+                case 3: return `Minimal rekrut ${targetRecruit} member aktif.`;
+                case 4: return `Agreement Link terbuka jika Poin 1, 2, 3, 5, 6 Hijau.`;
+                case 5: return `Saldo minimal Rp. ${targetSaldo.toLocaleString('id-ID')}.`;
+                case 6: return `Data Profil & Rekening Bank wajib lengkap.`;
+                case 7: return `Status berubah jika User Approved Agreement.`;
+                default: return "";
+            }
+        }
+
+        var LATEST_MAVRO_DATA = null;
+
+        window.showSultanTooltip = (no) => {
+            if(!LATEST_MAVRO_DATA) return;
+            const msg = getTooltipText(no, LATEST_MAVRO_DATA);
+            Swal.fire({
+                title: `<span style="font-size:14px; font-weight:900;">INFO POIN NO. ${no}</span>`,
+                html: `<div style="font-size:12px; color:#475569; line-height:1.6; text-align:center;">${msg}</div>`,
+                icon: 'info', iconColor: '#facc15',
+                confirmButtonText: 'MENGERTI', confirmButtonColor: '#0f172a',
+                width: '320px', customClass: { popup: 'rounded-3xl border-4 border-yellow-400' }
+            });
+        };
+
+        function renderMavroEligibilityModal(d) {
+            LATEST_MAVRO_DATA = d;
+            
+            const p1 = Number(d.totalMember) >= Number(d.minMember);
+            const pAgreedTotal = Number(d.totalAgreed) >= Number(d.totAgreeLimit);
+            const p2 = Number(d.rekrutCount) >= Number(d.minRecruit);
+            const p3 = Number(d.isAgreed) === 1;
+            const p4 = Number(d.saldo) >= Number(d.minSaldo);
+            const p5 = d.profileComplete === true;
+
+            const canAgree = (p1 && pAgreedTotal && p2 && p4 && p5);
+            const allPassed = (canAgree && p3);
+
+            const items = [
+                {n:1, r:"Member Komunitas", v:d.totalMember, s:p1},
+                {n:2, r:"Total Member Agreement", v:d.totalAgreed, s:pAgreedTotal},
+                {n:3, r:"Rekrut Member", v:d.rekrutCount, s:p2},
+                {n:4, r:"Persetujuan (Agreement)", v:p3?'True':'False', s:p3, type:'bool'},
+                {n:5, r:"Saldo Akun", v:(d.saldo || 0).toLocaleString('id-ID'), s:p4},
+                {n:6, r:"Foto Profil & Rekening", v:p5?'True':'False', s:p5, type:'bool'},
+                {n:7, r:"Biaya Join", v:(d.joinFee || 0).toLocaleString('id-ID'), s:p3}
+            ];
+
+            let html = `
+                <div class="mavro-modal-desc">Sistem mengambil data real-time dari database pusat.</div>
+                <table class="mavro-table">
+                    <thead><tr><th class="col-no">No</th><th>Persyaratan</th><th>Value</th><th>Status</th></tr></thead>
+                    <tbody>
+                        ${items.map(item => `
+                            <tr>
+                                <td class="col-no">${item.n}</td>
+                                <td class="col-req">${item.r}</td>
+                                <td class="${item.type==='bool'?'col-val-bool':'col-val'}">${item.v}</td>
+                                <td class="col-status">
+                                    <div class="sultan-tooltip-container">
+                                        <span class="${item.s ? 'text-emerald' : 'text-slate'} font-black">
+                                            ${item.n === 4 && !item.s && canAgree ? 
+                                                '<span class="link-gold-premium" onclick="openAgreementWindow()">Agreement Link</span>' : 
+                                                (item.s ? 'Memenuhi Syarat' : 'Dalam Proses...')
+                                            }
+                                        </span>
+                                        <i class="fas fa-info-circle info-icon-sultan" onclick="showSultanTooltip(${item.n})"></i>
+                                        <div class="tooltip-box">${getTooltipText(item.n, d)}</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>`;
+
+            Swal.fire({
+                title: '<span style="font-size:16px; font-weight:900; text-transform:uppercase;">ELIGIBILITY CHECK</span>',
+                html: html, confirmButtonText: 'DASHBOARD PPN', confirmButtonColor: '#10b981', showCancelButton: true, width: '550px',
+                didOpen: () => { if(!allPassed) { Swal.getConfirmButton().disabled = true; Swal.getConfirmButton().style.opacity = '0.3'; } }
+            }).then((res) => { if(res.isConfirmed) window.promptLoginUnlock(); });
+        }
+
+        function openAgreementWindow() { Swal.close(); changePageSultan('user_agreement'); }
+
+        window.promptLoginUnlock = function() {
+            Swal.fire({
+                width: '380px',
+                padding: '0 0 1em 0',
+                html: `
+                    <div class="sultan-pin-header">
+                        ENTRI USERNAME DAN PIN
+                    </div>
+                    
+                    <p style="text-align:center; font-size:10px; font-weight:800; color:#64748b; margin: 15px 0; letter-spacing:2px; text-transform:uppercase;">
+                        VERIFIKASI TERAKHIR
+                    </p>
+
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 0 25px;">
+                        <div style="display: flex; align-items: center; justify-content: center; width: 100%; gap: 10px;">
+                            <label style="font-size:11px; font-weight:900; color:#1e293b; width: 90px; text-align: left;">Username :</label>
+                            <input type="text" id="v_u" class="swal2-input sultan-btn-small" placeholder="Masukan Username">
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; justify-content: center; width: 100%; gap: 10px;">
+                            <label style="font-size:11px; font-weight:900; color:#1e293b; width: 90px; text-align: left;">PIN Anda :</label>
+                            <input type="password" id="v_p" class="swal2-input sultan-btn-small" placeholder="PIN 6 Digit (Angka)" maxlength="6" inputmode="numeric">
+                        </div>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'LOGIN',
+                cancelButtonText: 'CANCEL',
+                confirmButtonColor: '#059669',
+                cancelButtonColor: '#64748b',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    const container = Swal.getActions();
+                    const confirmBtn = Swal.getConfirmButton();
+                    const cancelBtn = Swal.getCancelButton();
+                    
+                    container.style.display = 'flex';
+                    confirmBtn.style.order = '1';
+                    cancelBtn.style.order = '2';
+                    
+                    confirmBtn.classList.add('sultan-btn-small');
+                    cancelBtn.classList.add('sultan-btn-small');
+                },
+                preConfirm: () => { 
+                    const u = document.getElementById('v_u').value.trim();
+                    const p = document.getElementById('v_p').value.trim();
+                    if(!u || !p) return Swal.showValidationMessage('Harap isi Username dan PIN!');
+                    return { u: u, p: p } 
+                }
+            }).then((res) => {
+                if(res.isConfirmed) {
+                    Swal.fire({ title: 'Memverifikasi Akses...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                    
+                    google.script.run.withSuccessHandler(function(v) {
+                        Swal.close();
+                        if(v) {
+                            IS_MAVRO_UNLOCKED = true;
+                            document.getElementById('sub_mavro').style.setProperty('display', 'block', 'important');
+                            document.getElementById('mavro_lock_icon').className = "fas fa-chevron-right text-[8px] text-emerald-500";
+                            Swal.fire({ icon: 'success', title: 'AKSES DIBUKA!', timer: 1500, showConfirmButton: false }).then(() => changePageSultan('mavro_stats'));
+                        } else { 
+                            Swal.fire({ icon: 'error', title: 'Gagal!', text: 'Username atau PIN salah. Periksa kembali data Anda.', confirmButtonColor: '#800000' }).then(() => window.promptLoginUnlock()); 
+                        }
+                    }).verifyMavroFinal(USER_REF, res.value.u, res.value.p);
+                }
+            });
+        }
+
+        function changePageSultan(pageName) {
+            if (SULTAN_HEARTBEAT) { 
+                clearInterval(SULTAN_HEARTBEAT); 
+                SULTAN_HEARTBEAT = null; 
+            }
+
+            const container = document.getElementById('dynamic_content_area');
+            const headerTitle = document.getElementById('header_user_name');
+
+            container.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full min-h-[300px] animate-pulse">
+                    <div class="relative flex items-center justify-center">
+                        <div class="w-16 h-16 border-4 border-emerald-100 border-t-emerald-600 rounded-full animate-spin"></div>
+                        <i class="fas fa-crown absolute text-emerald-600 text-xs"></i>
+                    </div>
+                    <p class="mt-5 text-[10px] font-black text-emerald-700 uppercase tracking-[0.3em]">
+                        Mengambil Data ${pageName}...
+                    </p>
+                </div>
+            `;
+
+            headerTitle.innerText = "⏳ MEMPROSES " + pageName.toUpperCase() + "...";
+            container.classList.add('page-loading');
+
+            google.script.run
+                .withSuccessHandler(function(htmlContent) {
+                    container.innerHTML = htmlContent;
+                    headerTitle.innerText = pageName.toUpperCase() + " AREA";
+                    container.classList.remove('page-loading');
+
+                    const scripts = container.getElementsByTagName('script');
+                    for (let i = 0; i < scripts.length; i++) {
+                        const newScript = document.createElement("script");
+                        newScript.text = scripts[i].text;
+                        document.body.appendChild(newScript).parentNode.removeChild(newScript);
+                    }
+
+                    container.scrollTo(0, 0);
+                    console.log("✅ Page " + pageName + " Loaded Successfully");
+                })
+                .withFailureHandler(function(err) {
+                    container.classList.remove('page-loading');
+                    container.innerHTML = `
+                        <div class="p-10 text-center">
+                            <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
+                            <p class="text-gray-600 font-bold">Gagal memuat halaman. Sesi mungkin berakhir.</p>
+                            <button onclick="location.reload()" class="mt-4 px-6 py-2 bg-emerald-600 text-white rounded-lg text-xs font-bold">RELOAD DASHBOARD</button>
+                        </div>
+                    `;
+                    console.error("❌ Gagal memuat halaman: " + err);
+                })
+                .getPageContentSultan(pageName, USER_REF);
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('sidebar-hide'); }
+        
+        function toggleSubmenu(id) {
+            var target = document.getElementById(id);
+            var isVisible = window.getComputedStyle(target).display === 'block';
+            document.querySelectorAll('.submenu').forEach(function(s) { s.style.display = 'none'; });
+            if(!isVisible) target.style.display = 'block';
+        }
+        
+        function confirmLogout() {
+            Swal.fire({ title: 'Logout Sultan', icon: 'warning', showCancelButton: true, confirmButtonColor: '#10b981', confirmButtonText: 'IYA, BRO!' })
+            .then((res) => { if (res.isConfirmed) window.top.location.href = '<?= baseUrl ?>?logout=1'; });
+        }
+
+        var CURRENT_LOG_ID = sessionStorage.getItem('sultan_history_id');
+        var SULTAN_HEARTBEAT = null;
+
+        function initiateHeartbeat() {
+            if (!CURRENT_LOG_ID || CURRENT_LOG_ID === "null") {
+                console.warn("⚠️ Sultan Radar: History ID tidak ditemukan. Memicu pelacakan ulang...");
+                if (typeof startLoginTracking === 'function') startLoginTracking();
+                return;
+            }
+
+            console.log("📡 Sultan Engine: Heartbeat tersambung ke " + CURRENT_LOG_ID);
+
+            SULTAN_HEARTBEAT = setInterval(function() {
+                if (CURRENT_LOG_ID) {
+                    google.script.run.withSuccessHandler(function(res) {
+                        if (res && res.valid === false) {
+                            console.error("🚫 Akses diputus oleh server!");
+                            clearInterval(SULTAN_HEARTBEAT);
+                            window.top.location.href = '<?= baseUrl ?>?login=1&error=Akses Terputus';
+                        }
+                    })
+                    .updateHeartbeatInHistory(USER_REF, CURRENT_LOG_ID);
+                }
+            }, 60000); 
+        }
+
+        setTimeout(initiateHeartbeat, 3000);
+    </script>
 </body>
 </html>
