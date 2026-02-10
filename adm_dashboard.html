@@ -165,15 +165,18 @@
     <!-- JAVASCRIPT -->
     <script>
     /**
-     * 👑 SULTAN CORE ADMIN ENGINE v15.5
-     * Features: SPA Engine, Inheritance Heartbeat, & Failure Guard
+     * 👑 SULTAN CORE ADMIN ENGINE v16.0 - HYBRID WORKER EDITION
+     * Features: SPA Engine, Worker API Integration, & Failure Guard
+     * Modified: initShell(), initiateAdminHeartbeat(), confirmLogout() → Worker API
+     * Unchanged: changePageAdmin() → TETAP GAS (untuk halaman anak)
      */
     
     // 1. GLOBAL VARIABLES
-    var ADMIN_REF = '<?= userRef ?>';
-    var ADMIN_USERNAME = '<?= adminUsername ?>';
-    var CURRENT_LOG_ID = sessionStorage.getItem('sultan_history_id'); 
+    var ADMIN_REF = new URLSearchParams(window.location.search).get('ref') || sessionStorage.getItem('sultan_admin_ref') || '';
+    var ADMIN_USERNAME = sessionStorage.getItem('sultan_admin_username') || '';
+    var CURRENT_LOG_ID = sessionStorage.getItem('sultan_history_id') || ''; 
     var ADMIN_HEARTBEAT = null;
+    var IS_BUSY = false;
 
     // 2. LIVE CLOCK SULTAN
     function updateClock() {
@@ -187,25 +190,67 @@
         }) + " WIB";
     }
 
-    // 3. INITIALIZE SHELL (ADMIN PROFILE)
+    // 🆕 3. INITIALIZE SHELL (WORKER API) - MODIFIED!
     function initShell() {
-        google.script.run
-            .withFailureHandler(err => console.error("Gagal sinkron shell:", err))
-            .withSuccessHandler(function(d) {
-                if(d) {
-                    document.getElementById('side_nama').innerText = d.nama.toUpperCase();
-                    var avatar = (d.photo_url && d.photo_url !== "") 
-                                 ? d.photo_url 
-                                 : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(d.nama) + '&background=1e3a8a&color=fff&size=128';
-                    document.getElementById('side_avatar').src = avatar;
-                }
-            }).getUserByRef(ADMIN_REF);
+        console.log('🔄 initShell() → Worker API');
         
-        // Membuka halaman default pertama kali
+        // Validasi ref token
+        if (!ADMIN_REF || ADMIN_REF === '') {
+            console.error('❌ No admin ref token found');
+            Swal.fire({
+                icon: 'error',
+                title: 'Session Error',
+                text: 'Token admin tidak ditemukan. Silakan login ulang.',
+                confirmButtonColor: '#3b82f6'
+            }).then(() => {
+                window.location.href = 'https://untungbersama.us/login';
+            });
+            return;
+        }
+
+        // ✅ FETCH KE WORKER API (BUKAN GAS!)
+        fetch('/api/admin/get-user?ref=' + encodeURIComponent(ADMIN_REF))
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error('HTTP ' + res.status);
+                }
+                return res.json();
+            })
+            .then(data => {
+                if (data && data.nama) {
+                    console.log('✅ User data received:', data.nama);
+                    
+                    // Update sidebar
+                    document.getElementById('side_nama').innerText = data.nama.toUpperCase();
+                    
+                    var avatar = (data.photo_url && data.photo_url !== "") 
+                                 ? data.photo_url 
+                                 : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(data.nama) + '&background=1e3a8a&color=fff&size=128';
+                    document.getElementById('side_avatar').src = avatar;
+                    
+                    // Simpan username untuk kebutuhan lain
+                    ADMIN_USERNAME = data.username || '';
+                    sessionStorage.setItem('sultan_admin_username', ADMIN_USERNAME);
+                    sessionStorage.setItem('sultan_admin_ref', ADMIN_REF);
+                } else {
+                    throw new Error('Invalid user data');
+                }
+            })
+            .catch(err => {
+                console.error('❌ Gagal sinkron shell:', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Memuat Profil',
+                    text: 'Tidak dapat memuat data admin. Silakan refresh halaman.',
+                    confirmButtonColor: '#3b82f6'
+                });
+            });
+        
+        // ✅ TETAP PANGGIL GAS UNTUK HALAMAN ANAK!
         changePageAdmin('dayatahanadm');
     }
 
-    // 4. SPA ENGINE (PAGE SWITCHER)
+    // 4. SPA ENGINE (PAGE SWITCHER) - TIDAK DIUBAH! TETAP GAS!
     function changePageAdmin(pageName) {
         const container = document.getElementById('dynamic_content_area');
         const headerTitle = document.getElementById('header_user_name');
@@ -214,6 +259,7 @@
         container.classList.add('page-loading');
         headerTitle.innerText = "⏳ MEMPROSES " + pageName.toUpperCase().replace('_', ' ') + "...";
 
+        // ✅ TETAP PAKAI GAS! (untuk halaman anak)
         google.script.run
             .withFailureHandler(err => {
                 container.classList.remove('page-loading');
@@ -238,7 +284,6 @@
 
                 // --- AUTO-INITIALIZER (SULTAN SYNC) ---
                 setTimeout(() => {
-                    // Panggil otomatis fungsi init jika tersedia di halaman anak
                     const inits = [
                         'initManageMember', 'initManageProducts', 'loadUploadHistory',
                         'initGlobalStats', 'initProductControl', 'initSettingIklan',
@@ -252,36 +297,60 @@
             }).getPageContentAdmin(pageName, ADMIN_REF);
     }
 
-    // 5. HEARTBEAT ENGINE (SULTAN SMART PROTECTOR)
-    var IS_BUSY = false; // Penanda kalau server lagi kerja berat
-
+    // 🆕 5. HEARTBEAT ENGINE (WORKER API) - MODIFIED!
     function initiateAdminHeartbeat() {
-        if (!CURRENT_LOG_ID || CURRENT_LOG_ID === "null") {
+        if (!CURRENT_LOG_ID || CURRENT_LOG_ID === "null" || CURRENT_LOG_ID === "") {
             console.warn("⚠️ Sultan Radar: History ID tidak ditemukan.");
             return;
         }
 
-        console.log("📡 Sultan Engine: Heartbeat Standby -> " + CURRENT_LOG_ID);
+        console.log("📡 Sultan Engine: Heartbeat Standby → " + CURRENT_LOG_ID);
 
         if (ADMIN_HEARTBEAT) clearInterval(ADMIN_HEARTBEAT);
         
         ADMIN_HEARTBEAT = setInterval(function() {
             // CEK: Kalau lagi proses Approve/Simpan, jangan ganggu dulu
-            if (CURRENT_LOG_ID && !IS_BUSY) { 
-                google.script.run.withSuccessHandler(function(res) {
-                    if (res && res.valid === false) {
+            if (CURRENT_LOG_ID && !IS_BUSY) {
+                console.log('💓 Heartbeat tick...');
+                
+                // ✅ FETCH KE WORKER API (BUKAN GAS!)
+                fetch('/api/admin/heartbeat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        ref: ADMIN_REF, 
+                        logId: CURRENT_LOG_ID 
+                    })
+                })
+                .then(res => res.json())
+                .then(result => {
+                    if (result && result.valid === false) {
                         console.error("🚫 Sesi Admin Terputus.");
                         clearInterval(ADMIN_HEARTBEAT);
-                        window.top.location.href = '<?= baseUrl ?>?login=1&error=Sesi Berakhir';
+                        
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Sesi Berakhir',
+                            text: 'Sesi Anda telah berakhir. Silakan login kembali.',
+                            confirmButtonColor: '#3b82f6'
+                        }).then(() => {
+                            window.location.href = 'https://untungbersama.us/login?error=Sesi Berakhir';
+                        });
+                    } else {
+                        console.log('✅ Heartbeat OK');
                     }
-                }).updateHeartbeatInHistory(ADMIN_REF, CURRENT_LOG_ID);
+                })
+                .catch(err => {
+                    console.warn('⚠️ Heartbeat error (non-critical):', err);
+                    // Tidak perlu logout paksa, mungkin cuma network issue sementara
+                });
             } else {
                 console.log("⏳ Heartbeat ditunda (Server lagi sibuk)...");
             }
-        }, 60000); 
+        }, 60000); // 60 detik
     }
 
-    // 6. UI CONTROLS
+    // 6. UI CONTROLS - TIDAK DIUBAH!
     function toggleSidebar() { 
         document.getElementById('sidebar').classList.toggle('sidebar-hide'); 
     }
@@ -297,6 +366,7 @@
         }
     }
 
+    // 🆕 7. CONFIRM LOGOUT (WORKER API) - MODIFIED!
     function confirmLogout() {
         Swal.fire({
             title: 'Logout Admin',
@@ -305,24 +375,76 @@
             showCancelButton: true,
             confirmButtonColor: '#3b82f6',
             cancelButtonColor: '#f43f5e',
-            confirmButtonText: 'Iya, Keluar'
+            confirmButtonText: 'Iya, Keluar',
+            cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                sessionStorage.removeItem('sultan_history_id'); // Bersihkan ID
-                window.top.location.href = '<?= baseUrl ?>?logout=1';
+                console.log('🚪 Logout initiated...');
+                
+                // ✅ FETCH KE WORKER API (BUKAN GAS!)
+                fetch('/api/admin/logout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        ref: ADMIN_REF, 
+                        logId: CURRENT_LOG_ID 
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log('✅ Logout response:', data);
+                    
+                    // Bersihkan session storage
+                    sessionStorage.removeItem('sultan_history_id');
+                    sessionStorage.removeItem('sultan_admin_ref');
+                    sessionStorage.removeItem('sultan_admin_username');
+                    
+                    // Stop heartbeat
+                    if (ADMIN_HEARTBEAT) {
+                        clearInterval(ADMIN_HEARTBEAT);
+                    }
+                    
+                    // ✅ REDIRECT KE LOGIN
+                    window.location.href = 'https://untungbersama.us/login';
+                })
+                .catch(err => {
+                    console.error('❌ Logout error:', err);
+                    
+                    // Tetap paksa logout meski error
+                    sessionStorage.removeItem('sultan_history_id');
+                    sessionStorage.removeItem('sultan_admin_ref');
+                    sessionStorage.removeItem('sultan_admin_username');
+                    
+                    if (ADMIN_HEARTBEAT) {
+                        clearInterval(ADMIN_HEARTBEAT);
+                    }
+                    
+                    window.location.href = 'https://untungbersama.us/login';
+                });
             }
         });
     }
 
-    // 7. BOOTSTRAP SYSTEM
+    // 8. BOOTSTRAP SYSTEM
     window.onload = function() {
+        console.log('🚀 Sultan Dashboard v16.0 - Hybrid Worker Edition');
+        console.log('📍 Admin Ref:', ADMIN_REF);
+        console.log('📍 History ID:', CURRENT_LOG_ID);
+        
+        // Live clock
         updateClock();
         setInterval(updateClock, 1000);
-        if (window.history.replaceState) { google.script.history.replace(null, null, ''); }
         
+        // Clean URL (remove query params for security)
+        if (window.history.replaceState) {
+            const cleanUrl = window.location.pathname;
+            window.history.replaceState(null, null, cleanUrl);
+        }
+        
+        // Initialize shell (Worker API)
         initShell();
         
-        // Jeda sedikit sebelum heartbeat agar server tidak kaget
+        // Start heartbeat setelah delay
         setTimeout(initiateAdminHeartbeat, 3000);
     };
     </script>
