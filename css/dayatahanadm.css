@@ -28,10 +28,10 @@
 
 /* 3. JUDUL & BRAND */
 .title-center { 
-  font-size: 60px; 
+  font-size: 60px !important; 
   font-weight: 900; 
   color: #0f172a;
-  text-align: center;
+  text-align: center !important;
   text-transform: uppercase; 
   letter-spacing: 1px; 
   margin-bottom: 5px; 
@@ -42,7 +42,7 @@
   font-size: 16px; 
   font-weight: 700; 
   color: #94a3b8;
-  text-align: center;
+  text-align: center !important;
   text-transform: uppercase; 
   letter-spacing: 12px; 
   margin-bottom: 60px; 
