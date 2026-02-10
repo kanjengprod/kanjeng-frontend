@@ -52,7 +52,7 @@ input::placeholder {
 }
 
 /* ============================================
-   🔘 BUTTONS
+   📘 BUTTONS
    ============================================ */
 .btn,
 button[type="submit"],
@@ -124,7 +124,7 @@ button:disabled {
   text-decoration: underline;
 }
 
-/* 🔑 Forgot Password/Pin Links - Special Styling */
+/* 🔒 Forgot Password/Pin Links - Special Styling */
 .register-link a[href*="forgot"] {
   color: #64748b;
   font-size: 10px;
@@ -421,4 +421,166 @@ input[type="tel"].input-sultan {
 
 /* ============================================
    END OF REGISTRASI COMPONENTS EXTENSIONS
+   ============================================ */
+
+
+/* ============================================
+   👑 DASHBOARD - COMPONENTS EXTENSIONS
+   Tambahan component khusus dashboard admin
+   ============================================ */
+
+/* ============================================
+   🎨 SIDEBAR COMPONENTS
+   ============================================ */
+
+/* Sidebar Container */
+.sidebar {
+  background-color: #0f111a;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 280px;
+}
+
+.sidebar-hide {
+  margin-left: -280px;
+}
+
+/* Category Labels */
+.category-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: #4b5563;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin: 1.5rem 0 0.5rem 1.25rem;
+}
+
+/* Menu Items */
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(100% - 1.5rem);
+  margin: 0 0.75rem 0.25rem 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  color: #9ca3af;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.menu-item:hover {
+  background-color: #1e293b;
+  color: #ffffff;
+  border-color: #3b82f6;
+}
+
+.menu-item.active {
+  background-color: #1e293b;
+  color: #3b82f6;
+  font-weight: 700;
+}
+
+/* Submenu Container */
+.submenu {
+  display: none;
+  background-color: #161926;
+  margin: 0.25rem 1.25rem 0.75rem 2rem;
+  border-radius: 10px;
+  border-left: 2px solid #1e293b;
+}
+
+.submenu a {
+  display: block;
+  padding: 0.65rem 1.25rem;
+  font-size: 11px;
+  color: #9ca3af;
+  font-weight: 600;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.submenu a:hover {
+  color: #3b82f6;
+  padding-left: 1.5rem;
+}
+
+/* ============================================
+   📊 DYNAMIC CONTENT AREA
+   ============================================ */
+
+/* Content Area Transition */
+#dynamic_content_area {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Page Loading State */
+.page-loading {
+  opacity: 0.3;
+  pointer-events: none;
+  filter: blur(4px);
+}
+
+/* ============================================
+   ⏰ LIVE CLOCK COMPONENT
+   ============================================ */
+
+#live_clock {
+  font-family: 'Inter', monospace;
+  font-feature-settings: "tnum";
+}
+
+/* ============================================
+   📱 RESPONSIVE - DASHBOARD COMPONENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    z-index: 999;
+  }
+
+  .sidebar-hide {
+    margin-left: -280px;
+  }
+
+  .category-label {
+    font-size: 9px;
+    margin: 1rem 0 0.5rem 1rem;
+  }
+
+  .menu-item {
+    padding: 0.65rem 0.85rem;
+  }
+
+  .menu-item span {
+    font-size: 10px;
+  }
+
+  .submenu {
+    margin: 0.25rem 1rem 0.5rem 1.5rem;
+  }
+
+  .submenu a {
+    font-size: 10px;
+    padding: 0.5rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 260px;
+  }
+
+  .sidebar-hide {
+    margin-left: -260px;
+  }
+}
+
+/* ============================================
+   END OF DASHBOARD COMPONENTS EXTENSIONS
    ============================================ */
