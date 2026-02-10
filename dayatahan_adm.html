@@ -1,64 +1,193 @@
 <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; overflow-x: hidden; }
-        
-        .sidebar { background-color: #0f111a; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); width: 280px; }
-        .sidebar-hide { margin-left: -280px; }
-        
-        .category-label {
-            font-size: 10px;
-            font-weight: 800;
-            color: #4b5563;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            margin: 1.5rem 0 0.5rem 1.25rem;
-        }
+  /* 1. IMPORT FONT POPPINS & INTER */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Poppins:wght@800;900&display=swap');
 
-        .menu-item { 
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: calc(100% - 1.5rem);
-            margin: 0 0.75rem 0.25rem 0.75rem;
-            padding: 0.75rem 1rem;
-            border-radius: 12px;
-            color: #9ca3af;
-            white-space: nowrap; /* Kunci Anti Berantakan */
-            transition: all 0.2s ease;
-            cursor: pointer;
-            border: 1px solid transparent;
-        }
+  /* 2. LAYOUT ULTRA WIDE - SULTAN COMMAND CENTER */
+  .sultan-ultra-container { 
+    width: 100%; 
+    padding: 0 10px; 
+    box-sizing: border-box; 
+    margin-top: 20px; 
+    font-family: 'Inter', sans-serif; 
+  }
 
-        .menu-item:hover { background-color: #1e293b; color: #ffffff; border-color: #3b82f6; }
-        .menu-item.active { background-color: #1e293b; color: #3b82f6; font-weight: 700; }
+  .card-command-center { 
+    width: 100%; 
+    background: #ffffff; 
+    border-radius: 60px; 
+    padding: 60px 30px; 
+    border: 1px solid #e2e8f0; 
+    box-shadow: 0 40px 120px -20px rgba(0,0,0,0.1); 
+    text-align: center; 
+  }
 
-        .submenu { 
-            display: none; 
-            background-color: #161926; 
-            margin: 0.25rem 1.25rem 0.75rem 2rem; 
-            border-radius: 10px; 
-            border-left: 2px solid #1e293b;
-        }
-        
-        .submenu a { 
-            display: block; 
-            padding: 0.65rem 1.25rem; 
-            font-size: 11px; 
-            color: #9ca3af; 
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-        .submenu a:hover { color: #3b82f6; padding-left: 1.5rem; }
+  /* 3. JUDUL & BRAND */
+  .title-center { font-size: 32px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; font-style: italic; }
+  .brand-center { font-size: 16px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 12px; margin-bottom: 60px; display: block; }
 
-        #dynamic_content_area { transition: all 0.3s ease-in-out; }
-        .page-loading { opacity: 0.3; pointer-events: none; filter: blur(4px); }
+  /* 4. LEGENDA BOLA 3D RAKSASA (55PX) */
+  .led-legend { display: flex; align-items: center; justify-content: center; gap: 45px; margin-bottom: 40px; }
+  .led-group { display: flex; align-items: center; gap: 20px; position: relative; }
+  
+  .sphere-3d-big { 
+    width: 55px; height: 55px; border-radius: 50%; position: relative; 
+    cursor: pointer; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .sphere-3d-big:hover { transform: scale(1.15) rotate(10deg); }
 
-        @media (max-width: 768px) {
-            .sidebar-hide { margin-left: -280px; }
-        }
-    </style>
+  .sphere-green { background: radial-gradient(circle at 35% 35%, #4ade80, #064e3b); box-shadow: inset -6px -6px 12px rgba(0,0,0,0.5), 0 15px 30px rgba(16, 185, 129, 0.4); }
+  .sphere-yellow { background: radial-gradient(circle at 35% 35%, #fbbf24, #78350f); box-shadow: inset -6px -6px 12px rgba(0,0,0,0.5), 0 15px 30px rgba(245, 158, 11, 0.4); }
+  .sphere-red { background: radial-gradient(circle at 35% 35%, #f87171, #7f1d1d); box-shadow: inset -6px -6px 12px rgba(0,0,0,0.5), 0 15px 30px rgba(239, 68, 68, 0.4); }
+  .sphere-3d-big::before { content: ''; position: absolute; top: 15%; left: 15%; width: 40%; height: 40%; background: rgba(255,255,255,0.5); border-radius: 50%; filter: blur(1.5px); }
 
+  .v-separator { color: #e2e8f0; font-weight: 300; font-size: 45px; opacity: 0.6; }
 
+  /* 💎 5. SULTAN GLASS TOOLTIP */
+  .led-group .tooltip-text {
+    visibility: hidden; opacity: 0;
+    position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(10px);
+    background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); color: #fff;
+    padding: 12px 20px; border-radius: 18px; font-size: 11px; font-weight: 800;
+    white-space: nowrap; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .led-group:hover .tooltip-text { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* 6. DIVIDER */
+  .hr-sultan-fine { width: 100%; height: 1.5px; background: linear-gradient(90deg, transparent, #e2e8f0, transparent); margin: 40px 0; }
+
+  /* 7. RUNNING CONTROL SECTION */
+  .status-control-flex { display: flex; align-items: center; justify-content: center; gap: 30px; flex-wrap: wrap; margin-bottom: 20px; }
+  
+  .btn-marquee-3d {
+    width: 550px; height: 95px; border-radius: 30px; color: white; border: none; overflow: hidden; position: relative; display: flex; align-items: center;
+    box-shadow: inset 0 4px 10px rgba(255,255,255,0.3), 0 30px 60px -12px rgba(0,0,0,0.2);
+  }
+  .bg-status-green { background: radial-gradient(circle at top left, #10b981, #064e3b); }
+  .bg-status-yellow { background: radial-gradient(circle at top left, #f59e0b, #78350f); }
+  .bg-status-red { background: radial-gradient(circle at top left, #ef4444, #7f1d1d); }
+  
+  .marquee-content { white-space: nowrap; position: absolute; animation: marquee-sultan 15s linear infinite; padding-left: 100%; font-weight: 900; font-style: italic; font-size: 15px; letter-spacing: 0.5px; }
+  @keyframes marquee-sultan { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
+  .label-condition-box { padding: 25px 50px; border-radius: 25px; font-size: 20px; font-weight: 900; text-transform: uppercase; display: flex; align-items: center; gap: 15px; background: #f8fafc; border: 2px solid #e2e8f0; box-shadow: 0 10px 20px rgba(0,0,0,0.02); }
+  .text-cond-green { color: #059669; } .text-cond-yellow { color: #d97706; } .text-cond-red { color: #dc2626; }
+
+  /* 📊 8. TABEL KEUANGAN SULTAN (MAROON & YELLOW) */
+  .table-sultan-wrapper { width: 100%; border-radius: 30px; overflow-x: auto; border: 4px solid #800000; margin-top: 10px; box-shadow: 0 20px 50px rgba(128,0,0,0.1); }
+  .table-sultan { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 1000px; }
+  
+  .table-sultan th { 
+    background-color: #800000; color: #facc15; 
+    padding: 25px 10px; font-weight: 900; text-transform: uppercase; font-size: 16px;
+    border-right: 1px solid rgba(255, 255, 255, 0.15); letter-spacing: 1.5px;
+  }
+  .table-sultan th:last-child { border-right: none; }
+
+  /* 🛠️ MODIFIKASI SEL (SULTAN ALIGNMENT) */
+  .table-sultan td { 
+    background-color: #ffffff; color: #000000; 
+    padding: 30px 20px;
+    border-right: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+  }
+  .table-sultan td:last-child { border-right: none; }
+  .table-sultan tr:last-child td { border-bottom: none; }
+
+  /* FLEX UNTUK KIRI DAN KANAN DALAM SATU SEL */
+  .cell-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    font-weight: 900; /* TEBAL SESUAI PERINTAH */
+    font-size: 26px;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .rp-left { text-align: left; }
+  .val-right { text-align: right; }
+
+  .desc-justify { font-size: 11px; color: #64748b; line-height: 1.8; text-align: justify; margin: 30px auto; max-width: 95%; font-weight: 500; }
+</style>
+
+<div class="sultan-ultra-container">
+  <div class="card-command-center animate-in fade-in zoom-in duration-1000">
+    
+    <h1 class="title-center">Indikator Kekuatan Perusahaan</h1>
+    <span class="brand-center">Kanjeng Production</span>
+
+    <div class="led-legend">
+      <div class="led-group">
+        <div class="sphere-3d-big sphere-green"></div>
+        <span class="tooltip-text">SISTEM KEUANGAN SEHAT</span>
+      </div>
+      <span class="v-separator">|</span>
+      <div class="led-group">
+        <div class="sphere-3d-big sphere-yellow"></div>
+        <span class="tooltip-text">SISTEM KEUANGAN WASPADA</span>
+      </div>
+      <span class="v-separator">|</span>
+      <div class="led-group">
+        <div class="sphere-3d-big sphere-red"></div>
+        <span class="tooltip-text">SISTEM KEUANGAN BERBAHAYA</span>
+      </div>
+    </div>
+
+    <div class="hr-sultan-fine"></div>
+
+    <div class="status-control-flex">
+      <button id="main_marquee_btn" class="btn-marquee-3d bg-status-green">
+        <div id="marquee_inner" class="marquee-content">MENGANALISA STABILITAS KEUANGAN KANJENG PRODUCTION... MOHON TUNGGU...</div>
+      </button>
+
+      <div class="label-condition-box" id="cond_box_ui">
+          <div id="cond_dot_ui" style="width: 15px; height: 15px; border-radius: 50%;" class="sphere-green"></div>
+          <span id="cond_text_ui">SINKRONISASI...</span>
+      </div>
+    </div>
+
+    <div class="hr-sultan-fine"></div>
+
+    <div class="table-sultan-wrapper">
+        <table class="table-sultan">
+            <thead>
+                <tr>
+                    <th>SALDO BANK</th>
+                    <th>SALDO KOMISI</th>
+                    <th>SALDO IKLAN</th>
+                    <th>SALDO TOPUP</th>
+                    <th>SALDO ADMIN</th>
+                    <th>SALDO PJBAN</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><div class="cell-flex"><span class="rp-left">Rp.</span><span class="val-right" id="d_saldo_bank">0</span></div></td>
+                    <td><div class="cell-flex"><span class="rp-left">Rp.</span><span class="val-right" id="d_saldo_komisi">0</span></div></td>
+                    <td><div class="cell-flex"><span class="rp-left">Rp.</span><span class="val-right" id="d_saldo_iklan">0</span></div></td>
+                    <td><div class="cell-flex"><span class="rp-left">Rp.</span><span class="val-right" id="d_saldo_topup">0</span></div></td>
+                    <td><div class="cell-flex"><span class="rp-left">Rp.</span><span class="val-right" id="d_saldo_admin">0</span></div></td>
+                    <td><div class="cell-flex"><span class="rp-left">Rp.</span><span class="val-right" id="d_saldo_pjban">0</span></div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="desc-justify">
+        Program Take and Give (Mavro) merupakan program saling berbagi antara member yang mana hari ini kamu memberi bantuan (PH), secepatnya kamu akan menerima bantuan (GH). Kemungkinan bantuan yang kamu terima akan lebih besar. (misalnya hari ini membantu 3 orang : (PH)=Rp. 90.000,- | Menerima dari 3 orang : (GH)=Rp. 210.000,-.
+    </div>
+
+    <div class="hr-sultan-fine"></div>
+
+     <div style="margin-top: 30px;">
+        <p style="font-size: 10px; color: #94a3b8; font-weight: 800; text-transform: uppercase; letter-spacing: 2px;">
+            <i class="fas fa-satellite mr-2"></i> Corporate Integrity Real-time Monitoring
+        </p>
+    </div>
+  </div>
+</div>
 <script>
 /**
  * SCRIPT KHUSUS HALAMAN DAYA TAHAN
