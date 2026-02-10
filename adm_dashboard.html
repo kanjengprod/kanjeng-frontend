@@ -187,31 +187,45 @@
 
     // 3. INITIALIZE SHELL (Menggunakan API Worker)
     function initShell() {
+        console.log('🔄 Memulai Sinkronisasi Shell...');
+        
         if (!ADMIN_REF) {
-            Swal.fire('Error', 'Sesi tidak valid, silakan login ulang', 'error').then(() => {
-                window.location.href = '/login';
-            });
+            console.error('❌ Token Admin tidak ditemukan!');
+            window.location.href = '/login';
             return;
         }
 
-        fetch('/api/admin/get-user?ref=' + ADMIN_REF)
-            .then(res => res.json())
-            .then(d => {
-                if(d && d.nama) {
-                    document.getElementById('side_nama').innerText = d.nama.toUpperCase();
-                    var avatar = (d.photo_url && d.photo_url !== "") 
-                                 ? d.photo_url 
-                                 : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(d.nama) + '&background=1e3a8a&color=fff&size=128';
-                    document.getElementById('side_avatar').src = avatar;
+        // Jalankan fetch profile
+        fetch('/api/admin/get-user?ref=' + encodeURIComponent(ADMIN_REF))
+            .then(res => {
+                if (!res.ok) throw new Error('Gagal verifikasi user');
+                return res.json();
+            })
+            .then(data => {
+                if (data && data.nama) {
+                    console.log('✅ Profil terverifikasi:', data.nama);
                     
+                    // Update UI Sidebar
+                    document.getElementById('side_nama').innerText = data.nama.toUpperCase();
+                    var avatar = (data.photo_url && data.photo_url !== "") 
+                                 ? data.photo_url 
+                                 : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(data.nama) + '&background=1e3a8a&color=fff&size=128';
+                    document.getElementById('side_avatar').src = avatar;
+
+                    // SIMPAN ULANG KE SESSION (Agar aman)
                     sessionStorage.setItem('sultan_admin_ref', ADMIN_REF);
-                    sessionStorage.setItem('sultan_admin_username', d.username || '');
+                    
+                    // --- PANGGIL HALAMAN OTOMATIS DI SINI ---
+                    console.log('🚀 Memuat halaman awal secara otomatis...');
+                    changePageAdmin('dayatahanadm'); 
+                    // ----------------------------------------
                 }
             })
-            .catch(err => console.error("Gagal sinkron shell:", err));
-        
-        // Load halaman pertama kali
-        changePageAdmin('dayatahanadm');
+            .catch(err => {
+                console.error('❌ Error Shell:', err);
+                // Jika error, tetap coba panggil halaman atau arahkan ke login
+                changePageAdmin('dayatahanadm'); 
+            });
     }
 
     // 4. SPA ENGINE (PAGE SWITCHER - ANTI BENTROK)
