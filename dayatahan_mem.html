@@ -1,1 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Dashboard - Indikator Kekuatan Perusahaan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- LINK TO EXTERNAL CSS -->
+    <link rel="stylesheet" href="dayatahanmem.css">
+</head>
+<body>
 
+<div class="sultan-ultra-container">
+  <div class="card-command-center animate-in fade-in zoom-in duration-1000">
+    
+    <h1 class="title-center">Indikator Kekuatan Perusahaan</h1>
+    <span class="brand-center">Kanjeng Production</span>
+
+    <div class="led-legend">
+      <div class="led-group">
+        <div class="sphere-3d-big sphere-green"></div>
+        <span class="tooltip-text">SISTEM KEUANGAN SEHAT</span>
+      </div>
+      <span class="v-separator">|</span>
+      <div class="led-group">
+        <div class="sphere-3d-big sphere-yellow"></div>
+        <span class="tooltip-text">SISTEM KEUANGAN WASPADA</span>
+      </div>
+      <span class="v-separator">|</span>
+      <div class="led-group">
+        <div class="sphere-3d-big sphere-red"></div>
+        <span class="tooltip-text">SISTEM KEUANGAN BERBAHAYA</span>
+      </div>
+    </div>
+
+    <div class="hr-sultan-fine"></div>
+
+    <!-- 💎 SALDO PERSONAL USER (POSITIONED PER INSTRUCTION) -->
+    <div class="personal-balance-container">
+        <span class="balance-label">Saldo Anda :</span>
+        <div class="balance-value-box">
+            <span class="rp-symbol-green">Rp.</span>
+            <span id="d_saldo_personal" class="amt-value-green">0</span>
+        </div>
+    </div>
+
+    <div class="status-control-flex">
+      <button id="main_marquee_btn" class="btn-marquee-3d bg-status-green">
+        <div id="marquee_inner" class="marquee-content">MENGANALISA STABILITAS KEUANGAN KANJENG PRODUCTION... MOHON TUNGGU...</div>
+      </button>
+
+      <div class="label-condition-box" id="cond_box_ui">
+          <div id="cond_dot_ui" style="width: 15px; height: 15px; border-radius: 50%;" class="sphere-green"></div>
+          <span id="cond_text_ui">SINKRONISASI...</span>
+      </div>
+    </div>
+
+    <div class="hr-sultan-fine"></div>
+
+    <div class="table-sultan-wrapper">
+        <table class="table-sultan">
+            <thead>
+                <tr>
+                    <th>SALDO BANK</th>
+                    <th>SALDO KOMISI</th>
+                    <th>SALDO IKLAN</th>
+                    <th>SALDO TOPUP</th>
+                    <th>SALDO ADMIN</th>
+                    <th>SALDO PJBAN</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><div class="cell-flex"><span class="rp-left">Rp.</span><span class="val-right" id="d_saldo_bank">0</span></div></td>
+                    <td><div class="cell-flex"><span class="rp-left">Rp.</span><span class="val-right" id="d_saldo_komisi">0</span></div></td>
+                    <td><div class="cell-flex"><span class="rp-left">Rp.</span><span class="val-right" id="d_saldo_iklan">0</span></div></td>
+                    <td><div class="cell-flex"><span class="rp-left">Rp.</span><span class="val-right" id="d_saldo_topup">0</span></div></td>
+                    <td><div class="cell-flex"><span class="rp-left">Rp.</span><span class="val-right" id="d_saldo_admin">0</span></div></td>
+                    <td><div class="cell-flex"><span class="rp-left">Rp.</span><span class="val-right" id="d_saldo_pjban">0</span></div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="desc-justify">
+        Program Take and Give (Mavro) merupakan program saling berbagi antara member yang mana hari ini kamu memberi bantuan (PH), secepatnya kamu akan menerima bantuan (GH). Kemungkinan bantuan yang kamu terima akan lebih besar. (misalnya hari ini membantu 3 orang : (PH)=Rp. 90.000,- | Menerima dari 3 orang : (GH)=Rp. 210.000,-.
+    </div>
+
+    <div class="hr-sultan-fine"></div>
+
+     <div style="margin-top: 30px;">
+        <p style="font-size: 10px; color: #94a3b8; font-weight: 800; text-transform: uppercase; letter-spacing: 2px;">
+            <i class="fas fa-satellite mr-2"></i> Corporate Integrity Real-time Monitoring
+        </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function syncSultanFinancialEngine() {
+    if (!document.getElementById('d_saldo_bank')) {
+        return; 
+    }
+
+    // 🔥 Gunakan USER_REF yang sudah ada di Dashboard Utama
+    google.script.run.withSuccessHandler(function(res) {
+      if (res && res.success) {
+        const elBank = document.getElementById('d_saldo_bank');
+        if (!elBank) return;
+
+        // 1. UPDATE DATA TABEL GLOBAL
+        elBank.innerText = res.saldoBank.toLocaleString('id-ID');
+        document.getElementById('d_saldo_komisi').innerText = res.saldoKomisi.toLocaleString('id-ID');
+        document.getElementById('d_saldo_iklan').innerText = res.saldoIklan.toLocaleString('id-ID');
+        document.getElementById('d_saldo_topup').innerText = res.saldoTopup.toLocaleString('id-ID');
+        document.getElementById('d_saldo_admin').innerText = res.saldoAdmin.toLocaleString('id-ID');
+        document.getElementById('d_saldo_pjban').innerText = res.saldoPjban.toLocaleString('id-ID');
+
+        // 2. UPDATE SALDO PERSONAL USER (SULTAN NEW FEATURE)
+        // Jika data personalSaldo dikirim dari backend
+        if (res.personalSaldo !== undefined) {
+           document.getElementById('d_saldo_personal').innerText = res.personalSaldo.toLocaleString('id-ID');
+        }
+
+        // 3. LOGIKA STATUS & RUNNING TEXT
+        const btn = document.getElementById('main_marquee_btn');
+        const marquee = document.getElementById('marquee_inner');
+        const box = document.getElementById('cond_box_ui');
+        const txt = document.getElementById('cond_text_ui');
+        const dot = document.getElementById('cond_dot_ui');
+
+        if (res.saldoBank > (res.saldoPjban * 2) || (res.saldoPjban === 0 && res.saldoBank > 0)) {
+          btn.className = "btn-marquee-3d bg-status-green";
+          marquee.innerText = "... KEUANGAN GLOBAL KANJENG PRODUCTION : \"STATUS STABIL (SEHAT)\" ...";
+          txt.innerText = "KEUANGAN STABIL (SEHAT)";
+          box.className = "label-condition-box text-cond-green";
+          dot.className = "sphere-green";
+        } else if (res.saldoBank > res.saldoPjban) {
+          btn.className = "btn-marquee-3d bg-status-yellow";
+          marquee.innerText = "... KEUANGAN GLOBAL KANJENG PRODUCTION : \"STATUS TERGANGGU (WASPADA)\" ...";
+          txt.innerText = "KEUANGAN TERGANGGU (WASPADA)";
+          box.className = "label-condition-box text-cond-yellow";
+          dot.className = "sphere-yellow";
+        } else {
+          btn.className = "btn-marquee-3d bg-status-red";
+          marquee.innerText = "... KEUANGAN GLOBAL KANJENG PRODUCTION : \"STATUS RESERVE LIMIT (DARURAT)\" ...";
+          txt.innerText = "KEUANGAN RESERVE LIMIT (DARURAT)";
+          box.className = "label-condition-box text-cond-red";
+          dot.className = "sphere-red";
+        }
+      }
+    }).getGlobalFinancialStats(USER_REF);
+  }
+
+  syncSultanFinancialEngine();
+  SULTAN_HEARTBEAT = setInterval(syncSultanFinancialEngine, 300000); 
+</script>
+
+</body>
+</html>
