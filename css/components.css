@@ -433,7 +433,7 @@ input[type="tel"].input-sultan {
    🎨 SIDEBAR COMPONENTS (ADMIN)
    ============================================ */
 
-/* Sidebar Container - Admin */
+/* Sidebar Container - Admin Version */
 .dashboard-page .sidebar {
   background-color: #0f111a;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -510,12 +510,12 @@ input[type="tel"].input-sultan {
    📊 DYNAMIC CONTENT AREA (ADMIN)
    ============================================ */
 
-/* Content Area Transition - Admin */
+/* Content Area Transition */
 .dashboard-page #dynamic_content_area {
   transition: all 0.3s ease-in-out;
 }
 
-/* Page Loading State - Admin */
+/* Page Loading State */
 .dashboard-page .page-loading {
   opacity: 0.3;
   pointer-events: none;
@@ -595,7 +595,7 @@ input[type="tel"].input-sultan {
    🎨 SIDEBAR COMPONENTS (MEMBER)
    ============================================ */
 
-/* Sidebar Container - Member (300px width) */
+/* Sidebar Container - Member Version (300px width) */
 .member-page .sidebar {
   background-color: #0f111a;
   transition: all 0.3s ease;
@@ -606,7 +606,15 @@ input[type="tel"].input-sultan {
   margin-left: -310px;
 }
 
-/* Menu Items - Member */
+/* Submenu - Member Version */
+.member-page .submenu {
+  display: none;
+  background-color: #1a1d2b;
+  border-radius: 12px;
+  margin: 4px 8px;
+}
+
+/* Menu Item - Member Version */
 .member-page .menu-item {
   color: #9ca3af;
   transition: all 0.2s;
@@ -618,16 +626,8 @@ input[type="tel"].input-sultan {
   color: #ffffff;
 }
 
-/* Submenu Container - Member */
-.member-page .submenu {
-  display: none;
-  background-color: #1a1d2b;
-  border-radius: 12px;
-  margin: 4px 8px;
-}
-
 /* ============================================
-   🌟 TOMBOL 3D GOLD BONAFIT (MEMBER EXCLUSIVE)
+   💰 TOMBOL 3D GOLD BONAFIT (MEMBER)
    ============================================ */
 
 .btn-take-give {
@@ -654,13 +654,13 @@ input[type="tel"].input-sultan {
 }
 
 .btn-take-give:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 0 #8b6508, 0 10px 25px rgba(0, 0, 0, 0.6);
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #8b6508, 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
 .btn-take-give:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 0 #8b6508, 0 4px 10px rgba(0, 0, 0, 0.4);
+  transform: translateY(4px);
+  box-shadow: 0 0 0 #8b6508, 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 /* ============================================
@@ -699,6 +699,7 @@ input[type="tel"].input-sultan {
   text-transform: uppercase;
 }
 
+/* Table Column Styles */
 .col-no {
   width: 35px;
   text-align: center;
@@ -726,10 +727,7 @@ input[type="tel"].input-sultan {
   font-weight: bold;
 }
 
-/* ============================================
-   🎨 HELPER CLASSES (MEMBER)
-   ============================================ */
-
+/* Table Text Colors */
 .text-emerald {
   color: #059669;
 }
@@ -747,12 +745,8 @@ input[type="tel"].input-sultan {
   cursor: pointer;
 }
 
-.link-gold-premium:hover {
-  color: #d4af37;
-}
-
 /* ============================================
-   💎 SULTAN FLOATING HOVER TOOLTIP
+   💎 SULTAN FLOATING HOVER TOOLTIP (MEMBER)
    ============================================ */
 
 .sultan-tooltip-container {
@@ -810,21 +804,17 @@ input[type="tel"].input-sultan {
 }
 
 /* ============================================
-   🔐 SULTAN PIN MODAL CUSTOM STYLE
+   🔐 SULTAN PIN MODAL CUSTOM STYLE (MEMBER)
    ============================================ */
 
 .sultan-pin-header {
-  background-color: #C4E0D9;
+  background-color: #c4e0d9;
   color: black;
   padding: 15px 20px;
   border-radius: 15px 15px 0 0;
   text-align: left;
   margin: -1.25em -1.25em 15px -1.25em;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  font-weight: 900;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
 .sultan-btn-small {
@@ -835,8 +825,8 @@ input[type="tel"].input-sultan {
   height: auto !important;
 }
 
-/* SweetAlert2 input styling untuk sultan modal */
-.swal2-input.sultan-btn-small {
+/* SweetAlert2 Input Styling for Member Modals */
+.member-page .swal2-input.sultan-btn-small {
   flex: 1;
   max-width: 180px;
   height: 35px;
@@ -863,7 +853,7 @@ input[type="tel"].input-sultan {
 }
 
 /* ============================================
-   📱 RESPONSIVE - MEMBER DASHBOARD COMPONENTS
+   📱 RESPONSIVE - MEMBER COMPONENTS
    ============================================ */
 
 @media (max-width: 768px) {
@@ -871,17 +861,10 @@ input[type="tel"].input-sultan {
     margin-left: -310px;
   }
 
-  .member-page .sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100%;
-    z-index: 999;
-  }
-
   .btn-take-give {
     font-size: 10px;
     padding: 10px 12px;
+    margin: 10px 12px;
   }
 
   .mavro-table {
@@ -894,9 +877,14 @@ input[type="tel"].input-sultan {
   }
 
   .tooltip-box {
-    width: 160px;
-    margin-left: -80px;
+    width: 180px;
     font-size: 8px;
+    margin-left: -90px;
+  }
+
+  .sultan-pin-header {
+    padding: 12px 15px;
+    font-size: 12px;
   }
 }
 
