@@ -437,39 +437,51 @@ input[type="tel"].input-sultan {
    👑 DASHBOARD ADMIN - COMPONENTS EXTENSIONS
    Tambahan component khusus dashboard admin
    ============================================ */
-/* ============================================
-   🟢 SWEETALERT CUSTOM HEADER (ADMIN)
-   ============================================ */
-
-/* Menghilangkan padding agar header bisa full ke pinggir */
+/* Container Utama Popup */
 .swal-popup-no-padding {
-  padding: 0 0 1.5em 0 !important;
+  display: flex !important;
+  flex-direction: column !important; /* Mengatur urutan ke bawah */
+  padding: 0 !important;
   overflow: hidden !important;
-  border-radius: 1.25rem !important; /* Biar lengkungannya sama dengan button kamu */
+  border-radius: 1.25rem !important;
 }
 
-/* Header warna hijau */
+/* Judul Jadi Header Paling Atas */
 .swal-header-hijau {
-  background: linear-gradient(135deg, #059669 0%, #064e3b 100%) !important; /* Pakai gradient biar senada sama button .btn-sultan kamu */
+  order: -1 !important; /* MEMAKSA JUDUL KE PALING ATAS */
+  background: linear-gradient(135deg, #059669 0%, #064e3b 100%) !important;
   color: white !important;
   width: 100%;
-  margin: 0 0 1em 0 !important;
-  padding: 25px 0 !important;
+  margin: 0 !important;
+  
+  /* --- ATUR TINGGI DI SINI --- */
+  height: 80px; 
+  /* --------------------------- */
+  
+  display: flex !important;
+  align-items: center;   /* Teks tengah vertikal */
+  justify-content: center; /* Teks tengah horizontal */
+  
   font-size: 18px !important;
   font-weight: 800 !important;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
-/* Perbaikan jarak konten karena padding popup di-nol-kan */
-.swal2-html-container {
-  margin: 1em 1.5em 0.5em !important;
-  font-weight: 600 !important;
-  color: #475569 !important;
+/* Atur jarak Icon (Tanda Seru) */
+.swal2-icon {
+  margin: 20px auto 10px auto !important;
 }
 
-.swal2-icon {
-  margin-top: 1.5em !important;
+/* Atur jarak teks pertanyaan */
+.swal2-html-container {
+  margin: 10px 1.5em 20px !important;
+  font-weight: 600 !important;
+}
+
+/* Atur jarak tombol bawah */
+.swal2-actions {
+  margin-bottom: 20px !important;
 }
 /* ============================================
    🎨 SIDEBAR COMPONENTS (ADMIN)
