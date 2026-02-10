@@ -257,12 +257,12 @@ body.register-page {
 
 
 /* ============================================
-   🏛️ DASHBOARD - GLOBAL EXTENSIONS
+   👑 DASHBOARD ADMIN - GLOBAL EXTENSIONS
    Tambahan styling khusus halaman dashboard admin
    ISOLATED dengan .dashboard-page class
    ============================================ */
 
-/* Body override untuk Dashboard - ISOLATED */
+/* Body override untuk Dashboard Admin - ISOLATED */
 body.dashboard-page {
   font-family: 'Inter', sans-serif !important;
   background-color: #f1f5f9 !important;
@@ -276,7 +276,7 @@ body.dashboard-page {
   min-height: 100vh;
 }
 
-/* Override global typography untuk dashboard */
+/* Override global typography untuk dashboard admin */
 body.dashboard-page h1,
 body.dashboard-page h2 {
   /* Reset ke default, biar Tailwind yang handle */
@@ -289,7 +289,7 @@ body.dashboard-page h2 {
   font-style: normal !important;
 }
 
-/* Override global container untuk dashboard */
+/* Override global container untuk dashboard admin */
 body.dashboard-page .container {
   background: none !important;
   padding: 0 !important;
@@ -304,5 +304,54 @@ body.dashboard-page .container {
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
 
 /* ============================================
-   END OF DASHBOARD GLOBAL EXTENSIONS
+   END OF DASHBOARD ADMIN GLOBAL EXTENSIONS
+   ============================================ */
+
+
+/* ============================================
+   💎 MEMBER DASHBOARD - GLOBAL EXTENSIONS
+   Tambahan styling khusus halaman member dashboard
+   ISOLATED dengan .member-page class
+   ============================================ */
+
+/* Body override untuk Member Dashboard - ISOLATED */
+body.member-page {
+  font-family: 'Inter', sans-serif !important;
+  background-color: #f1f5f9 !important;
+  background: #f1f5f9 !important; /* Override gradient */
+  overflow-x: hidden;
+  /* Reset flexbox centering dari global body */
+  display: block !important;
+  justify-content: initial !important;
+  align-items: initial !important;
+  padding: 0 !important;
+  min-height: 100vh;
+}
+
+/* Override global typography untuk member dashboard */
+body.member-page h1,
+body.member-page h2 {
+  /* Reset ke default, biar Tailwind yang handle */
+  text-align: left !important;
+  color: inherit !important;
+  margin-bottom: initial !important;
+  font-size: initial !important;
+  font-weight: inherit !important;
+  text-transform: none !important;
+  font-style: normal !important;
+}
+
+/* Override global container untuk member dashboard */
+body.member-page .container {
+  background: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  max-width: none !important;
+  border: none !important;
+  animation: none !important;
+}
+
+/* ============================================
+   END OF MEMBER DASHBOARD GLOBAL EXTENSIONS
    ============================================ */
