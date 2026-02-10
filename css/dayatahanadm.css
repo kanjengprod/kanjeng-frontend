@@ -28,9 +28,10 @@
 
 /* 3. JUDUL & BRAND */
 .title-center { 
-  font-size: 32px; 
+  font-size: 60px; 
   font-weight: 900; 
-  color: #0f172a; 
+  color: #0f172a;
+  text-align: center;
   text-transform: uppercase; 
   letter-spacing: 1px; 
   margin-bottom: 5px; 
