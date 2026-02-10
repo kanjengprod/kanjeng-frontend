@@ -455,16 +455,18 @@ input[type="tel"].input-sultan {
   margin: 0 !important;
   
   /* --- ATUR TINGGI DI SINI --- */
-  height: 80px; 
+  height: 40px; 
   /* --------------------------- */
   
   display: flex !important;
-  align-items: center;   /* Teks tengah vertikal */
-  justify-content: center; /* Teks tengah horizontal */
+  align-items: center;       /* Tulisan di tengah secara vertikal */
+  justify-content: flex-start; /* RATA KIRI */
+  padding-left: 10px !important; /* INDENSI 10PX */
+  box-sizing: border-box;    /* Agar padding tidak merusak lebar */
   
-  font-size: 18px !important;
+  font-size: 16px !important;
   font-weight: 800 !important;
-  text-transform: uppercase;
+  text-transform: uppercase; /* HURUF BESAR SEMUA */
   letter-spacing: 1px;
 }
 
