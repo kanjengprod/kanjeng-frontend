@@ -52,7 +52,7 @@ input::placeholder {
 }
 
 /* ============================================
-   🔘 BUTTONS
+   📘 BUTTONS
    ============================================ */
 .btn,
 button[type="submit"],
@@ -124,7 +124,7 @@ button:disabled {
   text-decoration: underline;
 }
 
-/* 🔑 Forgot Password/Pin Links - Special Styling */
+/* 🔒 Forgot Password/Pin Links - Special Styling */
 .register-link a[href*="forgot"] {
   color: #64748b;
   font-size: 10px;
@@ -425,27 +425,27 @@ input[type="tel"].input-sultan {
 
 
 /* ============================================
-   👑 DASHBOARD - COMPONENTS EXTENSIONS
+   👑 DASHBOARD ADMIN - COMPONENTS EXTENSIONS
    Tambahan component khusus dashboard admin
    ============================================ */
 
 /* ============================================
-   🎨 SIDEBAR COMPONENTS
+   🎨 SIDEBAR COMPONENTS (ADMIN)
    ============================================ */
 
-/* Sidebar Container */
-.sidebar {
+/* Sidebar Container - Admin */
+.dashboard-page .sidebar {
   background-color: #0f111a;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   width: 280px;
 }
 
-.sidebar-hide {
+.dashboard-page .sidebar-hide {
   margin-left: -280px;
 }
 
-/* Category Labels */
-.category-label {
+/* Category Labels - Admin */
+.dashboard-page .category-label {
   font-size: 10px;
   font-weight: 800;
   color: #4b5563;
@@ -454,8 +454,8 @@ input[type="tel"].input-sultan {
   margin: 1.5rem 0 0.5rem 1.25rem;
 }
 
-/* Menu Items */
-.menu-item {
+/* Menu Items - Admin */
+.dashboard-page .menu-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -470,20 +470,20 @@ input[type="tel"].input-sultan {
   border: 1px solid transparent;
 }
 
-.menu-item:hover {
+.dashboard-page .menu-item:hover {
   background-color: #1e293b;
   color: #ffffff;
   border-color: #3b82f6;
 }
 
-.menu-item.active {
+.dashboard-page .menu-item.active {
   background-color: #1e293b;
   color: #3b82f6;
   font-weight: 700;
 }
 
-/* Submenu Container */
-.submenu {
+/* Submenu Container - Admin */
+.dashboard-page .submenu {
   display: none;
   background-color: #161926;
   margin: 0.25rem 1.25rem 0.75rem 2rem;
@@ -491,7 +491,7 @@ input[type="tel"].input-sultan {
   border-left: 2px solid #1e293b;
 }
 
-.submenu a {
+.dashboard-page .submenu a {
   display: block;
   padding: 0.65rem 1.25rem;
   font-size: 11px;
@@ -501,42 +501,42 @@ input[type="tel"].input-sultan {
   text-decoration: none;
 }
 
-.submenu a:hover {
+.dashboard-page .submenu a:hover {
   color: #3b82f6;
   padding-left: 1.5rem;
 }
 
 /* ============================================
-   📊 DYNAMIC CONTENT AREA
+   📊 DYNAMIC CONTENT AREA (ADMIN)
    ============================================ */
 
-/* Content Area Transition */
-#dynamic_content_area {
+/* Content Area Transition - Admin */
+.dashboard-page #dynamic_content_area {
   transition: all 0.3s ease-in-out;
 }
 
-/* Page Loading State */
-.page-loading {
+/* Page Loading State - Admin */
+.dashboard-page .page-loading {
   opacity: 0.3;
   pointer-events: none;
   filter: blur(4px);
 }
 
 /* ============================================
-   ⏰ LIVE CLOCK COMPONENT
+   ⏰ LIVE CLOCK COMPONENT (ADMIN)
    ============================================ */
 
-#live_clock {
+.dashboard-page #live_clock {
   font-family: 'Inter', monospace;
   font-feature-settings: "tnum";
 }
 
 /* ============================================
-   📱 RESPONSIVE - DASHBOARD COMPONENTS
+   📱 RESPONSIVE - DASHBOARD ADMIN COMPONENTS
    ============================================ */
 
 @media (max-width: 768px) {
-  .sidebar {
+  .dashboard-page .sidebar {
     position: fixed;
     left: 0;
     top: 0;
@@ -544,43 +544,362 @@ input[type="tel"].input-sultan {
     z-index: 999;
   }
 
-  .sidebar-hide {
+  .dashboard-page .sidebar-hide {
     margin-left: -280px;
   }
 
-  .category-label {
+  .dashboard-page .category-label {
     font-size: 9px;
     margin: 1rem 0 0.5rem 1rem;
   }
 
-  .menu-item {
+  .dashboard-page .menu-item {
     padding: 0.65rem 0.85rem;
   }
 
-  .menu-item span {
+  .dashboard-page .menu-item span {
     font-size: 10px;
   }
 
-  .submenu {
+  .dashboard-page .submenu {
     margin: 0.25rem 1rem 0.5rem 1.5rem;
   }
 
-  .submenu a {
+  .dashboard-page .submenu a {
     font-size: 10px;
     padding: 0.5rem 1rem;
   }
 }
 
 @media (max-width: 480px) {
-  .sidebar {
+  .dashboard-page .sidebar {
     width: 260px;
   }
 
-  .sidebar-hide {
+  .dashboard-page .sidebar-hide {
     margin-left: -260px;
   }
 }
 
 /* ============================================
-   END OF DASHBOARD COMPONENTS EXTENSIONS
+   END OF DASHBOARD ADMIN COMPONENTS EXTENSIONS
+   ============================================ */
+
+
+/* ============================================
+   💎 MEMBER DASHBOARD - COMPONENTS EXTENSIONS
+   Tambahan component khusus member dashboard
+   ============================================ */
+
+/* ============================================
+   🎨 SIDEBAR COMPONENTS (MEMBER)
+   ============================================ */
+
+/* Sidebar Container - Member (300px width) */
+.member-page .sidebar {
+  background-color: #0f111a;
+  transition: all 0.3s ease;
+  width: 300px;
+}
+
+.member-page .sidebar-hide {
+  margin-left: -310px;
+}
+
+/* Menu Items - Member */
+.member-page .menu-item {
+  color: #9ca3af;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.member-page .menu-item:hover {
+  background-color: #1e2235;
+  color: #ffffff;
+}
+
+/* Submenu Container - Member */
+.member-page .submenu {
+  display: none;
+  background-color: #1a1d2b;
+  border-radius: 12px;
+  margin: 4px 8px;
+}
+
+/* ============================================
+   🌟 TOMBOL 3D GOLD BONAFIT (MEMBER EXCLUSIVE)
+   ============================================ */
+
+.btn-take-give {
+  position: relative;
+  background: linear-gradient(180deg, #ffd700 0%, #d4af37 50%, #b8860b 100%);
+  border: 1px solid #996515;
+  border-radius: 10px;
+  padding: 12px 15px;
+  color: #ffffff !important;
+  font-weight: 900;
+  font-size: 11px;
+  text-align: center;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 0 #8b6508, 0 8px 20px rgba(0, 0, 0, 0.5);
+  transition: all 0.1s ease;
+  margin: 12px 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.btn-take-give:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #8b6508, 0 10px 25px rgba(0, 0, 0, 0.6);
+}
+
+.btn-take-give:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #8b6508, 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================
+   📋 MODAL TABLE STYLE (MEMBER)
+   ============================================ */
+
+.mavro-modal-desc {
+  font-size: 10px;
+  color: #475569;
+  line-height: 1.6;
+  text-align: justify;
+  margin-bottom: 15px;
+  padding: 0 5px;
+}
+
+.mavro-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  border: 1px solid #cbd5e1;
+  table-layout: fixed;
+}
+
+.mavro-table th,
+.mavro-table td {
+  border: 1px solid #cbd5e1;
+  padding: 10px 8px;
+  overflow: visible !important;
+  position: relative;
+}
+
+.mavro-table th {
+  background-color: #f1f5f9;
+  color: #1e293b;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.col-no {
+  width: 35px;
+  text-align: center;
+}
+
+.col-req {
+  text-align: left;
+  font-weight: 600;
+  color: #334155;
+}
+
+.col-val {
+  text-align: right;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+}
+
+.col-val-bool {
+  text-align: center;
+  font-weight: 800;
+}
+
+.col-status {
+  text-align: center;
+  font-weight: bold;
+}
+
+/* ============================================
+   🎨 HELPER CLASSES (MEMBER)
+   ============================================ */
+
+.text-emerald {
+  color: #059669;
+}
+
+.text-slate {
+  color: #94a3b8;
+  font-style: italic;
+  font-weight: normal;
+}
+
+.link-gold-premium {
+  color: #b8860b;
+  font-weight: 900;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.link-gold-premium:hover {
+  color: #d4af37;
+}
+
+/* ============================================
+   💎 SULTAN FLOATING HOVER TOOLTIP
+   ============================================ */
+
+.sultan-tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-box {
+  visibility: hidden;
+  width: 200px;
+  background-color: rgba(15, 23, 42, 0.98);
+  color: #fff;
+  text-align: center;
+  border-radius: 10px;
+  padding: 10px;
+  position: absolute;
+  z-index: 9999;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+  border: 1px solid #facc15;
+  font-size: 9px;
+  line-height: 1.4;
+  pointer-events: none;
+  transform: translateY(10px);
+}
+
+.tooltip-box::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #facc15 transparent transparent transparent;
+}
+
+.sultan-tooltip-container:hover .tooltip-box {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.info-icon-sultan {
+  color: #3b82f6;
+  font-size: 11px;
+  margin-left: 6px;
+  cursor: pointer;
+  position: relative;
+  z-index: 10;
+}
+
+/* ============================================
+   🔐 SULTAN PIN MODAL CUSTOM STYLE
+   ============================================ */
+
+.sultan-pin-header {
+  background-color: #C4E0D9;
+  color: black;
+  padding: 15px 20px;
+  border-radius: 15px 15px 0 0;
+  text-align: left;
+  margin: -1.25em -1.25em 15px -1.25em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  font-weight: 900;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sultan-btn-small {
+  padding: 8px 25px !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  border-radius: 8px !important;
+  height: auto !important;
+}
+
+/* SweetAlert2 input styling untuk sultan modal */
+.swal2-input.sultan-btn-small {
+  flex: 1;
+  max-width: 180px;
+  height: 35px;
+  margin: 0;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* ============================================
+   📊 DYNAMIC CONTENT AREA (MEMBER)
+   ============================================ */
+
+.member-page #dynamic_content_area {
+  transition: all 0.3s ease-in-out;
+}
+
+.member-page .page-loading {
+  opacity: 0.3;
+  pointer-events: none;
+  filter: blur(4px);
+}
+
+/* ============================================
+   📱 RESPONSIVE - MEMBER DASHBOARD COMPONENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+  .member-page .sidebar-hide {
+    margin-left: -310px;
+  }
+
+  .member-page .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    z-index: 999;
+  }
+
+  .btn-take-give {
+    font-size: 10px;
+    padding: 10px 12px;
+  }
+
+  .mavro-table {
+    font-size: 10px;
+  }
+
+  .mavro-table th,
+  .mavro-table td {
+    padding: 8px 6px;
+  }
+
+  .tooltip-box {
+    width: 160px;
+    margin-left: -80px;
+    font-size: 8px;
+  }
+}
+
+/* ============================================
+   END OF MEMBER DASHBOARD COMPONENTS EXTENSIONS
    ============================================ */
