@@ -267,6 +267,15 @@ button:focus-visible {
 }
 
 /* ============================================
+   🎯 SUBMENU BASE (GLOBAL)
+   ============================================ */
+
+/* Base submenu style - applies to all pages */
+.submenu {
+  display: none;
+}
+
+/* ============================================
    END OF COMPONENTS.CSS
    ============================================ */
 
