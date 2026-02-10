@@ -95,6 +95,7 @@
 </div>
 
 <script>
+  // ✅ SULTAN FINANCIAL ENGINE - WORKER EDITION
   function syncSultanFinancialEngine() {
     // 🛡️ PROTEKSI: Cek apakah tabel masih ada di layar
     if (!document.getElementById('d_saldo_bank')) {
@@ -102,68 +103,90 @@
         return; 
     }
 
-    // ✅ BARU (WORKER)
-const USER_REF = new URLSearchParams(window.location.search).get('ref') || '';
-
-fetch(`/api/admin/financial-stats?ref=${USER_REF}`)
-  .then(res => res.json())
-  .then(data => {
-    if (data && data.success) {
-      // Update UI sama seperti sebelumnya
-      document.getElementById('d_saldo_bank').innerText = data.saldoBank.toLocaleString('id-ID');
-      document.getElementById('d_saldo_komisi').innerText = data.saldoKomisi.toLocaleString('id-ID');
-      // ... dst
+    // ✅ AMBIL REF DARI SESSION STORAGE (BUKAN DARI URL!)
+    const USER_REF = sessionStorage.getItem('sultan_admin_ref') || '';
+    
+    if (!USER_REF) {
+      console.error('❌ No admin ref found in session');
+      return;
     }
-  })
-  .catch(err => console.error('❌ Error:', err));
-      
-    google.script.run.withSuccessHandler(function(res) {
-      if (res && res.success) {
-        // Cek lagi sebelum update (mencegah error saat pindah halaman mendadak)
-        const elBank = document.getElementById('d_saldo_bank');
-        if (!elBank) return;
 
-        elBank.innerText = res.saldoBank.toLocaleString('id-ID');
-        document.getElementById('d_saldo_komisi').innerText = res.saldoKomisi.toLocaleString('id-ID');
-        document.getElementById('d_saldo_iklan').innerText = res.saldoIklan.toLocaleString('id-ID');
-        document.getElementById('d_saldo_topup').innerText = res.saldoTopup.toLocaleString('id-ID');
-        document.getElementById('d_saldo_admin').innerText = res.saldoAdmin.toLocaleString('id-ID');
-        document.getElementById('d_saldo_pjban').innerText = res.saldoPjban.toLocaleString('id-ID');
+    console.log('💰 Fetching financial stats for ref:', USER_REF);
 
-        const btn = document.getElementById('main_marquee_btn');
-        const marquee = document.getElementById('marquee_inner');
-        const box = document.getElementById('cond_box_ui');
-        const txt = document.getElementById('cond_text_ui');
-        const dot = document.getElementById('cond_dot_ui');
-
-        if (res.saldoBank > (res.saldoPjban * 2) || (res.saldoPjban === 0 && res.saldoBank > 0)) {
-          btn.className = "btn-marquee-3d bg-status-green";
-          marquee.innerText = "... KEUANGAN GLOBAL KANJENG PRODUCTION : \"STATUS STABIL (SEHAT)\" ...";
-          txt.innerText = "KEUANGAN STABIL (SEHAT)";
-          box.className = "label-condition-box text-cond-green";
-          dot.className = "sphere-green";
-        } else if (res.saldoBank > res.saldoPjban) {
-          btn.className = "btn-marquee-3d bg-status-yellow";
-          marquee.innerText = "... KEUANGAN GLOBAL KANJENG PRODUCTION : \"STATUS TERGANGGU (WASPADA)\" ...";
-          txt.innerText = "KEUANGAN TERGANGGU (WASPADA)";
-          box.className = "label-condition-box text-cond-yellow";
-          dot.className = "sphere-yellow";
-        } else {
-          btn.className = "btn-marquee-3d bg-status-red";
-          marquee.innerText = "... KEUANGAN GLOBAL KANJENG PRODUCTION : \"STATUS RESERVE LIMIT (DARURAT)\" ...";
-          txt.innerText = "KEUANGAN RESERVE LIMIT (DARURAT)";
-          box.className = "label-condition-box text-cond-red";
-          dot.className = "sphere-red";
+    // ✅ FETCH KE WORKER API
+    fetch(`/api/admin/financial-stats?ref=${encodeURIComponent(USER_REF)}`)
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('HTTP ' + res.status);
         }
-      }
-    }).getGlobalFinancialStats();
+        return res.json();
+      })
+      .then(res => {
+        if (res && res.success) {
+          console.log('✅ Financial data received');
+          
+          // Cek lagi sebelum update (mencegah error saat pindah halaman mendadak)
+          const elBank = document.getElementById('d_saldo_bank');
+          if (!elBank) return;
+
+          // Update tabel
+          elBank.innerText = res.saldoBank.toLocaleString('id-ID');
+          document.getElementById('d_saldo_komisi').innerText = res.saldoKomisi.toLocaleString('id-ID');
+          document.getElementById('d_saldo_iklan').innerText = res.saldoIklan.toLocaleString('id-ID');
+          document.getElementById('d_saldo_topup').innerText = res.saldoTopup.toLocaleString('id-ID');
+          document.getElementById('d_saldo_admin').innerText = res.saldoAdmin.toLocaleString('id-ID');
+          document.getElementById('d_saldo_pjban').innerText = res.saldoPjban.toLocaleString('id-ID');
+
+          // Update status UI
+          const btn = document.getElementById('main_marquee_btn');
+          const marquee = document.getElementById('marquee_inner');
+          const box = document.getElementById('cond_box_ui');
+          const txt = document.getElementById('cond_text_ui');
+          const dot = document.getElementById('cond_dot_ui');
+
+          if (res.saldoBank > (res.saldoPjban * 2) || (res.saldoPjban === 0 && res.saldoBank > 0)) {
+            btn.className = "btn-marquee-3d bg-status-green";
+            marquee.innerText = "... KEUANGAN GLOBAL KANJENG PRODUCTION : \"STATUS STABIL (SEHAT)\" ...";
+            txt.innerText = "KEUANGAN STABIL (SEHAT)";
+            box.className = "label-condition-box text-cond-green";
+            dot.className = "sphere-green";
+          } else if (res.saldoBank > res.saldoPjban) {
+            btn.className = "btn-marquee-3d bg-status-yellow";
+            marquee.innerText = "... KEUANGAN GLOBAL KANJENG PRODUCTION : \"STATUS TERGANGGU (WASPADA)\" ...";
+            txt.innerText = "KEUANGAN TERGANGGU (WASPADA)";
+            box.className = "label-condition-box text-cond-yellow";
+            dot.className = "sphere-yellow";
+          } else {
+            btn.className = "btn-marquee-3d bg-status-red";
+            marquee.innerText = "... KEUANGAN GLOBAL KANJENG PRODUCTION : \"STATUS RESERVE LIMIT (DARURAT)\" ...";
+            txt.innerText = "KEUANGAN RESERVE LIMIT (DARURAT)";
+            box.className = "label-condition-box text-cond-red";
+            dot.className = "sphere-red";
+          }
+        } else {
+          console.error('❌ Invalid response:', res);
+        }
+      })
+      .catch(err => {
+        console.error('❌ Fetch error:', err);
+        
+        // Tampilkan error di UI
+        const txt = document.getElementById('cond_text_ui');
+        if (txt) {
+          txt.innerText = 'ERROR SINKRONISASI';
+        }
+      });
   }
 
-  // Masukkan ke variabel Global Dashboard agar bisa dimatikan saat pindah halaman
+  // Jalankan pertama kali
   syncSultanFinancialEngine();
-  SULTAN_HEARTBEAT = setInterval(syncSultanFinancialEngine, 15000); // 15 detik sekali agar hemat server
+  
+  // Auto-refresh setiap 15 detik
+  if (typeof SULTAN_HEARTBEAT !== 'undefined') {
+    clearInterval(SULTAN_HEARTBEAT);
+  }
+  SULTAN_HEARTBEAT = setInterval(syncSultanFinancialEngine, 15000);
 </script>
 
 </body>
 </html>
-
