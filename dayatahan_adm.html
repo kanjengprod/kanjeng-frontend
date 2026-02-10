@@ -1,0 +1,103 @@
+<!-- HEADER HALAMAN -->
+<div class="p-6">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
+        <h1 class="text-2xl font-black text-slate-800 uppercase tracking-tight">📊 Daya Tahan Bisnis</h1>
+        <p class="text-slate-500 text-sm">Monitoring parameter vital dan keberlanjutan ekosistem Sultan.</p>
+    </div>
+
+    <!-- STATS CARDS -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="bg-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-blue-200">
+            <p class="text-blue-100 text-xs font-bold uppercase mb-1">Total Likuiditas</p>
+            <h3 id="stat_likuiditas" class="text-3xl font-black">Rp 0</h3>
+        </div>
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+            <p class="text-slate-400 text-xs font-bold uppercase mb-1">Indeks Resiko</p>
+            <h3 id="stat_resiko" class="text-3xl font-black text-slate-800">0.0%</h3>
+        </div>
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+            <p class="text-slate-400 text-xs font-bold uppercase mb-1">Skor Keamanan</p>
+            <h3 id="stat_keamanan" class="text-3xl font-black text-green-600">SECURE</h3>
+        </div>
+    </div>
+
+    <!-- AREA DATA (TABLE) -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+            <span class="text-xs font-black text-slate-500 uppercase">Rincian Parameter Vital</span>
+            <button onclick="loadDataDayaTahan()" class="text-blue-600 text-xs font-bold hover:underline">RELOAD DATA</button>
+        </div>
+        <div class="p-0">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-50 text-slate-400 text-[10px] uppercase font-bold">
+                    <tr>
+                        <th class="p-4">Parameter</th>
+                        <th class="p-4">Nilai</th>
+                        <th class="p-4">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="tabel_daya_tahan" class="text-sm text-slate-600">
+                    <tr>
+                        <td colspan="3" class="p-10 text-center text-slate-400 italic">Mengambil data dari server...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+/**
+ * SCRIPT KHUSUS HALAMAN DAYA TAHAN
+ * Dibungkus otomatis oleh Dashboard Utama agar tidak bentrok
+ */
+
+function initDayaTahan() {
+    console.log("🚀 Halaman Daya Tahan Dimuat");
+    loadDataDayaTahan();
+}
+
+function loadDataDayaTahan() {
+    // Tampilkan loading di tabel
+    document.getElementById('tabel_daya_tahan').innerHTML = '<tr><td colspan="3" class="p-10 text-center">Sedang memuat...</td></tr>';
+
+    /**
+     * PENTING:
+     * Karena sekarang pakai Worker, kamu harus menembak API.
+     * Misal kamu punya fungsi di GAS namanya 'getDayaTahanData'
+     * Kamu harus panggil via Worker API kamu (misal /api/login tapi kirim action: 'getDayaTahanData')
+     */
+     
+    // CONTOH TEMBAK DATA KE GAS (Lewat Worker)
+    fetch('/api/login', { // Menggunakan endpoint login worker sebagai proxy ke GAS
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            action: "getDayaTahanData", // Nama fungsi di GAS kamu
+            ref: typeof ADMIN_REF !== 'undefined' ? ADMIN_REF : ''
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        // Contoh Update UI (Sesuaikan dengan format data GAS kamu)
+        if(data.success) {
+            document.getElementById('stat_likuiditas').innerText = data.totalLikuiditas;
+            renderTabel(data.listData);
+        }
+    })
+    .catch(err => {
+        console.error("Gagal load data:", err);
+        document.getElementById('tabel_daya_tahan').innerHTML = '<tr><td colspan="3" class="p-10 text-center text-red-500">Gagal mengambil data dari GAS</td></tr>';
+    });
+}
+
+function renderTabel(list) {
+    let html = '';
+    // Logika render tabel kamu di sini...
+    document.getElementById('tabel_daya_tahan').innerHTML = html;
+}
+
+// PANGGIL INIT SAAT HALAMAN SELESAI DI-INJECT
+// Kita beri sedikit delay agar DOM siap
+setTimeout(initDayaTahan, 100);
+</script>
