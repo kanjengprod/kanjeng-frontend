@@ -251,6 +251,7 @@
     }
 
     // 4. SPA ENGINE (PAGE SWITCHER) - TIDAK DIUBAH! TETAP GAS!
+    // 4. SPA ENGINE (PAGE SWITCHER) - MODIFIED FOR WORKER!
     function changePageAdmin(pageName) {
         const container = document.getElementById('dynamic_content_area');
         const headerTitle = document.getElementById('header_user_name');
@@ -259,13 +260,18 @@
         container.classList.add('page-loading');
         headerTitle.innerText = "⏳ MEMPROSES " + pageName.toUpperCase().replace('_', ' ') + "...";
 
-        // ✅ TETAP PAKAI GAS! (untuk halaman anak)
-        google.script.run
-            .withFailureHandler(err => {
-                container.classList.remove('page-loading');
-                Swal.fire('Crash!', 'Gagal memuat halaman: ' + pageName, 'error');
+        // MAPPING NAMA HALAMAN KE NAMA FILE DI GITHUB
+        // Jika di menu panggil 'dayatahanadm', maka cari file 'dayatahan_adm.html'
+        let fileName = pageName;
+        if (pageName === 'dayatahanadm') fileName = 'dayatahan_adm';
+        
+        // Ambil file HTML dari Worker (yang diteruskan ke GitHub)
+        fetch('/' + fileName + '.html')
+            .then(response => {
+                if (!response.ok) throw new Error('File ' + fileName + '.html tidak ditemukan di GitHub');
+                return response.text();
             })
-            .withSuccessHandler(function(htmlContent) {
+            .then(htmlContent => {
                 container.classList.remove('page-loading');
                 container.innerHTML = htmlContent;
                 
@@ -282,7 +288,7 @@
                     } catch (e) { console.error("Script Error in " + pageName, e); }
                 }
 
-                // --- AUTO-INITIALIZER (SULTAN SYNC) ---
+                // --- AUTO-INITIALIZER ---
                 setTimeout(() => {
                     const inits = [
                         'initManageMember', 'initManageProducts', 'loadUploadHistory',
@@ -294,7 +300,16 @@
                     inits.forEach(fn => { if (typeof window[fn] === 'function') window[fn](); });
                 }, 300);
 
-            }).getPageContentAdmin(pageName, ADMIN_REF);
+            })
+            .catch(err => {
+                container.classList.remove('page-loading');
+                console.error('Error loading page:', err);
+                container.innerHTML = `<div class="p-10 text-center text-red-500 font-bold">
+                    <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
+                    <p>Gagal memuat halaman: ${fileName}.html</p>
+                    <p class="text-xs mt-2 font-normal">Pastikan file ini sudah di-upload ke GitHub Pages</p>
+                </div>`;
+            });
     }
 
     // 🆕 5. HEARTBEAT ENGINE (WORKER API) - MODIFIED!
