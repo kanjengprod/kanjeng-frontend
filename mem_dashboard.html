@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Dashboard - Sultan Area</title>
+    
+    <!-- External Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom CSS Modular -->
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body class="dashboard-page">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- SIDEBAR -->
+        <aside id="sidebar" class="sidebar w-[300px] flex-shrink-0 flex flex-col z-50 shadow-2xl overflow-y-auto">
+            
+            <!-- User Profile Section -->
+            <div class="p-8 text-center border-b border-gray-800">
+                <div class="relative inline-block">
+                    <img id="side_avatar" 
+                         class="h-16 w-16 rounded-full border-2 border-emerald-500 mx-auto object-cover bg-gray-800 shadow-lg" 
+                         src="https://ui-avatars.com/api/?name=User&background=059669&color=fff"
+                         alt="User Avatar">
+                    <div class="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-gray-900 rounded-full animate-pulse"></div>
+                </div>
+                <h2 id="side_nama" class="mt-4 text-white font-black text-xs tracking-widest uppercase truncate">LOADING...</h2>
+                <div class="inline-block px-3 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full mt-2">
+                    <p class="text-emerald-400 text-[8px] font-black uppercase">PREMIUM MEMBER</p>
+                </div>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="flex-1 px-3 py-6 space-y-1.5">
+                
+                <!-- Dashboard Resources -->
+                <div class="category-label">Dashboard Resources</div>
+                <button onclick="toggleSubmenu('sub_res')" class="menu-item w-full flex items-center justify-between py-2.5 px-4 rounded-xl transition">
+                    <span class="text-xs font-bold uppercase">
+                        <i class="fas fa-layer-group w-5 text-emerald-500"></i> Dashboard Resources
+                    </span>
+                    <i class="fas fa-chevron-right text-[8px]"></i>
+                </button>
+                <div id="sub_res" class="submenu overflow-hidden">
+                    <a href="javascript:void(0)" onclick="changePageSultan('dayatahanmem')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">1. Daya Tahan Bisnis</a>
+                </div>
+
+                <!-- Produk & Jaringan -->
+                <div class="category-label">Produk & Jaringan</div>
+                <button onclick="toggleSubmenu('sub_ref')" class="menu-item w-full flex items-center justify-between py-2.5 px-4 rounded-xl transition">
+                    <span class="text-xs font-bold uppercase">
+                        <i class="fas fa-sitemap w-5 text-emerald-500"></i> Dashboard Referral
+                    </span>
+                    <i class="fas fa-chevron-right text-[8px]"></i>
+                </button>
+                <div id="sub_ref" class="submenu overflow-hidden">
+                    <a href="javascript:void(0)" onclick="changePageSultan('statistic')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white font-bold">1. Referral & Statistic</a>
+                    <a href="javascript:void(0)" onclick="changePageSultan('editprofil')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">2. Edit Profil Akun</a>
+                    <a href="javascript:void(0)" onclick="changePageSultan('rekrutmen')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">3. Member Rekrutmen</a>
+                    <a href="javascript:void(0)" onclick="changePageSultan('repeatorder')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">4. Tambah Usaha/Produk</a>
+                    <a href="javascript:void(0)" onclick="changePageSultan('withdrawal')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">5. Proses Withdrawal</a>
+                </div>
+
+                <!-- Promosi & IKLAN -->
+                <div class="category-label">Promosi & IKLAN</div>
+                <button onclick="toggleSubmenu('sub_ads')" class="menu-item w-full flex items-center justify-between py-2.5 px-4 rounded-xl transition">
+                    <span class="text-xs font-bold uppercase">
+                        <i class="fas fa-bullhorn w-5 text-emerald-500"></i> Dashboard Iklan
+                    </span>
+                    <i class="fas fa-chevron-right text-[8px]"></i>
+                </button>
+                <div id="sub_ads" class="submenu overflow-hidden">
+                    <a href="javascript:void(0)" onclick="changePageSultan('ads_stats')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">1. Statistik Iklan</a>
+                    <a href="javascript:void(0)" onclick="changePageSultan('ads_video')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">2. Iklan Video Anda</a>
+                    <a href="javascript:void(0)" onclick="changePageSultan('ads_popup')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">3. Popup Pembelian!</a>
+                    <a href="javascript:void(0)" onclick="changePageSultan('ads_katalog')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">4. Katalog Quote</a>
+                </div>
+
+                <!-- Statistic & Topup -->
+                <div class="category-label">Statistic & Topup</div>
+                <button onclick="toggleSubmenu('sub_topup')" class="menu-item w-full flex items-center justify-between py-2.5 px-4 rounded-xl transition">
+                    <span class="text-xs font-bold uppercase">
+                        <i class="fas fa-wallet w-5 text-emerald-500"></i> Dashboard Topup
+                    </span>
+                    <i class="fas fa-chevron-right text-[8px]"></i>
+                </button>
+                <div id="sub_topup" class="submenu overflow-hidden">
+                    <a href="javascript:void(0)" onclick="changePageSultan('topup_stats')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">1. Statistik Topup</a>
+                    <a href="javascript:void(0)" onclick="changePageSultan('topup_manual')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">2. Topup (Transfer Manual)</a>
+                    <a href="javascript:void(0)" onclick="changePageSultan('topup_withqris')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">3. Topup (Menggunakan QRIS)</a>
+                </div>
+
+                <!-- Program Komunitas -->
+                <div class="category-label">Program Komunitas</div>
+                <button class="btn-take-give">
+                    <i class="fas fa-hand-holding-heart mr-2"></i> JOIN TAKE & GIVE
+                </button>
+
+                <button id="mavro_main_btn" onclick="startMavroGuard()" class="menu-item w-full flex items-center justify-between py-2.5 px-4 rounded-xl transition">
+                    <span class="text-xs font-bold uppercase">
+                        <i class="fas fa-heart w-5 text-emerald-500"></i> Dashboard Partisipan
+                    </span>
+                    <i id="mavro_lock_icon" class="fas fa-lock text-[8px] text-yellow-500"></i>
+                </button>
+                <div id="sub_mavro" class="submenu overflow-hidden text-[10px]" style="display:none !important;">
+                    <a href="javascript:void(0)" onclick="changePageSultan('mavro_stats')" class="block py-2 px-5 text-gray-400 hover:text-white">1. Statistic & Graphic</a>
+                    <a href="javascript:void(0)" onclick="changePageSultan('company_agreement')" class="block py-2 px-5 text-gray-400 hover:text-white">2. Company Agreement</a>
+                    <a href="javascript:void(0)" onclick="changePageSultan('user_agreement')" class="block py-2 px-5 text-gray-400 hover:text-white">3. Persetujuan Anda</a>
+                </div>
+
+                <!-- System -->
+                <div class="category-label">System</div>
+                <button onclick="toggleSubmenu('sub_set')" class="menu-item w-full flex items-center justify-between py-2.5 px-4 rounded-xl transition">
+                    <span class="text-xs font-bold uppercase">
+                        <i class="fas fa-cog w-5 text-emerald-500"></i> Pengaturan
+                    </span>
+                    <i class="fas fa-chevron-right text-[8px]"></i>
+                </button>
+                <div id="sub_set" class="submenu overflow-hidden">
+                    <a href="javascript:void(0)" onclick="confirmLogout()" class="block py-2.5 px-5 text-[10px] text-red-500 font-black italic uppercase tracking-tighter hover:text-red-400">3. KELUAR (LOGOUT)</a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <div class="flex-1 flex flex-col min-w-0 bg-slate-50 overflow-hidden">
+            
+            <!-- Header -->
+            <header class="bg-white border-b h-14 flex items-center justify-between px-6 shadow-sm z-40">
+                <button onclick="toggleSidebar()" class="text-gray-500 p-2 hover:bg-slate-100 transition rounded-lg">
+                    <i class="fas fa-bars text-lg"></i>
+                </button>
+                <div id="header_user_name" class="text-[10px] font-black text-emerald-600 uppercase tracking-widest italic">MEMBER AREA</div>
+                <div id="live_clock" class="text-xs font-bold text-gray-600"></div>
+            </header>
+            
+            <!-- Dynamic Content Area -->
+            <div id="dynamic_content_area" class="flex-1 overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <!-- External JavaScript -->
+    <script src="/js/dashboard.js"></script>
+</body>
+</html>
