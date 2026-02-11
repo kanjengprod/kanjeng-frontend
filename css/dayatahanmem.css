@@ -57,7 +57,7 @@
 .led-group { 
   display: flex !important; 
   align-items: center !important; 
-  gap: 16px !important;
+  gap: 10px !important;
   position: relative; 
 }
 
@@ -102,9 +102,9 @@
 .v-separator { 
   color: #e2e8f0 !important; 
   font-weight: 300; 
-  font-size: 22px;             /* Dikecilkan biar mepet */
+  font-size: 20px;             /* Dikecilkan biar mepet */
   opacity: 0.5; 
-  margin: 0 4px !important;    /* Jarak kiri kanan garis dipersempit */
+  margin: 0 5px !important;    /* Jarak kiri kanan garis dipersempit */
 }
 
 /* 5. TOOLTIP GLASSMORPHISM */
