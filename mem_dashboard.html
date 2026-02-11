@@ -504,11 +504,13 @@ function renderMavroEligibilityModal(d) {
 }
 
         // ✅ WORKER VERSION: Heartbeat
-        var CURRENT_LOG_ID = sessionStorage.getItem('sultan_history_id');
+        // var CURRENT_LOG_ID = sessionStorage.getItem('sultan_history_id');
+        CURRENT_LOG_ID = sessionStorage.getItem('sultan_history_id'); 
 
-        function initiateHeartbeat() {
+        function initiateHeartbeat() {  
             if (!CURRENT_LOG_ID || CURRENT_LOG_ID === "null") {
-                console.warn("⚠️ History ID tidak ditemukan");
+                console.warn("⚠️ History ID masih kosong, mencoba lagi dalam 5 detik...");
+                setTimeout(initiateHeartbeat, 5000); // Coba lagi nanti
                 return;
             }
 
