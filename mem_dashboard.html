@@ -123,18 +123,59 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        console.log("🚀 SULTAN ENGINE v9.1 LOADED - TOMBOL LOGIN DI KIRI");
-        var USER_REF = '<?= userRef ?>';
-        var USER_NAMA = '<?= userNama ?>';
-        var USER_PHOTO = '<?= userPhoto ?>';
+        console.log("🚀 SULTAN ENGINE v9.2 LOADED - WORKER EDITION");
+        
+        // ✅ WORKER VERSION: Ambil dari sessionStorage
+        var USER_REF = sessionStorage.getItem('sultan_member_ref') || '';
+        var USER_NAMA = sessionStorage.getItem('sultan_member_nama') || 'MEMBER';
+        var USER_PHOTO = sessionStorage.getItem('sultan_member_photo') || '';
         var IS_MAVRO_UNLOCKED = false;
         var SULTAN_HEARTBEAT = null;
 
-        window.onload = function() { 
+        // ✅ Jika data tidak ada di sessionStorage, ambil dari URL (fallback)
+        if (!USER_REF) {
+            const urlParams = new URLSearchParams(window.location.search);
+            USER_REF = urlParams.get('ref') || '';
+            if (USER_REF) {
+                sessionStorage.setItem('sultan_member_ref', USER_REF);
+                // Fetch user data dari Worker
+                loadUserData();
+            }
+        }
+
+        // ✅ WORKER FUNCTION: Load user data
+        function loadUserData() {
+            if (!USER_REF) {
+                console.error('❌ No user ref found');
+                return;
+            }
+
+            fetch(`/api/member/get-user?ref=${encodeURIComponent(USER_REF)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.nama) {
+                        USER_NAMA = data.nama;
+                        USER_PHOTO = data.photo_url || '';
+                        
+                        sessionStorage.setItem('sultan_member_nama', USER_NAMA);
+                        sessionStorage.setItem('sultan_member_photo', USER_PHOTO);
+                        
+                        updateSidebarProfile();
+                    }
+                })
+                .catch(err => console.error('❌ Load user data error:', err));
+        }
+
+        // ✅ Update sidebar profile
+        function updateSidebarProfile() {
             document.getElementById('side_nama').innerText = USER_NAMA.toUpperCase();
             if (USER_PHOTO !== "") {
                 document.getElementById('side_avatar').src = USER_PHOTO;
-            }      
+            }
+        }
+
+        window.onload = function() { 
+            updateSidebarProfile();
             changePageSultan('dayatahanmem'); 
         };
 
@@ -307,6 +348,7 @@
             });
         }
 
+        // ✅ WORKER VERSION: changePageSultan
         function changePageSultan(pageName) {
             if (SULTAN_HEARTBEAT) { 
                 clearInterval(SULTAN_HEARTBEAT); 
@@ -331,34 +373,72 @@
             headerTitle.innerText = "⏳ MEMPROSES " + pageName.toUpperCase() + "...";
             container.classList.add('page-loading');
 
-            google.script.run
-                .withSuccessHandler(function(htmlContent) {
-                    container.innerHTML = htmlContent;
-                    headerTitle.innerText = pageName.toUpperCase() + " AREA";
-                    container.classList.remove('page-loading');
+            // ✅ WORKER: Load dayatahanmem dari Worker
+            if (pageName === 'dayatahanmem') {
+                fetch('/dayatahan_mem.html')
+                    .then(res => {
+                        if (!res.ok) throw new Error('HTTP ' + res.status);
+                        return res.text();
+                    })
+                    .then(htmlContent => {
+                        container.innerHTML = htmlContent;
+                        headerTitle.innerText = "DAYA TAHAN BISNIS";
+                        container.classList.remove('page-loading');
 
-                    const scripts = container.getElementsByTagName('script');
-                    for (let i = 0; i < scripts.length; i++) {
-                        const newScript = document.createElement("script");
-                        newScript.text = scripts[i].text;
-                        document.body.appendChild(newScript).parentNode.removeChild(newScript);
-                    }
+                        // Execute embedded scripts
+                        const scripts = container.getElementsByTagName('script');
+                        for (let i = 0; i < scripts.length; i++) {
+                            const newScript = document.createElement("script");
+                            newScript.text = scripts[i].text;
+                            document.body.appendChild(newScript).parentNode.removeChild(newScript);
+                        }
 
-                    container.scrollTo(0, 0);
-                    console.log("✅ Page " + pageName + " Loaded Successfully");
-                })
-                .withFailureHandler(function(err) {
-                    container.classList.remove('page-loading');
-                    container.innerHTML = `
-                        <div class="p-10 text-center">
-                            <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
-                            <p class="text-gray-600 font-bold">Gagal memuat halaman. Sesi mungkin berakhir.</p>
-                            <button onclick="location.reload()" class="mt-4 px-6 py-2 bg-emerald-600 text-white rounded-lg text-xs font-bold">RELOAD DASHBOARD</button>
-                        </div>
-                    `;
-                    console.error("❌ Gagal memuat halaman: " + err);
-                })
-                .getPageContentSultan(pageName, USER_REF);
+                        container.scrollTo(0, 0);
+                        console.log("✅ Page dayatahanmem loaded from Worker");
+                    })
+                    .catch(err => {
+                        container.classList.remove('page-loading');
+                        container.innerHTML = `
+                            <div class="p-10 text-center">
+                                <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
+                                <p class="text-gray-600 font-bold">Gagal memuat halaman dari Worker</p>
+                                <p class="text-sm text-gray-400 mt-2">${err.message}</p>
+                                <button onclick="changePageSultan('dayatahanmem')" class="mt-4 px-6 py-2 bg-emerald-600 text-white rounded-lg text-xs font-bold">COBA LAGI</button>
+                            </div>
+                        `;
+                        console.error("❌ Load error:", err);
+                    });
+            } else {
+                // ✅ FALLBACK: Halaman lain masih pakai GAS (belum migrasi)
+                google.script.run
+                    .withSuccessHandler(function(htmlContent) {
+                        container.innerHTML = htmlContent;
+                        headerTitle.innerText = pageName.toUpperCase() + " AREA";
+                        container.classList.remove('page-loading');
+
+                        const scripts = container.getElementsByTagName('script');
+                        for (let i = 0; i < scripts.length; i++) {
+                            const newScript = document.createElement("script");
+                            newScript.text = scripts[i].text;
+                            document.body.appendChild(newScript).parentNode.removeChild(newScript);
+                        }
+
+                        container.scrollTo(0, 0);
+                        console.log("✅ Page " + pageName + " loaded from GAS");
+                    })
+                    .withFailureHandler(function(err) {
+                        container.classList.remove('page-loading');
+                        container.innerHTML = `
+                            <div class="p-10 text-center">
+                                <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
+                                <p class="text-gray-600 font-bold">Gagal memuat halaman. Sesi mungkin berakhir.</p>
+                                <button onclick="location.reload()" class="mt-4 px-6 py-2 bg-emerald-600 text-white rounded-lg text-xs font-bold">RELOAD DASHBOARD</button>
+                            </div>
+                        `;
+                        console.error("❌ Gagal memuat halaman: " + err);
+                    })
+                    .getPageContentSultan(pageName, USER_REF);
+            }
         }
 
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('sidebar-hide'); }
@@ -370,35 +450,72 @@
             if(!isVisible) target.style.display = 'block';
         }
         
+        // ✅ WORKER VERSION: confirmLogout
         function confirmLogout() {
-            Swal.fire({ title: 'Logout Sultan', icon: 'warning', showCancelButton: true, confirmButtonColor: '#10b981', confirmButtonText: 'IYA, BRO!' })
-            .then((res) => { if (res.isConfirmed) window.top.location.href = '<?= baseUrl ?>?logout=1'; });
+            Swal.fire({ 
+                title: 'Logout Sultan', 
+                icon: 'warning', 
+                showCancelButton: true, 
+                confirmButtonColor: '#10b981', 
+                confirmButtonText: 'IYA, BRO!' 
+            }).then((res) => { 
+                if (res.isConfirmed) {
+                    const logId = sessionStorage.getItem('sultan_history_id');
+                    
+                    if (logId) {
+                        // Call Worker logout endpoint
+                        fetch('/api/member/logout', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ ref: USER_REF, logId: logId })
+                        })
+                        .then(() => {
+                            sessionStorage.clear();
+                            window.location.href = '/login';
+                        })
+                        .catch(err => {
+                            console.error('❌ Logout error:', err);
+                            sessionStorage.clear();
+                            window.location.href = '/login';
+                        });
+                    } else {
+                        sessionStorage.clear();
+                        window.location.href = '/login';
+                    }
+                }
+            });
         }
 
+        // ✅ WORKER VERSION: Heartbeat
         var CURRENT_LOG_ID = sessionStorage.getItem('sultan_history_id');
-        var SULTAN_HEARTBEAT = null;
 
         function initiateHeartbeat() {
             if (!CURRENT_LOG_ID || CURRENT_LOG_ID === "null") {
-                console.warn("⚠️ Sultan Radar: History ID tidak ditemukan. Memicu pelacakan ulang...");
-                if (typeof startLoginTracking === 'function') startLoginTracking();
+                console.warn("⚠️ History ID tidak ditemukan");
                 return;
             }
 
             console.log("📡 Sultan Engine: Heartbeat tersambung ke " + CURRENT_LOG_ID);
 
             SULTAN_HEARTBEAT = setInterval(function() {
-                if (CURRENT_LOG_ID) {
-                    google.script.run.withSuccessHandler(function(res) {
-                        if (res && res.valid === false) {
+                if (CURRENT_LOG_ID && USER_REF) {
+                    fetch('/api/member/heartbeat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ ref: USER_REF, logId: CURRENT_LOG_ID })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data && data.valid === false) {
                             console.error("🚫 Akses diputus oleh server!");
                             clearInterval(SULTAN_HEARTBEAT);
-                            window.top.location.href = '<?= baseUrl ?>?login=1&error=Akses Terputus';
+                            sessionStorage.clear();
+                            window.location.href = '/login?error=Akses%20Terputus';
                         }
                     })
-                    .updateHeartbeatInHistory(USER_REF, CURRENT_LOG_ID);
+                    .catch(err => console.error('❌ Heartbeat error:', err));
                 }
-            }, 60000); 
+            }, 60000); // 1 menit
         }
 
         setTimeout(initiateHeartbeat, 3000);
