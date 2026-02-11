@@ -1,12 +1,11 @@
 // FILE: agreement.js - VERSI SULTAN PRECISION FINAL v11.7
-
-// CONTOH DATA USER - Ganti dengan data dari sistem Anda
 const USER_DATA = {
-    nama: "JOHN DOE",
-    userId: "USR001",
-    ip_address: "103.123.45.67",
-    mavro_agreement: 0, // 0 = belum sign, 1 = sudah sign
-    timestamp: "2026-02-11T10:30:00"
+    nama: sessionStorage.getItem('sultan_member_nama') || "MEMBER",
+    userId: sessionStorage.getItem('sultan_user_id') || "USR-UNKNOWN",
+    ip_address: "Captured Via System",
+    // Ambil status dari data eligibility yang sudah di-load sebelumnya
+    mavro_agreement: (LATEST_MAVRO_DATA && LATEST_MAVRO_DATA.isAgreed === 1) ? 1 : 0,
+    timestamp: new Date().toISOString()
 };
 
 const USER_REF = "USER_REF_123"; // Reference ID untuk Google Script
