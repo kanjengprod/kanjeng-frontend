@@ -847,7 +847,7 @@ input[type="tel"].input-sultan {
     text-decoration: underline;
     cursor: pointer;
     text-transform: normal;
-    font-size: 10px;
+    font-size: 12px;
 }
 .link-gold-premium:hover {
     color: #d4af37 !important; /* Warna Emas Terang saat Hover */
