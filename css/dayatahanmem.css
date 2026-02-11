@@ -50,14 +50,14 @@
   display: flex !important; 
   align-items: center !important; 
   justify-content: center !important; 
-  gap: 8px !important;       /* Jarak antar grup bola + garis (Sangat Rapat) */
+  gap: 15px !important;
   margin-bottom: 40px; 
 }
 
 .led-group { 
   display: flex !important; 
   align-items: center !important; 
-  gap: 6px !important;       /* Jarak bola ke teks tooltip (Rapat) */
+  gap: 16px !important;
   position: relative; 
 }
 
