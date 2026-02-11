@@ -50,64 +50,81 @@ const USER_REF = "USER_REF_123"; // Reference ID untuk Google Script
         };
     }
 
+    // ✅ 1. INISIALISASI CANVAS (DIPERBAIKI)
     function init() {
         const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width; 
-        canvas.height = rect.height;
-        ctx.strokeStyle = "#000000"; 
-        ctx.lineWidth = 3; 
-        ctx.lineCap = "round";
-
-        const dataTgl = formatTanggalLengkap(USER_DATA.timestamp);
         
-        document.getElementById('txt_hari').innerText = dataTgl.hari;
-        document.getElementById('txt_tgl').innerText = dataTgl.tgl;
-        document.getElementById('txt_bln').innerText = dataTgl.bln;
-        document.getElementById('txt_thn').innerText = dataTgl.thn;
-        document.getElementById('tgl_sig_p1').innerText = dataTgl.short;
-        document.getElementById('tgl_sig_p2').innerText = dataTgl.short;
+        // Paksa ukuran internal canvas sama dengan ukuran display CSS-nya
+        canvas.width = canvas.offsetWidth; 
+        canvas.height = canvas.offsetHeight;
+        
+        // Pengaturan Kuas (Tebal & Halus)
+        ctx.strokeStyle = "#000000"; 
+        ctx.lineWidth = 4; 
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
 
+        // Render Tanggal Perjanjian
+        const dataTgl = formatTanggalLengkap(USER_DATA.timestamp);
+        if(document.getElementById('txt_hari')){
+            document.getElementById('txt_hari').innerText = dataTgl.hari;
+            document.getElementById('txt_tgl').innerText = dataTgl.tgl;
+            document.getElementById('txt_bln').innerText = dataTgl.bln;
+            document.getElementById('txt_thn').innerText = dataTgl.thn;
+            document.getElementById('tgl_sig_p1').innerText = dataTgl.short;
+            document.getElementById('tgl_sig_p2').innerText = dataTgl.short;
+        }
+
+        // Jika sudah ditandatangani, kunci layar
         if (isSigned) {
-            document.getElementById('overlay_sultan_sah').style.display = "flex";
+            const overlay = document.getElementById('overlay_sultan_sah');
+            if(overlay) overlay.style.display = "flex";
             btn.disabled = true;
             btn.innerText = "✓ PROGRAM MAVRO TELAH AKTIF";
             btn.className = "w-full py-4 rounded-2xl font-black text-[12px] btn-sultan-disabled";
             chk.checked = true; 
             chk.disabled = true;
-            btnDownload.style.display = "flex";
+            if(btnDownload) btnDownload.style.display = "flex";
         }
     }
 
-    // Draggable form
+    // ✅ 2. DRAGGABLE FORM LOGIC
     let isDragging = false, offsetX, offsetY;
-    document.getElementById('form_header').onmousedown = function(e) { 
-        isDragging = true; 
-        offsetX = e.clientX - form.getBoundingClientRect().left; 
-        offsetY = e.clientY - form.getBoundingClientRect().top; 
-        form.style.position = 'absolute'; 
-        form.style.margin = '0'; 
-    };
-    document.onmousemove = function(e) { 
-        if (!isDragging) return; 
-        form.style.left = (e.clientX - offsetX) + 'px'; 
-        form.style.top = (e.clientY - offsetY) + 'px'; 
-    };
-    document.onmouseup = function() { isDragging = false; };
+    const headerEl = document.getElementById('form_header');
+    if(headerEl){
+        headerEl.onmousedown = function(e) { 
+            isDragging = true; 
+            offsetX = e.clientX - form.getBoundingClientRect().left; 
+            offsetY = e.clientY - form.getBoundingClientRect().top; 
+            form.style.position = 'absolute'; 
+            form.style.margin = '0'; 
+        };
+        document.onmousemove = function(e) { 
+            if (!isDragging) return; 
+            form.style.left = (e.clientX - offsetX) + 'px'; 
+            form.style.top = (e.clientY - offsetY) + 'px'; 
+        };
+        document.onmouseup = function() { isDragging = false; };
+    }
     
-    // Signature pad
-    let drawing = false, hasDrawn = false;
+    // ✅ 3. POSISI KURSOR PRESISI (KUNCI AGAR GARIS KELUAR)
     function getPos(e) { 
         const rect = canvas.getBoundingClientRect(); 
         const clientX = e.touches ? e.touches[0].clientX : e.clientX; 
         const clientY = e.touches ? e.touches[0].clientY : e.clientY; 
-        return { x: clientX - rect.left, y: clientY - rect.top }; 
+        
+        // Kalkulasi posisi berdasarkan skala canvas (solusi load dinamis)
+        return { 
+            x: (clientX - rect.left) * (canvas.width / rect.width), 
+            y: (clientY - rect.top) * (canvas.height / rect.height) 
+        }; 
     }
     
+    // ✅ 4. EVENT DRAWING (MOUSE & TOUCH)
     if (!isSigned) {
+        // Desktop
         canvas.addEventListener('mousedown', (e) => { 
-            init(); 
-            drawing = true; 
-            hasDrawn = true; 
+            drawing = true; hasDrawn = true; 
             ctx.beginPath(); 
             let p = getPos(e); 
             ctx.moveTo(p.x, p.y); 
@@ -119,32 +136,37 @@ const USER_REF = "USER_REF_123"; // Reference ID untuk Google Script
                 ctx.stroke(); 
             } 
         });
-        window.addEventListener('mouseup', () => drawing = false);
+        window.addEventListener('mouseup', () => { drawing = false; });
+
+        // Mobile / HP (Ditambah passive: false agar preventDefault jalan)
         canvas.addEventListener('touchstart', (e) => { 
-            init(); 
-            drawing = true; 
-            hasDrawn = true; 
+            drawing = true; hasDrawn = true; 
             ctx.beginPath(); 
             let p = getPos(e); 
             ctx.moveTo(p.x, p.y); 
-            e.preventDefault(); 
-        });
+            if(e.cancelable) e.preventDefault(); 
+        }, { passive: false });
+        
         canvas.addEventListener('touchmove', (e) => { 
             if(drawing){ 
                 let p = getPos(e); 
                 ctx.lineTo(p.x, p.y); 
                 ctx.stroke(); 
             } 
-            e.preventDefault(); 
-        });
+            if(e.cancelable) e.preventDefault(); 
+        }, { passive: false });
     }
     
+    // ✅ 5. RESET PAD
     window.resetPad = () => { 
         if(!isSigned){ 
-            ctx.clearRect(0,0,canvas.width,canvas.height); 
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
             hasDrawn = false; 
         } 
     };
+    
+    // Jalankan init dengan delay kecil agar element HTML ter-render dulu
+    setTimeout(init, 500);
     
     // Download PDF Function
     window.downloadAgreementPDF = function() {
