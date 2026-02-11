@@ -184,64 +184,82 @@ const USER_REF = "USER_REF_123"; // Reference ID untuk Google Script
     };
 
     window.submitData = async function() {
+        // 1. Validasi: Apakah sudah tanda tangan atau belum centang?
         if(isSigned) return;
         if(!chk.checked || !hasDrawn) { 
             Swal.fire({ 
                 icon: 'error', 
                 title: 'Maaf !', 
-                html: '<b>Dokumen ini harus anda Signatured.</b>', 
+                html: '<b>Dokumen ini harus anda Signatured dan Checkbox harus dicentang.</b>', 
                 confirmButtonColor: '#059669' 
             }); 
             return; 
         }
         
+        // 2. Tampilkan Loading ala Sultan
         Swal.fire({ 
-            title: 'Menyimpan...', 
+            title: 'Menyimpan ke Cloud...', 
+            html: 'Sedang mengamankan sertifikat persetujuan Anda',
             allowOutsideClick: false, 
             didOpen: () => Swal.showLoading() 
         });
         
+        // 3. Ambil IP Address User untuk Audit Trail Firestore
         let userIp = "0.0.0.0";
         try { 
             const response = await fetch('https://api.ipify.org?format=json'); 
             const data = await response.json(); 
             userIp = data.ip; 
-        } catch (err) { }
+        } catch (err) { console.warn("Gagal mengambil IP, menggunakan default."); }
         
-        // SIMULASI - Ganti dengan google.script.run untuk GAS
-        setTimeout(() => {
-            Swal.fire({ 
-                icon: 'success', 
-                title: 'VERIFIED', 
-                confirmButtonColor: '#059669' 
-            }).then(() => {
-                location.reload(); // Reload untuk simulasi
+        // 4. PROSES KIRIM KE WORKER (FIRESTORE)
+        try {
+            const response = await fetch('/api/member/save-agreement', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ref: USER_REF,                 // ID unik member
+                    signature: canvas.toDataURL(), // Gambar Tanda Tangan (Base64)
+                    ip: userIp                     // Alamat IP
+                })
             });
-        }, 2000);
-        
-        /*
-        // UNTUK INTEGRASI GAS:
-        google.script.run.withSuccessHandler(res => {
-            if(res.success) { 
+
+            const res = await response.json();
+
+            if (res.success) {
+                // 5. Jika Berhasil Simpan
                 Swal.fire({ 
                     icon: 'success', 
                     title: 'VERIFIED', 
+                    text: 'Persetujuan berhasil disimpan di Cloud Firestore.',
                     confirmButtonColor: '#059669' 
                 }).then(() => { 
-                    // Redirect atau reload sesuai kebutuhan
+                    // Update status lokal agar menu terbuka
+                    if(typeof IS_MAVRO_UNLOCKED !== 'undefined') IS_MAVRO_UNLOCKED = true;
+                    
+                    // Refresh halaman agreement agar muncul overlay "SAH"
                     if(typeof changePageSultan === "function") {
                         changePageSultan('user_agreement');
                     }
+
+                    // Munculkan prompt unlock login (opsional)
                     setTimeout(() => { 
                         if(typeof window.promptLoginUnlock === "function") {
                             window.promptLoginUnlock();
                         }
-                    }, 1000);
+                    }, 1200);
                 }); 
+            } else {
+                throw new Error(res.message || "Gagal menyimpan ke server");
             }
-        }).saveMavroAgreement(USER_REF, canvas.toDataURL(), userIp);
-        */
+
+        } catch (error) {
+            // 6. Jika Terjadi Kesalahan (Server mati / Route belum ada)
+            Swal.fire({
+                icon: 'error',
+                title: 'Koneksi Gagal',
+                text: 'Terjadi kesalahan: ' + error.message,
+                confirmButtonColor: '#d33'
+            });
+        }
     };
-    
-    setTimeout(init, 800);
-})();
