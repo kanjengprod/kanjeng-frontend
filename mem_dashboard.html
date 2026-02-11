@@ -180,104 +180,117 @@
             changePageSultan('dayatahanmem'); 
         };
 
-        function startMavroGuard() {
-            if(IS_MAVRO_UNLOCKED) { toggleSubmenu('sub_mavro'); return; }
-            Swal.fire({ title: 'Verifikasi Kualifikasi...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
-            google.script.run.withSuccessHandler(function(res) {
-                Swal.close();
-                if(res) { renderMavroEligibilityModal(res); }
-            }).getMavroGuardStatus(USER_REF);
+        // ✅ FUNGSI UNTUK MEMULAI PENGECEKAN (REPLACED VERSION)
+function startMavroGuard() {
+    // 1. Tampilkan Loading ala Sultan
+    Swal.fire({
+        title: 'Verifikasi Kualifikasi...',
+        html: '<p style="font-size:12px;">Menghubungkan ke Database Pusat...</p>',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
         }
+    });
 
-        function getTooltipText(no, d) {
-            const targetMember = d.minMember || 0;
-            const targetAgree = d.totAgreeLimit || 0;
-            const targetRecruit = d.minRecruit || 0;
-            const targetSaldo = d.minSaldo || 0;
-            const feeJoin = d.joinFee || 0;
+    // 2. Ambil Data dari API Worker (Ganti endpoint jika perlu)
+    fetch(`/api/member/get-eligibility?ref=${USER_REF}`)
+    .then(res => res.json())
+    .then(res => {
+        Swal.close(); 
+        if(res && res.success) {
+            renderMavroEligibilityModal(res.data);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Akses Ditolak',
+                text: res.message || 'Gagal mengambil data verifikasi.'
+            });
+        }
+    })
+    .catch(err => {
+        Swal.close();
+        console.error('Error Eligibility:', err);
+        Swal.fire('Error', 'Terjadi kesalahan koneksi ke server.', 'error');
+    });
+}
 
-            switch(no) {
-                case 1: return `Member Komunitas minimal ${targetMember} orang.`;
-                case 2: return `Total Member Agreement minimal ${targetAgree} orang.`;
-                case 3: return `Minimal rekrut ${targetRecruit} member aktif.`;
-                case 4: return `Agreement Link terbuka jika Poin 1, 2, 3, 5, 6 Hijau.`;
-                case 5: return `Saldo minimal Rp. ${targetSaldo.toLocaleString('id-ID')}.`;
-                case 6: return `Data Profil & Rekening Bank wajib lengkap.`;
-                case 7: return `Status berubah jika User Approved Agreement.`;
-                default: return "";
+// ✅ FUNGSI UNTUK MERENDER TABEL SESUAI GAMBAR
+function renderMavroEligibilityModal(d) {
+    LATEST_MAVRO_DATA = d; // Simpan untuk tooltip jika perlu
+
+    // Susun data untuk tabel
+    const items = [
+        { n: 1, r: "Member Komunitas", v: d.totalMember || 0, s: d.totalMember >= d.minMember },
+        { n: 2, r: "Total Member Agreement", v: d.totalAgreed || 0, s: d.totalAgreed >= d.totAgreeLimit },
+        { n: 3, r: "Rekrut Member", v: d.rekrutCount || 0, s: d.rekrutCount >= d.minRecruit },
+        { n: 4, r: "Persetujuan (Agreement)", v: d.isAgreed ? "True" : "False", s: d.isAgreed === 1 },
+        { n: 5, r: "Saldo Akun", v: (d.saldo || 0).toLocaleString('id-ID'), s: d.saldo >= d.minSaldo },
+        { n: 6, r: "Foto Profil & Rekening", v: d.profileComplete ? "True" : "False", s: d.profileComplete },
+        { n: 7, r: "Biaya Join", v: (d.joinFee || 0).toLocaleString('id-ID'), s: d.isAgreed === 1 }
+    ];
+
+    const allPassed = items.every(item => item.s === true);
+
+    let tableHtml = `
+        <p style="font-size: 10px; color: #64748b; margin-bottom: 15px; text-align: left; font-weight: 600;">
+            Sistem mengambil data real-time dari database pusat.
+        </p>
+        <table class="swal-eligibility-table">
+            <thead>
+                <tr>
+                    <th style="width: 40px;">NO</th>
+                    <th>PERSYARATAN</th>
+                    <th>VALUE</th>
+                    <th>STATUS</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${items.map(it => `
+                <tr>
+                    <td style="text-align: center;">${it.n}</td>
+                    <td style="text-align: left;">${it.r}</td>
+                    <td style="text-align: center; font-weight: 800;">${it.v}</td>
+                    <td>
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 5px;">
+                            <span class="${it.s ? 'text-memenuhi' : 'text-slate'}">
+                                ${it.s ? 'Memenuhi Syarat' : 'Belum Memenuhi'}
+                            </span>
+                            <i class="fas fa-info-circle" style="color:#3b82f6; cursor:pointer; font-size: 12px;" onclick="showSultanTooltip(${it.n})"></i>
+                        </div>
+                    </td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+
+    Swal.fire({
+        title: '<div class="eligibility-title-box">ELIGIBILITY CHECK</div>',
+        html: tableHtml,
+        showCancelButton: true,
+        confirmButtonText: 'DASHBOARD PPN',
+        cancelButtonText: 'Cancel',
+        allowOutsideClick: false,
+        width: '550px',
+        customClass: {
+            confirmButton: 'btn-dashboard-ppn',
+            cancelButton: 'btn-cancel-grey',
+            popup: 'rounded-2xl shadow-2xl'
+        },
+        didOpen: () => {
+            if(!allPassed) {
+                const confBtn = Swal.getConfirmButton();
+                confBtn.disabled = true;
+                confBtn.style.opacity = '0.3';
+                confBtn.style.cursor = 'not-allowed';
             }
         }
-
-        var LATEST_MAVRO_DATA = null;
-
-        window.showSultanTooltip = (no) => {
-            if(!LATEST_MAVRO_DATA) return;
-            const msg = getTooltipText(no, LATEST_MAVRO_DATA);
-            Swal.fire({
-                title: `<span style="font-size:14px; font-weight:900;">INFO POIN NO. ${no}</span>`,
-                html: `<div style="font-size:12px; color:#475569; line-height:1.6; text-align:center;">${msg}</div>`,
-                icon: 'info', iconColor: '#facc15',
-                confirmButtonText: 'MENGERTI', confirmButtonColor: '#0f172a',
-                width: '320px', customClass: { popup: 'rounded-3xl border-4 border-yellow-400' }
-            });
-        };
-
-        function renderMavroEligibilityModal(d) {
-            LATEST_MAVRO_DATA = d;
-            
-            const p1 = Number(d.totalMember) >= Number(d.minMember);
-            const pAgreedTotal = Number(d.totalAgreed) >= Number(d.totAgreeLimit);
-            const p2 = Number(d.rekrutCount) >= Number(d.minRecruit);
-            const p3 = Number(d.isAgreed) === 1;
-            const p4 = Number(d.saldo) >= Number(d.minSaldo);
-            const p5 = d.profileComplete === true;
-
-            const canAgree = (p1 && pAgreedTotal && p2 && p4 && p5);
-            const allPassed = (canAgree && p3);
-
-            const items = [
-                {n:1, r:"Member Komunitas", v:d.totalMember, s:p1},
-                {n:2, r:"Total Member Agreement", v:d.totalAgreed, s:pAgreedTotal},
-                {n:3, r:"Rekrut Member", v:d.rekrutCount, s:p2},
-                {n:4, r:"Persetujuan (Agreement)", v:p3?'True':'False', s:p3, type:'bool'},
-                {n:5, r:"Saldo Akun", v:(d.saldo || 0).toLocaleString('id-ID'), s:p4},
-                {n:6, r:"Foto Profil & Rekening", v:p5?'True':'False', s:p5, type:'bool'},
-                {n:7, r:"Biaya Join", v:(d.joinFee || 0).toLocaleString('id-ID'), s:p3}
-            ];
-
-            let html = `
-                <div class="mavro-modal-desc">Sistem mengambil data real-time dari database pusat.</div>
-                <table class="mavro-table">
-                    <thead><tr><th class="col-no">No</th><th>Persyaratan</th><th>Value</th><th>Status</th></tr></thead>
-                    <tbody>
-                        ${items.map(item => `
-                            <tr>
-                                <td class="col-no">${item.n}</td>
-                                <td class="col-req">${item.r}</td>
-                                <td class="${item.type==='bool'?'col-val-bool':'col-val'}">${item.v}</td>
-                                <td class="col-status">
-                                    <div class="sultan-tooltip-container">
-                                        <span class="${item.s ? 'text-emerald' : 'text-slate'} font-black">
-                                            ${item.n === 4 && !item.s && canAgree ? 
-                                                '<span class="link-gold-premium" onclick="openAgreementWindow()">Agreement Link</span>' : 
-                                                (item.s ? 'Memenuhi Syarat' : 'Dalam Proses...')
-                                            }
-                                        </span>
-                                        <i class="fas fa-info-circle info-icon-sultan" onclick="showSultanTooltip(${item.n})"></i>
-                                        <div class="tooltip-box">${getTooltipText(item.n, d)}</div>
-                                    </div>
-                                </td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>`;
-
-            Swal.fire({
-                title: '<span style="font-size:16px; font-weight:900; text-transform:uppercase;">ELIGIBILITY CHECK</span>',
-                html: html, confirmButtonText: 'DASHBOARD PPN', confirmButtonColor: '#10b981', showCancelButton: true, width: '550px',
-                didOpen: () => { if(!allPassed) { Swal.getConfirmButton().disabled = true; Swal.getConfirmButton().style.opacity = '0.3'; } }
-            }).then((res) => { if(res.isConfirmed) window.promptLoginUnlock(); });
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.promptLoginUnlock();
         }
+    });
+}
 
         function openAgreementWindow() { Swal.close(); changePageSultan('user_agreement'); }
 
