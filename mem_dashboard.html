@@ -470,7 +470,7 @@
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('/api/admin/logout', {
+            fetch('/api/member/logout', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ ref: ADMIN_REF, logId: CURRENT_LOG_ID })
