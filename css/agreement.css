@@ -192,8 +192,8 @@
   vertical-align: top; 
   text-align: center; 
   padding: 10px 5px; 
-  font-size: 12px !important;                     /* SAMAKAN BESAR FONT */
-  font-family: 'Poppins', sans-serif !important;   /* SAMAKAN JENIS FONT */
+  font-size: 12px !important;
+  font-family: 'Poppins', sans-serif !important;
 }
 
 #signature-pad {
@@ -201,7 +201,7 @@
     height: 100% !important;
     display: block;
     cursor: crosshair;
-    touch-action: none; /* PENTING: Matikan scroll saat tanda tangan di HP */
+    touch-action: none;
     z-index: 5;
     position: relative;
 }
