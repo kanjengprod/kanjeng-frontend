@@ -646,7 +646,54 @@ input[type="tel"].input-sultan {
    💎 MEMBER DASHBOARD - COMPONENTS EXTENSIONS
    Tambahan component khusus member dashboard
    ============================================ */
+/* Container Utama Popup */
+.swal-popup-no-padding {
+  display: flex !important;
+  flex-direction: column !important; /* Mengatur urutan ke bawah */
+  padding: 0 !important;
+  overflow: hidden !important;
+  border-radius: 1.25rem !important;
+}
 
+/* Judul Jadi Header Paling Atas */
+.swal-header-hijau {
+  order: -1 !important; /* MEMAKSA JUDUL KE PALING ATAS */
+  background: linear-gradient(135deg, #059669 0%, #064e3b 100%) !important;
+  color: white !important;
+  width: 100%;
+  margin: 0 !important;
+  
+  /* --- ATUR TINGGI DI SINI --- */
+  height: 75px; 
+  /* --------------------------- */
+  
+  display: flex !important;
+  align-items: center;       /* Tulisan di tengah secara vertikal */
+  justify-content: flex-start; /* RATA KIRI */
+  padding-left: 10px !important; /* INDENSI 10PX */
+  box-sizing: border-box;    /* Agar padding tidak merusak lebar */
+  
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase; /* HURUF BESAR SEMUA */
+  letter-spacing: 1px;
+}
+
+/* Atur jarak Icon (Tanda Seru) */
+.swal2-icon {
+  margin: 20px auto 10px auto !important;
+}
+
+/* Atur jarak teks pertanyaan */
+.swal2-html-container {
+  margin: 10px 1.5em 20px !important;
+  font-weight: 600 !important;
+}
+
+/* Atur jarak tombol bawah */
+.swal2-actions {
+  margin-bottom: 20px !important;
+}
 /* ============================================
    🎨 SIDEBAR COMPONENTS (MEMBER)
    ============================================ */
