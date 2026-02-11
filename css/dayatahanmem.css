@@ -102,9 +102,9 @@
 .v-separator { 
   color: #e2e8f0 !important; 
   font-weight: 300; 
-  font-size: 20px;             /* Dikecilkan biar mepet */
+  font-size: 25px;
   opacity: 0.5; 
-  margin: 0 5px !important;    /* Jarak kiri kanan garis dipersempit */
+  margin: 0 5px !important;
 }
 
 /* 5. TOOLTIP GLASSMORPHISM */
