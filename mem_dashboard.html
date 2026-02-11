@@ -450,41 +450,36 @@
             if(!isVisible) target.style.display = 'block';
         }
         
-        // ✅ WORKER VERSION: confirmLogout
-        function confirmLogout() {
-            Swal.fire({ 
-                title: 'Logout Sultan', 
-                icon: 'warning', 
-                showCancelButton: true, 
-                confirmButtonColor: '#10b981', 
-                confirmButtonText: 'IYA, BRO!' 
-            }).then((res) => { 
-                if (res.isConfirmed) {
-                    const logId = sessionStorage.getItem('sultan_history_id');
-                    
-                    if (logId) {
-                        // Call Worker logout endpoint
-                        fetch('/api/member/logout', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ ref: USER_REF, logId: logId })
-                        })
-                        .then(() => {
-                            sessionStorage.clear();
-                            window.location.href = '/login';
-                        })
-                        .catch(err => {
-                            console.error('❌ Logout error:', err);
-                            sessionStorage.clear();
-                            window.location.href = '/login';
-                        });
-                    } else {
-                        sessionStorage.clear();
-                        window.location.href = '/login';
-                    }
-                }
+        // 7. LOGOUT (Menggunakan API Worker)
+   function confirmLogout() {
+    Swal.fire({
+        title: 'KELUAR (LOGOUT)', 
+        text: "Yakin ingin keluar dari sistem?",
+        icon: 'warning',
+        iconColor: '#facc15', // Warna kuning biar kontras sama hijau
+        showCancelButton: true,
+        confirmButtonColor: '#059669',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Iya, Keluar',
+        cancelButtonText: 'Batal',
+        customClass: {
+            container: 'my-swal-container',
+            popup: 'swal-popup-no-padding',
+            title: 'swal-header-hijau'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('/api/admin/logout', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ ref: ADMIN_REF, logId: CURRENT_LOG_ID })
+            }).finally(() => {
+                sessionStorage.clear();
+                window.location.href = '/login';
             });
         }
+    });
+}
 
         // ✅ WORKER VERSION: Heartbeat
         var CURRENT_LOG_ID = sessionStorage.getItem('sultan_history_id');
