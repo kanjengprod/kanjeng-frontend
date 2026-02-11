@@ -216,17 +216,29 @@ function startMavroGuard() {
 
 // ✅ FUNGSI UNTUK MERENDER TABEL SESUAI GAMBAR
 function renderMavroEligibilityModal(d) {
-    LATEST_MAVRO_DATA = d; // Simpan untuk tooltip jika perlu
+    LATEST_MAVRO_DATA = d;
 
-    // Susun data untuk tabel
+    // 1. Cek Status Individu (Boolean)
+    const p1 = d.totalMember >= d.minMember;
+    const p2 = d.totalAgreed >= d.totAgreeLimit;
+    const p3 = d.rekrutCount >= d.minRecruit;
+    const p5 = d.saldo >= d.minSaldo;
+    const p6 = d.profileComplete === true || d.profileComplete === "true";
+    
+    // 2. Cek apakah Syarat 1,2,3,5,6 SEMUA HIJAU?
+    const canSeeAgreementLink = (p1 && p2 && p3 && p5 && p6);
+    
+    // 3. Status Final Item No 4 (Persetujuan)
+    const p4 = d.isAgreed === 1;
+
     const items = [
-        { n: 1, r: "Member Komunitas", v: d.totalMember || 0, s: d.totalMember >= d.minMember },
-        { n: 2, r: "Total Member Agreement", v: d.totalAgreed || 0, s: d.totalAgreed >= d.totAgreeLimit },
-        { n: 3, r: "Rekrut Member", v: d.rekrutCount || 0, s: d.rekrutCount >= d.minRecruit },
-        { n: 4, r: "Persetujuan (Agreement)", v: d.isAgreed ? "True" : "False", s: d.isAgreed === 1 },
-        { n: 5, r: "Saldo Akun", v: (d.saldo || 0).toLocaleString('id-ID'), s: d.saldo >= d.minSaldo },
-        { n: 6, r: "Foto Profil & Rekening", v: d.profileComplete ? "True" : "False", s: d.profileComplete },
-        { n: 7, r: "Biaya Join", v: (d.joinFee || 0).toLocaleString('id-ID'), s: d.isAgreed === 1 }
+        { n: 1, r: "Member Komunitas", v: d.totalMember || 0, s: p1 },
+        { n: 2, r: "Total Member Agreement", v: d.totalAgreed || 0, s: p2 },
+        { n: 3, r: "Rekrut Member", v: d.rekrutCount || 0, s: p3 },
+        { n: 4, r: "Persetujuan (Agreement)", v: p4 ? "True" : "False", s: p4 },
+        { n: 5, r: "Saldo Akun", v: (d.saldo || 0).toLocaleString('id-ID'), s: p5 },
+        { n: 6, r: "Foto Profil & Rekening", v: p6 ? "True" : "False", s: p6 },
+        { n: 7, r: "Biaya Join", v: (d.joinFee || 0).toLocaleString('id-ID'), s: p4 }
     ];
 
     const allPassed = items.every(item => item.s === true);
@@ -245,21 +257,32 @@ function renderMavroEligibilityModal(d) {
                 </tr>
             </thead>
             <tbody>
-                ${items.map(it => `
-                <tr>
-                    <td style="text-align: center;">${it.n}</td>
-                    <td style="text-align: left;">${it.r}</td>
-                    <td style="text-align: center; font-weight: 800;">${it.v}</td>
-                    <td>
-                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 5px;">
-                            <span class="${it.s ? 'text-memenuhi' : 'text-slate'}">
-                                ${it.s ? 'Memenuhi Syarat' : 'Belum Memenuhi'}
-                            </span>
-                            <i class="fas fa-info-circle" style="color:#3b82f6; cursor:pointer; font-size: 12px;" onclick="showSultanTooltip(${it.n})"></i>
-                        </div>
-                    </td>
-                </tr>
-                `).join('')}
+                ${items.map(it => {
+                    // LOGIKA KHUSUS UNTUK BARIS NOMOR 4
+                    let statusHtml = "";
+                    if (it.n === 4 && !it.s && canSeeAgreementLink) {
+                        // Jika poin 4 belum hijau tapi syarat lain terpenuhi, munculkan Link Kuning
+                        statusHtml = `<span class="link-gold-premium" onclick="openAgreementWindow()">Agreement Link</span>`;
+                    } else {
+                        // Selain kondisi di atas, tampilkan teks standard (Hijau/Slate)
+                        statusHtml = `<span class="${it.s ? 'text-memenuhi' : 'text-slate'}">
+                                        ${it.s ? 'Memenuhi Syarat' : 'Dalam Proses...'}
+                                      </span>`;
+                    }
+
+                    return `
+                    <tr>
+                        <td style="text-align: center;">${it.n}</td>
+                        <td style="text-align: left;">${it.r}</td>
+                        <td style="text-align: center; font-weight: 800;">${it.v}</td>
+                        <td>
+                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 5px;">
+                                ${statusHtml}
+                                <i class="fas fa-info-circle" style="color:#3b82f6; cursor:pointer; font-size: 12px;" onclick="showSultanTooltip(${it.n})"></i>
+                            </div>
+                        </td>
+                    </tr>`;
+                }).join('')}
             </tbody>
         </table>
     `;
@@ -291,8 +314,10 @@ function renderMavroEligibilityModal(d) {
         }
     });
 }
-
-        function openAgreementWindow() { Swal.close(); changePageSultan('user_agreement'); }
+        function openAgreementWindow() {
+            Swal.close(); 
+            changePageSultan('user_agreement');
+        }
 
         window.promptLoginUnlock = function() {
             Swal.fire({
