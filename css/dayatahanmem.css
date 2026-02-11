@@ -46,7 +46,67 @@
 }
 
 /* 4. LEGENDA BOLA 3D RAKSASA (55PX) */
+.led-legend { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 15px; 
+  margin-bottom: 40px; 
+}
 
+.led-group { 
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+  position: relative; 
+}
+
+.sphere-3d-big { 
+  width: 55px; 
+  height: 55px; 
+  border-radius: 50%; 
+  position: relative; 
+  cursor: pointer; 
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.sphere-3d-big:hover { 
+  transform: scale(1.15) rotate(10deg); 
+}
+
+.sphere-green { 
+  background: radial-gradient(circle at 35% 35%, #4ade80, #064e3b); 
+  box-shadow: inset -6px -6px 12px rgba(0,0,0,0.5), 0 15px 30px rgba(16, 185, 129, 0.4); 
+}
+
+.sphere-yellow { 
+  background: radial-gradient(circle at 35% 35%, #fbbf24, #78350f); 
+  box-shadow: inset -6px -6px 12px rgba(0,0,0,0.5), 0 15px 30px rgba(245, 158, 11, 0.4); 
+}
+
+.sphere-red { 
+  background: radial-gradient(circle at 35% 35%, #f87171, #7f1d1d); 
+  box-shadow: inset -6px -6px 12px rgba(0,0,0,0.5), 0 15px 30px rgba(239, 68, 68, 0.4); 
+}
+
+.sphere-3d-big::before { 
+  content: ''; 
+  position: absolute; 
+  top: 15%; 
+  left: 15%; 
+  width: 40%; 
+  height: 40%; 
+  background: rgba(255,255,255,0.5); 
+  border-radius: 50%; 
+  filter: blur(1.5px); 
+}
+
+.v-separator { 
+  color: #e2e8f0; 
+  font-weight: 300; 
+  font-size: 25px; 
+  opacity: 0.5; 
+}
 
 /* 💎 5. SULTAN GLASS TOOLTIP */
 .led-group .tooltip-text {
