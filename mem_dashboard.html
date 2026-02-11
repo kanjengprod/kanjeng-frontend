@@ -452,12 +452,12 @@
         }
         
         // 7. LOGOUT (Menggunakan API Worker)
-   function confirmLogout() {
+       function confirmLogout() {
     Swal.fire({
         title: 'KELUAR (LOGOUT)', 
         text: "Yakin ingin keluar dari sistem?",
         icon: 'warning',
-        iconColor: '#facc15', // Warna kuning biar kontras sama hijau
+        iconColor: '#facc15',
         showCancelButton: true,
         confirmButtonColor: '#059669',
         cancelButtonColor: '#64748b',
@@ -470,11 +470,18 @@
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('/api/member/logout', {
+            // Pastikan pakai USER_REF, bukan ADMIN_REF
+            const refTujuan = USER_REF || sessionStorage.getItem('sultan_member_ref');
+            
+            fetch('/api/member/logout', { // Pastikan endpoint-nya benar
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ ref: ADMIN_REF, logId: CURRENT_LOG_ID })
+                body: JSON.stringify({ 
+                    ref: refTujuan, 
+                    logId: CURRENT_LOG_ID 
+                })
             }).finally(() => {
+                // Hapus semua session dan pindah ke login
                 sessionStorage.clear();
                 window.location.href = '/login';
             });
