@@ -1,0 +1,201 @@
+/* ============================================
+   📜 AGREEMENT.CSS - User Agreement Document
+   ============================================ */
+
+/* IMPORT FONT POPPINS */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap');
+
+/* LEGAL DOCUMENT CONTAINER */
+.legal-doc-container { 
+  font-family: 'Poppins', sans-serif; 
+  position: relative; 
+}
+
+/* CUSTOM SCROLLBAR */
+.custom-scrollbar::-webkit-scrollbar { 
+  width: 4px; 
+}
+
+.custom-scrollbar::-webkit-scrollbar-track { 
+  background: #f8fafc; 
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb { 
+  background: #cbd5e1; 
+  border-radius: 10px; 
+}
+
+/* DRAGGABLE FORM */
+#draggable_form { 
+  width: 520px; 
+  margin: 20px auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); 
+  background: #ffffff; 
+  border: 2px solid #e2e8f0;
+  position: relative;
+  z-index: 10;
+  border-radius: 2.5rem;
+  overflow: hidden;
+}
+
+/* DRAG HANDLE */
+.drag-handle { 
+  cursor: move; 
+  background: #0f172a; 
+  padding: 25px; 
+  text-align: center; 
+  position: relative;
+}
+
+/* SAH OVERLAY FINAL */
+.sah-overlay-final {
+  position: absolute; 
+  inset: 0; 
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px); 
+  display: none; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center;
+  z-index: 1000; 
+  border-radius: 1.5rem; 
+  border: 3px solid #059669;
+}
+
+/* BUTTON STYLES */
+.btn-sultan-active { 
+  background: #059669 !important; 
+  color: #fff !important; 
+  cursor: pointer !important; 
+  box-shadow: 0 10px 20px rgba(5, 150, 105, 0.3) !important; 
+  font-weight: 900; 
+}
+
+.btn-sultan-disabled { 
+  background: #e2e8f0 !important; 
+  color: #94a3b8 !important; 
+  cursor: not-allowed !important; 
+  font-weight: 900; 
+}
+
+/* SECTION PIHAK */
+.section-pihak { 
+  font-size: 11px; 
+  margin-bottom: 1.5em; 
+}
+
+/* TABEL PIHAK */
+.tabel-pihak { 
+  width: 100%; 
+  table-layout: fixed; 
+}
+
+.tabel-pihak td { 
+  padding: 3px 0; 
+  vertical-align: top; 
+}
+
+.col-label { 
+  width: 130px; 
+}
+
+.col-separator { 
+  width: 15px; 
+  text-align: center; 
+}
+
+/* JUDUL UTAMA */
+.judul-utama { 
+  font-weight: 900; 
+  text-align: center; 
+  text-transform: uppercase; 
+  font-size: 14px; 
+  color: #000; 
+  line-height: 1.0; 
+  margin: 0; 
+}
+
+/* PEMBUKAAN TEKS */
+.pembukaan-teks { 
+  text-align: justify; 
+  line-height: 2; 
+  font-size: 11px; 
+  color: #000; 
+  margin-top: 2em; 
+  margin-bottom: 1.5em; 
+}
+
+/* DEKLARASI PARA PIHAK */
+.deklarasi-parapihak { 
+  text-align: justify; 
+  line-height: 1.8; 
+  font-size: 11px; 
+  color: #000; 
+  margin: 15px 0; 
+  padding: 0px; 
+}
+
+/* PASAL NUMBER */
+.pasal-no { 
+  font-weight: 900; 
+  text-align: center; 
+  color: #000; 
+  margin-top: 35px; 
+}
+
+/* PASAL TITLE */
+.pasal-title { 
+  font-weight: 900; 
+  text-align: center; 
+  text-transform: uppercase; 
+  margin-top: 5px; 
+  margin-bottom: 25px; 
+  text-decoration: underline; 
+}
+
+/* 📋 HANGING INDENT UTAMA (1. 2. 3.) */
+.isi-peraturan { 
+  text-align: justify; 
+  margin-bottom: 12px; 
+  padding-left: 24px; 
+  text-indent: -24px;  
+  line-height: 1.6;
+  color: #1e293b;
+  font-size: 11px;
+  margin-left: 15px;
+}
+
+/* 📋 HANGING INDENT ALFABET (a. b. c.) */
+.alfabet-peraturan { 
+  text-align: justify; 
+  margin-bottom: 10px; 
+  padding-left: 65px; 
+  text-indent: -25px; 
+  line-height: 1.5;
+  color: #1e293b;
+  font-size: 11px;
+}
+
+/* SIGNATURE SECTION */
+.signature-section {
+  padding-top: 15px; 
+}
+
+/* SIGNATURE TABLE */
+.signature-table { 
+  width: 100%; 
+  border-collapse: collapse; 
+  table-layout: fixed; 
+}
+
+.signature-table td { 
+  vertical-align: top; 
+  text-align: center; 
+  padding: 10px 5px; 
+  font-size: 12px !important;                     /* SAMAKAN BESAR FONT */
+  font-family: 'Poppins', sans-serif !important;   /* SAMAKAN JENIS FONT */
+}
+
+/* ============================================
+   END OF AGREEMENT.CSS
+   ============================================ */
