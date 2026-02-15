@@ -360,15 +360,39 @@
 <script>
 // FILE: agreement.js - VERSI SULTAN PRECISION FINAL v11.8 (FIXED CANVAS BUG - INLINE VERSION)
 
-const USER_DATA = {
-    nama: sessionStorage.getItem('sultan_member_nama') || "MEMBER",
-    userId: sessionStorage.getItem('sultan_user_id') || "USR-UNKNOWN",
-    ip_address: "Captured Via System",
-    mavro_agreement: (typeof LATEST_MAVRO_DATA !== 'undefined' && LATEST_MAVRO_DATA && LATEST_MAVRO_DATA.isAgreed === 1) ? 1 : 0,
-    timestamp: new Date().toISOString()
-};
+// ✅ CEK DULU APAKAH USER_DATA DAN USER_REF SUDAH ADA (HINDARI DUPLICATE DECLARATION)
+if (typeof USER_DATA === 'undefined') {
+    var USER_DATA = {
+        nama: (function() {
+            try { 
+                return sessionStorage.getItem('sultan_member_nama') || "MEMBER"; 
+            } catch(e) { 
+                console.warn('SessionStorage blocked:', e);
+                return "MEMBER"; 
+            }
+        })(),
+        userId: (function() {
+            try { 
+                return sessionStorage.getItem('sultan_user_id') || "USR-UNKNOWN"; 
+            } catch(e) { 
+                return "USR-UNKNOWN"; 
+            }
+        })(),
+        ip_address: "Captured Via System",
+        mavro_agreement: (typeof LATEST_MAVRO_DATA !== 'undefined' && LATEST_MAVRO_DATA && LATEST_MAVRO_DATA.isAgreed === 1) ? 1 : 0,
+        timestamp: new Date().toISOString()
+    };
+}
 
-const USER_REF = sessionStorage.getItem('sultan_user_id') || "USER_REF_123";
+if (typeof USER_REF === 'undefined') {
+    var USER_REF = (function() {
+        try { 
+            return sessionStorage.getItem('sultan_user_id') || "USER_REF_123"; 
+        } catch(e) { 
+            return "USER_REF_123"; 
+        }
+    })();
+}
 
 (function() {
     const canvas = document.getElementById('signature-pad');
