@@ -1,17 +1,23 @@
-// FILE: agreement.js - VERSI SULTAN PRECISION FINAL v11.7
+// FILE: agreement.js - VERSI SULTAN PRECISION FINAL v11.8 (FIXED CANVAS BUG)
+
 const USER_DATA = {
     nama: sessionStorage.getItem('sultan_member_nama') || "MEMBER",
     userId: sessionStorage.getItem('sultan_user_id') || "USR-UNKNOWN",
     ip_address: "Captured Via System",
     // Ambil status dari data eligibility yang sudah di-load sebelumnya
-    mavro_agreement: (LATEST_MAVRO_DATA && LATEST_MAVRO_DATA.isAgreed === 1) ? 1 : 0,
+    mavro_agreement: (typeof LATEST_MAVRO_DATA !== 'undefined' && LATEST_MAVRO_DATA && LATEST_MAVRO_DATA.isAgreed === 1) ? 1 : 0,
     timestamp: new Date().toISOString()
 };
 
-const USER_REF = "USER_REF_123"; // Reference ID untuk Google Script
+const USER_REF = sessionStorage.getItem('sultan_user_id') || "USER_REF_123";
 
 (function() {
     const canvas = document.getElementById('signature-pad');
+    if (!canvas) {
+        console.error('Canvas element not found!');
+        return;
+    }
+    
     const ctx = canvas.getContext('2d');
     const btn = document.getElementById('btn_submit');
     const btnDownload = document.getElementById('btn_download');
@@ -21,12 +27,26 @@ const USER_REF = "USER_REF_123"; // Reference ID untuk Google Script
     
     const isSigned = (USER_DATA.mavro_agreement == 1);
     
+    // ⚡ DEKLARASI VARIABEL DRAWING (INI YANG PENTING!)
+    let drawing = false;
+    let hasDrawn = false;
+    
     // Populate user data
-    document.getElementById('user_nama').textContent = USER_DATA.nama;
-    document.getElementById('user_id').textContent = USER_DATA.userId;
-    document.getElementById('user_ip').textContent = USER_DATA.ip_address || 'Captured Via System';
-    document.getElementById('user_nama_sig').textContent = USER_DATA.nama;
-    document.getElementById('user_id_sig').textContent = USER_DATA.userId;
+    if(document.getElementById('user_nama')) {
+        document.getElementById('user_nama').textContent = USER_DATA.nama;
+    }
+    if(document.getElementById('user_id')) {
+        document.getElementById('user_id').textContent = USER_DATA.userId;
+    }
+    if(document.getElementById('user_ip')) {
+        document.getElementById('user_ip').textContent = USER_DATA.ip_address || 'Captured Via System';
+    }
+    if(document.getElementById('user_nama_sig')) {
+        document.getElementById('user_nama_sig').textContent = USER_DATA.nama;
+    }
+    if(document.getElementById('user_id_sig')) {
+        document.getElementById('user_id_sig').textContent = USER_DATA.userId;
+    }
     
     function terbilang(n) {
         const kata = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
@@ -52,15 +72,15 @@ const USER_REF = "USER_REF_123"; // Reference ID untuk Google Script
 
     // ✅ 1. INISIALISASI CANVAS (DIPERBAIKI)
     function init() {
-        const rect = canvas.getBoundingClientRect();
-        
         // Paksa ukuran internal canvas sama dengan ukuran display CSS-nya
         canvas.width = canvas.offsetWidth; 
         canvas.height = canvas.offsetHeight;
         
+        console.log('Canvas initialized:', canvas.width, 'x', canvas.height);
+        
         // Pengaturan Kuas (Tebal & Halus)
         ctx.strokeStyle = "#000000"; 
-        ctx.lineWidth = 4; 
+        ctx.lineWidth = 3; 
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
 
@@ -79,11 +99,15 @@ const USER_REF = "USER_REF_123"; // Reference ID untuk Google Script
         if (isSigned) {
             const overlay = document.getElementById('overlay_sultan_sah');
             if(overlay) overlay.style.display = "flex";
-            btn.disabled = true;
-            btn.innerText = "✓ PROGRAM MAVRO TELAH AKTIF";
-            btn.className = "w-full py-4 rounded-2xl font-black text-[12px] btn-sultan-disabled";
-            chk.checked = true; 
-            chk.disabled = true;
+            if(btn) {
+                btn.disabled = true;
+                btn.innerText = "✓ PROGRAM MAVRO TELAH AKTIF";
+                btn.className = "w-full py-4 rounded-2xl font-black text-[12px] btn-sultan-disabled";
+            }
+            if(chk) {
+                chk.checked = true; 
+                chk.disabled = true;
+            }
             if(btnDownload) btnDownload.style.display = "flex";
         }
     }
@@ -91,7 +115,7 @@ const USER_REF = "USER_REF_123"; // Reference ID untuk Google Script
     // ✅ 2. DRAGGABLE FORM LOGIC
     let isDragging = false, offsetX, offsetY;
     const headerEl = document.getElementById('form_header');
-    if(headerEl){
+    if(headerEl && form){
         headerEl.onmousedown = function(e) { 
             isDragging = true; 
             offsetX = e.clientX - form.getBoundingClientRect().left; 
@@ -120,15 +144,22 @@ const USER_REF = "USER_REF_123"; // Reference ID untuk Google Script
         }; 
     }
     
-    // ✅ 4. EVENT DRAWING (MOUSE & TOUCH)
-    if (!isSigned) {
-        // Desktop
+    // ✅ 4. SETUP EVENT DRAWING (DIPANGGIL SETELAH INIT)
+    function setupSignaturePad() {
+        if (isSigned) return; // Skip jika sudah ditandatangani
+        
+        console.log('Setting up signature pad events...');
+        
+        // Desktop - Mouse Events
         canvas.addEventListener('mousedown', (e) => { 
-            drawing = true; hasDrawn = true; 
+            console.log('Mouse down detected');
+            drawing = true; 
+            hasDrawn = true; 
             ctx.beginPath(); 
             let p = getPos(e); 
             ctx.moveTo(p.x, p.y); 
         });
+        
         canvas.addEventListener('mousemove', (e) => { 
             if(drawing){ 
                 let p = getPos(e); 
@@ -136,11 +167,19 @@ const USER_REF = "USER_REF_123"; // Reference ID untuk Google Script
                 ctx.stroke(); 
             } 
         });
-        window.addEventListener('mouseup', () => { drawing = false; });
+        
+        window.addEventListener('mouseup', () => { 
+            if(drawing) {
+                console.log('Signature drawn');
+            }
+            drawing = false; 
+        });
 
-        // Mobile / HP (Ditambah passive: false agar preventDefault jalan)
+        // Mobile / HP - Touch Events
         canvas.addEventListener('touchstart', (e) => { 
-            drawing = true; hasDrawn = true; 
+            console.log('Touch start detected');
+            drawing = true; 
+            hasDrawn = true; 
             ctx.beginPath(); 
             let p = getPos(e); 
             ctx.moveTo(p.x, p.y); 
@@ -155,6 +194,13 @@ const USER_REF = "USER_REF_123"; // Reference ID untuk Google Script
             } 
             if(e.cancelable) e.preventDefault(); 
         }, { passive: false });
+        
+        window.addEventListener('touchend', () => { 
+            if(drawing) {
+                console.log('Signature drawn (touch)');
+            }
+            drawing = false; 
+        });
     }
     
     // ✅ 5. RESET PAD
@@ -162,13 +208,19 @@ const USER_REF = "USER_REF_123"; // Reference ID untuk Google Script
         if(!isSigned){ 
             ctx.clearRect(0, 0, canvas.width, canvas.height); 
             hasDrawn = false; 
+            console.log('Signature pad reset');
         } 
     };
     
+    // ✅ 6. JALANKAN INIT & SETUP
     // Jalankan init dengan delay kecil agar element HTML ter-render dulu
-    setTimeout(init, 500);
+    setTimeout(() => {
+        init();
+        setupSignaturePad(); // Setup event listener SETELAH canvas di-init
+        console.log('Agreement.js fully loaded. Ready to sign!');
+    }, 500);
     
-    // Download PDF Function
+    // ========== DOWNLOAD PDF FUNCTION ==========
     window.downloadAgreementPDF = function() {
         Swal.fire({
             title: 'Generating PDF...',
@@ -205,14 +257,34 @@ const USER_REF = "USER_REF_123"; // Reference ID untuk Google Script
         */
     };
 
+    // ========== SUBMIT DATA FUNCTION ==========
     window.submitData = async function() {
         // 1. Validasi: Apakah sudah tanda tangan atau belum centang?
-        if(isSigned) return;
-        if(!chk.checked || !hasDrawn) { 
+        if(isSigned) {
+            Swal.fire({ 
+                icon: 'info', 
+                title: 'Sudah Ditandatangani', 
+                text: 'Dokumen ini sudah pernah Anda tandatangani sebelumnya.', 
+                confirmButtonColor: '#059669' 
+            });
+            return;
+        }
+        
+        if(!chk || !chk.checked) { 
             Swal.fire({ 
                 icon: 'error', 
-                title: 'Maaf !', 
-                html: '<b>Dokumen ini harus anda Signatured dan Checkbox harus dicentang.</b>', 
+                title: 'Checkbox Belum Dicentang', 
+                html: '<b>Anda harus mencentang persetujuan terlebih dahulu.</b>', 
+                confirmButtonColor: '#059669' 
+            }); 
+            return; 
+        }
+        
+        if(!hasDrawn) { 
+            Swal.fire({ 
+                icon: 'error', 
+                title: 'Belum Tanda Tangan', 
+                html: '<b>Silakan bubuhkan tanda tangan Anda di area yang tersedia.</b>', 
                 confirmButtonColor: '#059669' 
             }); 
             return; 
@@ -232,7 +304,9 @@ const USER_REF = "USER_REF_123"; // Reference ID untuk Google Script
             const response = await fetch('https://api.ipify.org?format=json'); 
             const data = await response.json(); 
             userIp = data.ip; 
-        } catch (err) { console.warn("Gagal mengambil IP, menggunakan default."); }
+        } catch (err) { 
+            console.warn("Gagal mengambil IP, menggunakan default:", err); 
+        }
         
         // 4. PROSES KIRIM KE WORKER (FIRESTORE)
         try {
@@ -262,6 +336,8 @@ const USER_REF = "USER_REF_123"; // Reference ID untuk Google Script
                     // Refresh halaman agreement agar muncul overlay "SAH"
                     if(typeof changePageSultan === "function") {
                         changePageSultan('user_agreement');
+                    } else {
+                        location.reload(); // Fallback jika changePageSultan tidak ada
                     }
 
                     // Munculkan prompt unlock login (opsional)
@@ -277,6 +353,7 @@ const USER_REF = "USER_REF_123"; // Reference ID untuk Google Script
 
         } catch (error) {
             // 6. Jika Terjadi Kesalahan (Server mati / Route belum ada)
+            console.error('Save agreement error:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Koneksi Gagal',
@@ -285,3 +362,4 @@ const USER_REF = "USER_REF_123"; // Reference ID untuk Google Script
             });
         }
     };
+})();
