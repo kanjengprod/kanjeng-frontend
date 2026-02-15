@@ -5,12 +5,156 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perjanjian Kerja Sama - Kanjeng Production</title>
     
-    <!-- Link ke CSS Eksternal -->
-    <link rel="stylesheet" href="agreement.css">
+    <!-- Inline CSS untuk Menghindari MIME Type Issue -->
+    <style>
+        /* FILE: agreement.css - VERSI SULTAN PRECISION FINAL v11.7 (FULL POPPINS - NO ABRIDGEMENT) */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap');
+        
+        .legal-doc-container { font-family: 'Poppins', sans-serif; position: relative; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        #draggable_form { 
+            width: 520px; margin: 20px auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); 
+            background: #ffffff; border: 2px solid #e2e8f0;
+            position: relative; z-index: 10;
+            border-radius: 2.5rem; overflow: hidden;
+        }
+        
+        .drag-handle { cursor: move; background: #0f172a; padding: 25px; text-align: center; position: relative; }
+        
+        .sah-overlay-final {
+            position: absolute; inset: 0; background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px); display: none; flex-direction: column; 
+            align-items: center; justify-content: center;
+            z-index: 1000; border-radius: 1.5rem; border: 3px solid #059669;
+        }
+
+        .btn-sultan-active { 
+            background: #059669 !important; color: #fff !important; cursor: pointer !important; 
+            box-shadow: 0 10px 20px rgba(5, 150, 105, 0.3) !important; font-weight: 900; 
+        }
+        .btn-sultan-disabled { 
+            background: #e2e8f0 !important; color: #94a3b8 !important; 
+            cursor: not-allowed !important; font-weight: 900; 
+        }
+        
+        .section-pihak { font-size: 11px; margin-bottom: 1.5em; }
+        .tabel-pihak { width: 100%; table-layout: fixed; }
+        .tabel-pihak td { padding: 3px 0; vertical-align: top; }
+        .col-label { width: 130px; }
+        .col-separator { width: 15px; text-align: center; }
+        
+        .judul-utama { 
+            font-weight: 900; text-align: center; text-transform: uppercase; 
+            font-size: 14px; color: #000; line-height: 1.0; margin: 0; 
+        }
+        .pembukaan-teks { 
+            text-align: justify; line-height: 2; font-size: 11px; 
+            color: #000; margin-top: 2em; margin-bottom: 1.5em; 
+        }
+        .deklarasi-parapihak { 
+            text-align: justify; line-height: 1.8; font-size: 11px; 
+            color: #000; margin: 15px 0; padding: 0px; 
+        }
+        
+        .pasal-no { font-weight: 900; text-align: center; color: #000; margin-top: 35px; }
+        .pasal-title { 
+            font-weight: 900; text-align: center; text-transform: uppercase; 
+            margin-top: 5px; margin-bottom: 25px; text-decoration: underline; 
+        }
+        
+        .isi-peraturan { 
+            text-align: justify; margin-bottom: 12px; padding-left: 24px; text-indent: -24px;  
+            line-height: 1.6; color: #1e293b; font-size: 11px; margin-left: 15px;
+        }
+        .alfabet-peraturan { 
+            text-align: justify; margin-bottom: 10px; padding-left: 65px; text-indent: -25px; 
+            line-height: 1.5; color: #1e293b; font-size: 11px;
+        }
+        
+        .signature-section { padding-top: 15px; }
+        .signature-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .signature-table td { 
+            vertical-align: top; text-align: center; padding: 10px 5px; 
+            font-size: 12px !important; font-family: 'Poppins', sans-serif !important;
+        }
+        
+        /* Utility classes */
+        .text-white { color: white; }
+        .font-black { font-weight: 900; }
+        .text-lg { font-size: 1.125rem; }
+        .tracking-wide { letter-spacing: 0.025em; }
+        .uppercase { text-transform: uppercase; }
+        .italic { font-style: italic; }
+        .text-yellow-500 { color: #eab308; }
+        .text-slate-800 { color: #1e293b; }
+        .text-slate-500 { color: #64748b; }
+        .text-slate-400 { color: #94a3b8; }
+        .text-emerald-600 { color: #059669; }
+        .text-amber-500 { color: #f59e0b; }
+        .font-bold { font-weight: 700; }
+        .underline { text-decoration: underline; }
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 0.75rem; }
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-5 { margin-top: 1.25rem; }
+        .p-6 { padding: 1.5rem; }
+        .p-10 { padding: 2.5rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .bg-slate-50 { background-color: #f8fafc; }
+        .bg-white { background-color: white; }
+        .bg-amber-500 { background-color: #f59e0b; }
+        .border-t { border-top-width: 1px; }
+        .border-2 { border-width: 2px; }
+        .border-slate-200 { border-color: #e2e8f0; }
+        .rounded-2xl { border-radius: 1rem; }
+        .rounded-lg { border-radius: 0.5rem; }
+        .rounded { border-radius: 0.25rem; }
+        .overflow-hidden { overflow: hidden; }
+        .overflow-y-auto { overflow-y: auto; }
+        .relative { position: relative; }
+        .absolute { position: absolute; }
+        .top-0 { top: 0; }
+        .left-0 { left: 0; }
+        .w-full { width: 100%; }
+        .w-5 { width: 1.25rem; }
+        .h-1 { height: 0.25rem; }
+        .h-5 { height: 1.25rem; }
+        .h-44 { height: 11rem; }
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .space-x-3 > * + * { margin-left: 0.75rem; }
+        .space-y-3 > * + * { margin-top: 0.75rem; }
+        .gap-2 { gap: 0.5rem; }
+        .cursor-pointer { cursor: pointer; }
+        .cursor-crosshair { cursor: crosshair; }
+        .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+        .hover\:bg-amber-600:hover { background-color: #d97706; }
+        .bg-gradient-to-r { background-image: linear-gradient(to right, var(--tw-gradient-stops)); }
+        .from-yellow-600 { --tw-gradient-from: #ca8a04; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(202, 138, 4, 0)); }
+        .via-yellow-300 { --tw-gradient-stops: var(--tw-gradient-from), #fde047, var(--tw-gradient-to, rgba(253, 224, 71, 0)); }
+        .to-yellow-600 { --tw-gradient-to: #ca8a04; }
+        .text-\[8px\] { font-size: 8px; }
+        .text-\[9px\] { font-size: 9px; }
+        .text-\[10px\] { font-size: 10px; }
+        .text-\[12px\] { font-size: 12px; }
+        .tracking-widest { letter-spacing: 0.1em; }
+    </style>
     
     <!-- Font Awesome untuk Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/css/agreement.css">
     
     <!-- SweetAlert2 untuk Alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -213,7 +357,313 @@
     </div>
 </div>
 
-<script src="agreement.js"></script>
+<script>
+// FILE: agreement.js - VERSI SULTAN PRECISION FINAL v11.8 (FIXED CANVAS BUG - INLINE VERSION)
+
+const USER_DATA = {
+    nama: sessionStorage.getItem('sultan_member_nama') || "MEMBER",
+    userId: sessionStorage.getItem('sultan_user_id') || "USR-UNKNOWN",
+    ip_address: "Captured Via System",
+    mavro_agreement: (typeof LATEST_MAVRO_DATA !== 'undefined' && LATEST_MAVRO_DATA && LATEST_MAVRO_DATA.isAgreed === 1) ? 1 : 0,
+    timestamp: new Date().toISOString()
+};
+
+const USER_REF = sessionStorage.getItem('sultan_user_id') || "USER_REF_123";
+
+(function() {
+    const canvas = document.getElementById('signature-pad');
+    if (!canvas) {
+        console.error('Canvas element not found!');
+        return;
+    }
+    
+    const ctx = canvas.getContext('2d');
+    const btn = document.getElementById('btn_submit');
+    const btnDownload = document.getElementById('btn_download');
+    const chk = document.getElementById('final_check');
+    const scrollBox = document.getElementById('legal_scroll_box');
+    const form = document.getElementById('draggable_form');
+    
+    const isSigned = (USER_DATA.mavro_agreement == 1);
+    
+    let drawing = false;
+    let hasDrawn = false;
+    
+    if(document.getElementById('user_nama')) document.getElementById('user_nama').textContent = USER_DATA.nama;
+    if(document.getElementById('user_id')) document.getElementById('user_id').textContent = USER_DATA.userId;
+    if(document.getElementById('user_ip')) document.getElementById('user_ip').textContent = USER_DATA.ip_address || 'Captured Via System';
+    if(document.getElementById('user_nama_sig')) document.getElementById('user_nama_sig').textContent = USER_DATA.nama;
+    if(document.getElementById('user_id_sig')) document.getElementById('user_id_sig').textContent = USER_DATA.userId;
+    
+    function terbilang(n) {
+        const kata = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
+        if (n < 12) return kata[n];
+        if (n < 20) return terbilang(n - 10) + " Belas";
+        if (n < 100) return terbilang(Math.floor(n / 10)) + " Puluh " + terbilang(n % 10);
+        return String(n);
+    }
+
+    function formatTanggalLengkap(isoDate) {
+        if (!isoDate || isoDate === "") return { hari:"Sabtu", tgl:"Tiga", bln:"Januari", thn:"Dua Ribu Dua Puluh Enam", short:"03-01-2026" };
+        const dObj = new Date(isoDate);
+        const monthArr = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        const dayArr = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+        return {
+            hari: dayArr[dObj.getDay()],
+            tgl: terbilang(dObj.getDate()),
+            bln: monthArr[dObj.getMonth()],
+            thn: "Dua Ribu Dua Puluh Enam",
+            short: String(dObj.getDate()).padStart(2, '0') + "-" + String(dObj.getMonth() + 1).padStart(2, '0') + "-" + dObj.getFullYear()
+        };
+    }
+
+    function init() {
+        canvas.width = canvas.offsetWidth; 
+        canvas.height = canvas.offsetHeight;
+        
+        console.log('Canvas initialized:', canvas.width, 'x', canvas.height);
+        
+        ctx.strokeStyle = "#000000"; 
+        ctx.lineWidth = 3; 
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+
+        const dataTgl = formatTanggalLengkap(USER_DATA.timestamp);
+        if(document.getElementById('txt_hari')){
+            document.getElementById('txt_hari').innerText = dataTgl.hari;
+            document.getElementById('txt_tgl').innerText = dataTgl.tgl;
+            document.getElementById('txt_bln').innerText = dataTgl.bln;
+            document.getElementById('txt_thn').innerText = dataTgl.thn;
+            document.getElementById('tgl_sig_p1').innerText = dataTgl.short;
+            document.getElementById('tgl_sig_p2').innerText = dataTgl.short;
+        }
+
+        if (isSigned) {
+            const overlay = document.getElementById('overlay_sultan_sah');
+            if(overlay) overlay.style.display = "flex";
+            if(btn) {
+                btn.disabled = true;
+                btn.innerText = "✓ PROGRAM MAVRO TELAH AKTIF";
+                btn.className = "w-full py-4 rounded-2xl font-black text-[12px] btn-sultan-disabled";
+            }
+            if(chk) {
+                chk.checked = true; 
+                chk.disabled = true;
+            }
+            if(btnDownload) btnDownload.style.display = "flex";
+        }
+    }
+
+    let isDragging = false, offsetX, offsetY;
+    const headerEl = document.getElementById('form_header');
+    if(headerEl && form){
+        headerEl.onmousedown = function(e) { 
+            isDragging = true; 
+            offsetX = e.clientX - form.getBoundingClientRect().left; 
+            offsetY = e.clientY - form.getBoundingClientRect().top; 
+            form.style.position = 'absolute'; 
+            form.style.margin = '0'; 
+        };
+        document.onmousemove = function(e) { 
+            if (!isDragging) return; 
+            form.style.left = (e.clientX - offsetX) + 'px'; 
+            form.style.top = (e.clientY - offsetY) + 'px'; 
+        };
+        document.onmouseup = function() { isDragging = false; };
+    }
+    
+    function getPos(e) { 
+        const rect = canvas.getBoundingClientRect(); 
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX; 
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY; 
+        return { 
+            x: (clientX - rect.left) * (canvas.width / rect.width), 
+            y: (clientY - rect.top) * (canvas.height / rect.height) 
+        }; 
+    }
+    
+    function setupSignaturePad() {
+        if (isSigned) return;
+        
+        console.log('Setting up signature pad events...');
+        
+        canvas.addEventListener('mousedown', (e) => { 
+            console.log('Mouse down detected');
+            drawing = true; 
+            hasDrawn = true; 
+            ctx.beginPath(); 
+            let p = getPos(e); 
+            ctx.moveTo(p.x, p.y); 
+        });
+        
+        canvas.addEventListener('mousemove', (e) => { 
+            if(drawing){ 
+                let p = getPos(e); 
+                ctx.lineTo(p.x, p.y); 
+                ctx.stroke(); 
+            } 
+        });
+        
+        window.addEventListener('mouseup', () => { 
+            if(drawing) console.log('Signature drawn');
+            drawing = false; 
+        });
+
+        canvas.addEventListener('touchstart', (e) => { 
+            console.log('Touch start detected');
+            drawing = true; 
+            hasDrawn = true; 
+            ctx.beginPath(); 
+            let p = getPos(e); 
+            ctx.moveTo(p.x, p.y); 
+            if(e.cancelable) e.preventDefault(); 
+        }, { passive: false });
+        
+        canvas.addEventListener('touchmove', (e) => { 
+            if(drawing){ 
+                let p = getPos(e); 
+                ctx.lineTo(p.x, p.y); 
+                ctx.stroke(); 
+            } 
+            if(e.cancelable) e.preventDefault(); 
+        }, { passive: false });
+        
+        window.addEventListener('touchend', () => { 
+            if(drawing) console.log('Signature drawn (touch)');
+            drawing = false; 
+        });
+    }
+    
+    window.resetPad = () => { 
+        if(!isSigned){ 
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            hasDrawn = false; 
+            console.log('Signature pad reset');
+        } 
+    };
+    
+    setTimeout(() => {
+        init();
+        setupSignaturePad();
+        console.log('Agreement.js fully loaded. Ready to sign!');
+    }, 500);
+    
+    window.downloadAgreementPDF = function() {
+        Swal.fire({
+            title: 'Generating PDF...',
+            html: 'Menyiapkan Akta Persetujuan Sultan...',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+        });
+
+        setTimeout(() => {
+            Swal.close();
+            Swal.fire({ 
+                icon: 'info', 
+                title: 'DEMO MODE', 
+                text: 'Fitur download PDF akan aktif saat terintegrasi dengan Google Apps Script.', 
+                confirmButtonColor: '#059669' 
+            });
+        }, 2000);
+    };
+
+    window.submitData = async function() {
+        if(isSigned) {
+            Swal.fire({ 
+                icon: 'info', 
+                title: 'Sudah Ditandatangani', 
+                text: 'Dokumen ini sudah pernah Anda tandatangani sebelumnya.', 
+                confirmButtonColor: '#059669' 
+            });
+            return;
+        }
+        
+        if(!chk || !chk.checked) { 
+            Swal.fire({ 
+                icon: 'error', 
+                title: 'Checkbox Belum Dicentang', 
+                html: '<b>Anda harus mencentang persetujuan terlebih dahulu.</b>', 
+                confirmButtonColor: '#059669' 
+            }); 
+            return; 
+        }
+        
+        if(!hasDrawn) { 
+            Swal.fire({ 
+                icon: 'error', 
+                title: 'Belum Tanda Tangan', 
+                html: '<b>Silakan bubuhkan tanda tangan Anda di area yang tersedia.</b>', 
+                confirmButtonColor: '#059669' 
+            }); 
+            return; 
+        }
+        
+        Swal.fire({ 
+            title: 'Menyimpan ke Cloud...', 
+            html: 'Sedang mengamankan sertifikat persetujuan Anda',
+            allowOutsideClick: false, 
+            didOpen: () => Swal.showLoading() 
+        });
+        
+        let userIp = "0.0.0.0";
+        try { 
+            const response = await fetch('https://api.ipify.org?format=json'); 
+            const data = await response.json(); 
+            userIp = data.ip; 
+        } catch (err) { 
+            console.warn("Gagal mengambil IP, menggunakan default:", err); 
+        }
+        
+        try {
+            const response = await fetch('/api/member/save-agreement', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ref: USER_REF,
+                    signature: canvas.toDataURL(),
+                    ip: userIp
+                })
+            });
+
+            const res = await response.json();
+
+            if (res.success) {
+                Swal.fire({ 
+                    icon: 'success', 
+                    title: 'VERIFIED', 
+                    text: 'Persetujuan berhasil disimpan di Cloud Firestore.',
+                    confirmButtonColor: '#059669' 
+                }).then(() => { 
+                    if(typeof IS_MAVRO_UNLOCKED !== 'undefined') IS_MAVRO_UNLOCKED = true;
+                    
+                    if(typeof changePageSultan === "function") {
+                        changePageSultan('user_agreement');
+                    } else {
+                        location.reload();
+                    }
+
+                    setTimeout(() => { 
+                        if(typeof window.promptLoginUnlock === "function") {
+                            window.promptLoginUnlock();
+                        }
+                    }, 1200);
+                }); 
+            } else {
+                throw new Error(res.message || "Gagal menyimpan ke server");
+            }
+
+        } catch (error) {
+            console.error('Save agreement error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Koneksi Gagal',
+                text: 'Terjadi kesalahan: ' + error.message,
+                confirmButtonColor: '#d33'
+            });
+        }
+    };
+})();
+</script>
 
 </body>
 </html>
