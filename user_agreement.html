@@ -649,6 +649,12 @@ if (typeof USER_REF === 'undefined') {
                 })
             });
 
+            // ✅ CEK CONTENT-TYPE SEBELUM PARSE JSON
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                throw new Error('Route /api/member/save-agreement belum ada di Worker! Server return HTML instead of JSON.');
+            }
+
             const res = await response.json();
 
             if (res.success) {
