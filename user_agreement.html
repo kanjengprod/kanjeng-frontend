@@ -585,6 +585,41 @@ if (typeof USER_REF === 'undefined') {
         didOpen: () => { Swal.showLoading(); }
     });
 
+    // ✅ PANGGIL WORKER API (bukan GAS)
+    fetch('/api/member/generate-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref: USER_REF })
+    })
+    .then(res => res.json())
+    .then(data => {
+        Swal.close();
+        if(data.success) {
+            const link = document.createElement('a');
+            link.href = 'data:application/pdf;base64,' + data.base64;
+            link.download = data.fileName || 'Agreement_' + USER_REF + '.pdf';
+            link.click();
+            Swal.fire({ 
+                icon: 'success', 
+                title: 'Download Berhasil!', 
+                text: 'Dokumen PDF telah tersimpan.',
+                confirmButtonColor: '#059669' 
+            });
+        } else {
+            throw new Error(data.message || 'Gagal generate PDF');
+        }
+    })
+    .catch(err => {
+        Swal.close();
+        Swal.fire({ 
+            icon: 'error', 
+            title: 'Gagal Generate PDF', 
+            text: err.message,
+            confirmButtonColor: '#d33'
+        });
+    });
+};
+
            setTimeout(() => {
             Swal.close();
             Swal.fire({ 
