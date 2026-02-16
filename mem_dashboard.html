@@ -457,18 +457,18 @@ function renderMavroEligibilityModal(d) {
                 container.innerHTML = `<div class="p-10 text-center"><i class="fas fa-exclamation-triangle text-red-500 mb-4"></i><p>Gagal memuat ${pageName}</p></div>`;
                 console.error("❌ Load error:", err);
             });
-    } else {
-        // FALLBACK: Halaman lain masih pakai GAS (jika belum migrasi)
-        google.script.run
-            .withSuccessHandler(function(htmlContent) {
-                container.innerHTML = htmlContent;
-                headerTitle.innerText = pageName.toUpperCase() + " AREA";
-                container.classList.remove('page-loading');
-                container.scrollTo(0, 0);
-            })
-            .getPageContentSultan(pageName, USER_REF);
+     } else {
+        // ✅ WORKER VERSION: Semua halaman dari Worker/GitHub Pages
+        container.classList.remove('page-loading');
+        container.innerHTML = `
+            <div class="p-10 text-center">
+                <i class="fas fa-construction text-yellow-500 text-4xl mb-4"></i>
+                <p class="text-gray-600 font-bold text-sm">Halaman "${pageName}" sedang dalam pengembangan.</p>
+                <p class="text-gray-400 text-xs mt-2">Akan segera tersedia!</p>
+            </div>
+        `;
+        headerTitle.innerText = pageName.toUpperCase() + " AREA";
     }
-}
 
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('sidebar-hide'); }
         
