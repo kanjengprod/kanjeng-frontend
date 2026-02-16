@@ -372,7 +372,7 @@ function renderMavroEligibilityModal(d) {
                 if(res.isConfirmed) {
                     Swal.fire({ title: 'Memverifikasi Akses...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
                     
-                    // ✅ WORKER VERSION: Verify PIN via API (BUKAN GOOGLE.SCRIPT.RUN)
+                    // ✅ WORKER VERSION: Verify PIN via API
                     fetch('/api/member/verify-pin', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -419,6 +419,7 @@ function renderMavroEligibilityModal(d) {
                     });
                 }
             });
+        }
 
         // ✅ WORKER VERSION: changePageSultan
         function changePageSultan(pageName) {
