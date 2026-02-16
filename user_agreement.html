@@ -668,16 +668,25 @@ if (typeof USER_REF === 'undefined') {
                 
                 Swal.fire({ 
                     icon: 'success', 
-                    title: 'VERIFIED', 
-                    text: 'Persetujuan berhasil disimpan di Cloud Firestore.',
-                    confirmButtonColor: '#059669' 
+                    title: '✅ AGREEMENT TERSIMPAN!', 
+                    html: '<p style="font-size:13px; margin-top:10px;">Dokumen berhasil disimpan ke Cloud Firestore.</p><p style="font-size:11px; color:#64748b; margin-top:8px;">Anda akan diarahkan ke verifikasi akhir...</p>',
+                    confirmButtonColor: '#059669',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
                 }).then(() => { 
                     // ✅ UPDATE GLOBAL FLAG
                     if(typeof IS_MAVRO_UNLOCKED !== 'undefined') IS_MAVRO_UNLOCKED = true;
                     if(typeof LATEST_MAVRO_DATA !== 'undefined') LATEST_MAVRO_DATA.isAgreed = 1;
                     
-                    // ✅ RELOAD PAGE UNTUK TRIGGER OVERLAY "DOKUMEN SAH"
-                    location.reload();
+                    // ✅ LANGSUNG PANGGIL PROMPT USERNAME & PIN (TIDAK RELOAD)
+                    if(typeof window.promptLoginUnlock === "function") {
+                        window.promptLoginUnlock();
+                    } else {
+                        // Fallback jika function tidak ada (standalone mode)
+                        console.warn('promptLoginUnlock function not found, reloading page instead');
+                        location.reload();
+                    }
                 }); 
             } else {
                 throw new Error(res.message || "Gagal menyimpan ke server");
