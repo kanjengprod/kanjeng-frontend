@@ -4,71 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Member Dashboard - Sultan Area</title>
+    
+    <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; overflow-x: hidden; }
-        
-        .sidebar { background-color: #0f111a; transition: all 0.3s ease; width: 300px;}
-        .sidebar-hide { margin-left: -310px; }
-        .submenu { display: none; background-color: #1a1d2b; border-radius: 12px; margin: 4px 8px; }
-        .menu-item { color: #9ca3af; transition: all 0.2s; cursor: pointer; }
-        .menu-item:hover { background-color: #1e2235; color: #ffffff; }
-        
-        .btn-take-give {
-            position: relative;
-            background: linear-gradient(180deg, #ffd700 0%, #d4af37 50%, #b8860b 100%);
-            border: 1px solid #996515; border-radius: 10px; padding: 12px 15px; color: #ffffff !important;
-            font-weight: 900; font-size: 11px; text-align: center; letter-spacing: 2px; text-transform: uppercase;
-            box-shadow: 0 4px 0 #8b6508, 0 8px 20px rgba(0, 0, 0, 0.5);
-            transition: all 0.1s ease; margin: 12px 15px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.6); overflow: hidden;
-        }
-
-        .mavro-modal-desc { font-size: 10px; color: #475569; line-height: 1.6; text-align: justify; margin-bottom: 15px; padding: 0 5px; }
-        .mavro-table { width: 100%; border-collapse: collapse; font-size: 11px; border: 1px solid #cbd5e1; table-layout: fixed; }
-        .mavro-table th, .mavro-table td { border: 1px solid #cbd5e1; padding: 10px 8px; overflow: visible !important; position: relative; }
-        .mavro-table th { background-color: #f1f5f9; color: #1e293b; font-weight: 900; text-transform: uppercase; }
-        
-        .col-no { width: 35px; text-align: center; }
-        .col-req { text-align: left; font-weight: 600; color: #334155; }
-        .col-val { text-align: right; font-family: 'Courier New', monospace; font-weight: bold; }
-        .col-val-bool { text-align: center; font-weight: 800; }
-        .col-status { text-align: center; font-weight: bold; }
-
-        .text-emerald { color: #059669; }
-        .text-slate { color: #94a3b8; font-style: italic; font-weight: normal; }
-        .link-gold-premium { color: #b8860b; font-weight: 900; text-decoration: underline; cursor: pointer; }
-
-        .sultan-tooltip-container { position: relative; display: inline-block; }
-        .tooltip-box {
-            visibility: hidden; width: 200px; background-color: rgba(15, 23, 42, 0.98);
-            color: #fff; text-align: center;
-            border-radius: 10px; padding: 10px;
-            position: absolute; z-index: 9999; bottom: 150%; left: 50%;
-            margin-left: -100px; opacity: 0; transition: opacity 0.3s, transform 0.3s;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.4); border: 1px solid #facc15;
-            font-size: 9px; line-height: 1.4; pointer-events: none; transform: translateY(10px);
-        }
-        .tooltip-box::after {
-            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
-            border-width: 5px; border-style: solid; border-color: #facc15 transparent transparent transparent;
-        }
-        .sultan-tooltip-container:hover .tooltip-box { visibility: visible; opacity: 1; transform: translateY(0); }
-        .info-icon-sultan { color: #3b82f6; font-size: 11px; margin-left: 6px; cursor: pointer; position: relative; z-index: 10; }
-
-        .sultan-pin-header { background-color: #C4E0D9; color: black; padding: 15px 20px; border-radius: 15px 15px 0 0; text-align: left; margin: -1.25em -1.25em 15px -1.25em; border-bottom: 1px solid rgba(0,0,0,0.1); }
-
-        #dynamic_content_area { transition: all 0.3s ease-in-out; }
-        .page-loading { opacity: 0.3; pointer-events: none; filter: blur(4px); }
-
-        @media (max-width: 768px) { .sidebar-hide { margin-left: -310px; } }
-    </style>
+    
+    <!-- Modular CSS Files -->
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/auth.css">
+    <link rel="stylesheet" href="/css/dayatahanmem.css">
 </head>
-<body>
+<body class="member-page">
 
     <div class="flex h-screen overflow-hidden">
         <!-- SIDEBAR -->
@@ -78,13 +27,14 @@
                     <img id="side_avatar" class="h-16 w-16 rounded-full border-2 border-emerald-500 mx-auto object-cover bg-gray-800 shadow-lg" src="https://ui-avatars.com/api/?name=User&background=059669&color=fff">
                     <div class="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 border-2 border-gray-900 rounded-full"></div>
                 </div>
-                <h2 id="side_nama" class="mt-4 text-white font-black text-xs tracking-widest uppercase truncate">LOADING...</h2>
+                <p id="side_nama" class="mt-4 text-white font-black text-xs tracking-widest uppercase truncate">LOADING...</p>
                 <div class="inline-block px-3 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full mt-2">
                     <p class="text-emerald-400 text-[8px] font-black uppercase">PREMIUM MEMBER</p>
                 </div>
             </div>
 
             <nav class="flex-1 px-3 py-6 space-y-1.5">
+                <!-- CATEGORY 1: Dashboard Resources -->
                 <div class="px-4 py-2 mt-4 text-[9px] font-black text-gray-600 uppercase tracking-widest">Dashboard Resources</div>
                 <button onclick="toggleSubmenu('sub_res')" class="menu-item w-full flex items-center justify-between py-2.5 px-4 rounded-xl transition">
                     <span class="text-xs font-bold uppercase"><i class="fas fa-layer-group w-5 text-emerald-500"></i> Dashboard Resources</span>
@@ -94,6 +44,7 @@
                     <a href="javascript:void(0)" onclick="changePageSultan('dayatahanmem')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">1. Daya Tahan Bisnis</a>
                 </div>
 
+                <!-- CATEGORY 2: Produk & Jaringan -->
                 <div class="px-4 py-2 text-[9px] font-black text-gray-600 uppercase tracking-widest">Produk & Jaringan</div>
                 <button onclick="toggleSubmenu('sub_ref')" class="menu-item w-full flex items-center justify-between py-2.5 px-4 rounded-xl transition">
                     <span class="text-xs font-bold uppercase"><i class="fas fa-sitemap w-5 text-emerald-500"></i> Dashboard Referral</span>
@@ -101,12 +52,13 @@
                 </button>
                 <div id="sub_ref" class="submenu overflow-hidden">
                     <a href="javascript:void(0)" onclick="changePageSultan('statistic')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white font-bold">1. Referral & Statistic</a>
-                    <a href="javascript:void(0)" onclick="changePageSultan('editprofil')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">2. Edit Profil Akun</a>   
+                    <a href="javascript:void(0)" onclick="changePageSultan('editprofil')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">2. Edit Profil Akun</a>
                     <a href="javascript:void(0)" onclick="changePageSultan('rekrutmen')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">3. Member Rekrutmen</a>
                     <a href="javascript:void(0)" onclick="changePageSultan('repeatorder')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">4. Tambah Usaha/Produk</a>
                     <a href="javascript:void(0)" onclick="changePageSultan('withdrawal')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">5. Proses Withdrawal</a>
                 </div>
 
+                <!-- CATEGORY 3: Promosi & IKLAN -->
                 <div class="px-4 py-2 mt-4 text-[9px] font-black text-gray-600 uppercase tracking-widest">Promosi & IKLAN</div>
                 <button onclick="toggleSubmenu('sub_ads')" class="menu-item w-full flex items-center justify-between py-2.5 px-4 rounded-xl transition">
                     <span class="text-xs font-bold uppercase"><i class="fas fa-bullhorn w-5 text-emerald-500"></i> Dashboard Iklan</span>
@@ -114,11 +66,12 @@
                 </button>
                 <div id="sub_ads" class="submenu overflow-hidden">
                     <a href="javascript:void(0)" onclick="changePageSultan('ads_stats')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">1. Statistik Iklan</a>
-                    <a href="javascript:void(0)" onclick="changePageSultan('ads_video')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">2. Iklan Video Anda</a>   
+                    <a href="javascript:void(0)" onclick="changePageSultan('ads_video')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">2. Iklan Video Anda</a>
                     <a href="javascript:void(0)" onclick="changePageSultan('ads_popup')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">3. Popup Pembelian!</a>
                     <a href="javascript:void(0)" onclick="changePageSultan('ads_katalog')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">4. Katalog Quote</a>
                 </div>
 
+                <!-- CATEGORY 4: Statistic & Topup -->
                 <div class="px-4 py-2 mt-4 text-[9px] font-black text-gray-600 uppercase tracking-widest">Statistic & Topup</div>
                 <button onclick="toggleSubmenu('sub_topup')" class="menu-item w-full flex items-center justify-between py-2.5 px-4 rounded-xl transition">
                     <span class="text-xs font-bold uppercase"><i class="fas fa-wallet w-5 text-emerald-500"></i> Dashboard Topup</span>
@@ -126,23 +79,25 @@
                 </button>
                 <div id="sub_topup" class="submenu overflow-hidden">
                     <a href="javascript:void(0)" onclick="changePageSultan('topup_stats')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">1. Statistik Topup</a>
-                    <a href="javascript:void(0)" onclick="changePageSultan('topup_manual')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">2. Topup (Transfer Manual)</a>   
-                    <a href="javascript:void(0)" onclick="changePageSultan('topup_withqris')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">3. Top (Menggunakan QRIS)</a>
+                    <a href="javascript:void(0)" onclick="changePageSultan('topup_manual')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">2. Topup (Transfer Manual)</a>
+                    <a href="javascript:void(0)" onclick="changePageSultan('topup_withqris')" class="block py-2.5 px-5 text-xs text-gray-400 hover:text-white">3. Topup (Menggunakan QRIS)</a>
                 </div>
 
+                <!-- CATEGORY 5: Program Komunitas -->
                 <div class="px-4 py-2 mt-4 text-[9px] font-black text-gray-600 uppercase tracking-widest">Program Komunitas</div>
                 <button class="btn-take-give"><i class="fas fa-hand-holding-heart mr-2"></i> JOIN TAKE & GIVE</button>
 
-                <!-- ✅ DASHBOARD PARTISIPAN (MAVRO) -->
                 <button id="mavro_main_btn" onclick="startMavroGuard()" class="menu-item w-full flex items-center justify-between py-2.5 px-4 rounded-xl transition">
                     <span class="text-xs font-bold uppercase"><i class="fas fa-heart w-5 text-emerald-500"></i> Dashboard Partisipan</span>
                     <i id="mavro_lock_icon" class="fas fa-lock text-[8px] text-yellow-500"></i>
                 </button>
                 <div id="sub_mavro" class="submenu overflow-hidden text-[10px]" style="display:none !important;">
                     <a href="javascript:void(0)" onclick="changePageSultan('mavro_stats')" class="block py-2 px-5 text-gray-400 hover:text-white">1. Statistic & Graphic</a>
+                    <a href="javascript:void(0)" onclick="changePageSultan('company_agreement')" class="block py-2 px-5 text-gray-400 hover:text-white">2. Company Agreement</a>
                     <a href="javascript:void(0)" onclick="changePageSultan('user_agreement')" class="block py-2 px-5 text-gray-400 hover:text-white">3. Persetujuan Anda</a>
                 </div>
 
+                <!-- CATEGORY 6: System -->
                 <div class="px-4 py-2 mt-4 text-[9px] font-black text-gray-600 uppercase tracking-widest">System</div>
                 <button onclick="toggleSubmenu('sub_set')" class="menu-item w-full flex items-center justify-between py-2.5 px-4 rounded-xl transition">
                     <span class="text-xs font-bold uppercase"><i class="fas fa-cog w-5 text-emerald-500"></i> Pengaturan</span>
@@ -156,238 +111,220 @@
 
         <!-- MAIN AREA -->
         <div class="flex-1 flex flex-col min-w-0 bg-slate-50 overflow-hidden">
+            <!-- HEADER -->
             <header class="bg-white border-b h-14 flex items-center justify-between px-6 shadow-sm z-40">
                 <button onclick="toggleSidebar()" class="text-gray-500 p-2 hover:bg-slate-100 transition rounded-lg"><i class="fas fa-bars text-lg"></i></button>
                 <div id="header_user_name" class="text-[10px] font-black text-emerald-600 uppercase tracking-widest italic">MEMBER AREA</div>
             </header>
+            
+            <!-- DYNAMIC CONTENT AREA -->
             <div id="dynamic_content_area" class="flex-1 overflow-y-auto"></div>
         </div>
     </div>
 
+    <!-- JAVASCRIPT -->
     <script>
         console.log("🚀 SULTAN ENGINE v9.2 LOADED - WORKER EDITION");
         
-        // ✅ AMBIL DATA DARI URL PARAMS
-        const urlParams = new URLSearchParams(window.location.search);
-        const USER_REF = urlParams.get('ref') || '';
-        
-        var USER_NAMA = '';
-        var USER_PHOTO = '';
+        // ✅ WORKER VERSION: Ambil dari sessionStorage
+        var USER_REF = sessionStorage.getItem('sultan_member_ref') || '';
+        var USER_NAMA = sessionStorage.getItem('sultan_member_nama') || 'MEMBER';
+        var USER_PHOTO = sessionStorage.getItem('sultan_member_photo') || '';
         var IS_MAVRO_UNLOCKED = false;
         var SULTAN_HEARTBEAT = null;
-        var LATEST_MAVRO_DATA = null;
 
-        // ✅ FETCH USER DATA DARI WORKER
-        window.onload = async function() {
+        // ✅ Jika data tidak ada di sessionStorage, ambil dari URL (fallback)
+        if (!USER_REF) {
+            const urlParams = new URLSearchParams(window.location.search);
+            USER_REF = urlParams.get('ref') || '';
+            if (USER_REF) {
+                sessionStorage.setItem('sultan_member_ref', USER_REF);
+                // Fetch user data dari Worker
+                loadUserData();
+            }
+        }
+
+        // ✅ WORKER FUNCTION: Load user data
+        function loadUserData() {
             if (!USER_REF) {
-                window.location.href = '/login';
+                console.error('❌ No user ref found');
                 return;
             }
-            
-            try {
-                const response = await fetch(`/api/member/get-user?ref=${USER_REF}`);
-                const userData = await response.json();
-                
-                if (userData.userId) {
-                    USER_NAMA = userData.nama || userData.username;
-                    USER_PHOTO = userData.photo_url || '';
-                    
-                    // Update sidebar
-                    document.getElementById('side_nama').innerText = USER_NAMA.toUpperCase();
-                    if (USER_PHOTO) {
-                        document.getElementById('side_avatar').src = USER_PHOTO;
+
+            fetch(`/api/member/get-user?ref=${encodeURIComponent(USER_REF)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.nama) {
+                        USER_NAMA = data.nama;
+                        USER_PHOTO = data.photo_url || '';
+                        
+                        sessionStorage.setItem('sultan_member_nama', USER_NAMA);
+                        sessionStorage.setItem('sultan_member_photo', USER_PHOTO);
+                        
+                        updateSidebarProfile();
                     }
-                    
-                    // Store di sessionStorage
-                    sessionStorage.setItem('sultan_member_nama', USER_NAMA);
-                    sessionStorage.setItem('sultan_user_id', userData.userId);
-                    
-                    // Load default page
-                    changePageSultan('dayatahanmem'); 
-                    
-                    // Start heartbeat
-                    initiateHeartbeat();
-                } else {
-                    throw new Error('User not found');
-                }
-            } catch (error) {
-                console.error('❌ Failed to load user data:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Session Error',
-                    text: 'Gagal memuat data user. Silakan login kembali.',
-                    confirmButtonColor: '#800000'
-                }).then(() => {
-                    window.location.href = '/login';
-                });
+                })
+                .catch(err => console.error('❌ Load user data error:', err));
+        }
+
+        // ✅ Update sidebar profile
+        function updateSidebarProfile() {
+            document.getElementById('side_nama').innerText = USER_NAMA.toUpperCase();
+            if (USER_PHOTO !== "") {
+                document.getElementById('side_avatar').src = USER_PHOTO;
             }
+        }
+
+        window.onload = function() { 
+            updateSidebarProfile();
+            changePageSultan('dayatahanmem'); 
         };
 
-        // ✅ FETCH FINANCIAL STATS UNTUK HEARTBEAT
-        async function initiateHeartbeat() {
-            console.log("💰 Fetching financial stats for member ref:", USER_REF);
-            
-            try {
-                const response = await fetch(`/api/member/financial-stats?ref=${USER_REF}`);
-                const data = await response.json();
-                
-                if (data.success) {
-                    console.log("✅ Financial data received");
-                    // Data sudah tersedia untuk eligibility check nanti
-                }
-            } catch (error) {
-                console.error("❌ Failed to fetch financial stats:", error);
-            }
-            
-            // TODO: Implement heartbeat ping setiap 60 detik
+        // ✅ FUNGSI UNTUK MEMULAI PENGECEKAN (REPLACED VERSION)
+function startMavroGuard() {
+    // 1. Tampilkan Loading ala Sultan
+    Swal.fire({
+        title: 'Verifikasi Kualifikasi...',
+        html: '<p style="font-size:12px;">Menghubungkan ke Database Pusat...</p>',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
         }
+    });
 
-        // ✅ MAVRO GUARD - CEK ELIGIBILITY
-        async function startMavroGuard() {
-            if(IS_MAVRO_UNLOCKED) { 
-                toggleSubmenu('sub_mavro'); 
-                return; 
-            }
-            
-            Swal.fire({ 
-                title: 'Verifikasi Kualifikasi...', 
-                allowOutsideClick: false, 
-                didOpen: () => { Swal.showLoading(); } 
-            });
-            
-            try {
-                const response = await fetch(`/api/member/get-eligibility?ref=${USER_REF}`);
-                const res = await response.json();
-                
-                Swal.close();
-                
-                if(res.success && res.data) {
-                    renderMavroEligibilityModal(res.data);
-                } else {
-                    throw new Error(res.message || 'Failed to get eligibility');
-                }
-            } catch (error) {
-                Swal.close();
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Gagal memuat data eligibility: ' + error.message,
-                    confirmButtonColor: '#800000'
-                });
-            }
-        }
-
-        function getTooltipText(no, d) {
-            const targetMember = d.minMember || 0;
-            const targetAgree = d.totAgreeLimit || 0;
-            const targetRecruit = d.minRecruit || 0;
-            const targetSaldo = d.minSaldo || 0;
-            const feeJoin = d.joinFee || 0;
-
-            switch(no) {
-                case 1: return `Member Komunitas minimal ${targetMember} orang.`;
-                case 2: return `Total Member Agreement minimal ${targetAgree} orang.`;
-                case 3: return `Minimal rekrut ${targetRecruit} member aktif.`;
-                case 4: return `Agreement Link terbuka jika Poin 1, 2, 3, 5, 6 Hijau.`;
-                case 5: return `Saldo minimal Rp. ${targetSaldo.toLocaleString('id-ID')}.`;
-                case 6: return `Data Profil & Rekening Bank wajib lengkap.`;
-                case 7: return `Status berubah jika User Approved Agreement.`;
-                default: return "";
-            }
-        }
-
-        window.showSultanTooltip = (no) => {
-            if(!LATEST_MAVRO_DATA) return;
-            const msg = getTooltipText(no, LATEST_MAVRO_DATA);
+    // 2. Ambil Data dari API Worker (Ganti endpoint jika perlu)
+    fetch(`/api/member/get-eligibility?ref=${USER_REF}`)
+    .then(res => res.json())
+    .then(res => {
+        Swal.close(); 
+        if(res && res.success) {
+            renderMavroEligibilityModal(res.data);
+        } else {
             Swal.fire({
-                title: `<span style="font-size:14px; font-weight:900;">INFO POIN NO. ${no}</span>`,
-                html: `<div style="font-size:12px; color:#475569; line-height:1.6; text-align:center;">${msg}</div>`,
-                icon: 'info', iconColor: '#facc15',
-                confirmButtonText: 'MENGERTI', confirmButtonColor: '#0f172a',
-                width: '320px', customClass: { popup: 'rounded-3xl border-4 border-yellow-400' }
-            });
-        };
-
-        function renderMavroEligibilityModal(d) {
-            LATEST_MAVRO_DATA = d;
-            
-            const p1 = Number(d.totalMember) >= Number(d.minMember);
-            const pAgreedTotal = Number(d.totalAgreed) >= Number(d.totAgreeLimit);
-            const p2 = Number(d.rekrutCount) >= Number(d.minRecruit);
-            const p3 = Number(d.isAgreed) === 1;
-            const p4 = Number(d.saldo) >= Number(d.minSaldo);
-            const p5 = d.profileComplete === true;
-
-            const canAgree = (p1 && pAgreedTotal && p2 && p4 && p5);
-            const allPassed = (canAgree && p3);
-
-            const items = [
-                {n:1, r:"Member Komunitas", v:d.totalMember, s:p1},
-                {n:2, r:"Total Member Agreement", v:d.totalAgreed, s:pAgreedTotal},
-                {n:3, r:"Rekrut Member", v:d.rekrutCount, s:p2},
-                {n:4, r:"Persetujuan (Agreement)", v:p3?'True':'False', s:p3, type:'bool'},
-                {n:5, r:"Saldo Akun", v:(d.saldo || 0).toLocaleString('id-ID'), s:p4},
-                {n:6, r:"Foto Profil & Rekening", v:p5?'True':'False', s:p5, type:'bool'},
-                {n:7, r:"Biaya Join", v:(d.joinFee || 0).toLocaleString('id-ID'), s:p3}
-            ];
-
-            let html = `
-                <div class="mavro-modal-desc">Sistem mengambil data real-time dari database pusat.</div>
-                <table class="mavro-table">
-                    <thead><tr><th class="col-no">No</th><th>Persyaratan</th><th>Value</th><th>Status</th></tr></thead>
-                    <tbody>
-                        ${items.map(item => `
-                            <tr>
-                                <td class="col-no">${item.n}</td>
-                                <td class="col-req">${item.r}</td>
-                                <td class="${item.type==='bool'?'col-val-bool':'col-val'}">${item.v}</td>
-                                <td class="col-status">
-                                    <div class="sultan-tooltip-container">
-                                        <span class="${item.s ? 'text-emerald' : 'text-slate'} font-black">
-                                            ${item.n === 4 && !item.s && canAgree ? 
-                                                '<span class="link-gold-premium" onclick="openAgreementWindow()">Agreement Link</span>' : 
-                                                (item.s ? 'Memenuhi Syarat' : 'Dalam Proses...')
-                                            }
-                                        </span>
-                                        <i class="fas fa-info-circle info-icon-sultan" onclick="showSultanTooltip(${item.n})"></i>
-                                        <div class="tooltip-box">${getTooltipText(item.n, d)}</div>
-                                    </div>
-                                </td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>`;
-
-            Swal.fire({
-                title: '<span style="font-size:16px; font-weight:900; text-transform:uppercase;">ELIGIBILITY CHECK</span>',
-                html: html, 
-                confirmButtonText: 'DASHBOARD PPN', 
-                confirmButtonColor: '#10b981', 
-                showCancelButton: true, 
-                width: '550px',
-                didOpen: () => { 
-                    if(!allPassed) { 
-                        Swal.getConfirmButton().disabled = true; 
-                        Swal.getConfirmButton().style.opacity = '0.3'; 
-                    } 
-                }
-            }).then((res) => { 
-                if(res.isConfirmed) window.promptLoginUnlock(); 
+                icon: 'error',
+                title: 'Akses Ditolak',
+                text: res.message || 'Gagal mengambil data verifikasi.'
             });
         }
+    })
+    .catch(err => {
+        Swal.close();
+        console.error('Error Eligibility:', err);
+        Swal.fire('Error', 'Terjadi kesalahan koneksi ke server.', 'error');
+    });
+}
 
-        function openAgreementWindow() { 
+// ✅ FUNGSI UNTUK MERENDER TABEL SESUAI GAMBAR
+function renderMavroEligibilityModal(d) {
+    LATEST_MAVRO_DATA = d;
+
+    // 1. Cek Status Individu (Boolean)
+    const p1 = d.totalMember >= d.minMember;
+    const p2 = d.totalAgreed >= d.totAgreeLimit;
+    const p3 = d.rekrutCount >= d.minRecruit;
+    const p5 = d.saldo >= d.minSaldo;
+    const p6 = d.profileComplete === true || d.profileComplete === "true";
+    
+    // 2. Cek apakah Syarat 1,2,3,5,6 SEMUA HIJAU?
+    const canSeeAgreementLink = (p1 && p2 && p3 && p5 && p6);
+    
+    // 3. Status Final Item No 4 (Persetujuan)
+    const p4 = d.isAgreed === 1;
+
+    const items = [
+        { n: 1, r: "Member Komunitas", v: d.totalMember || 0, s: p1 },
+        { n: 2, r: "Total Member Agreement", v: d.totalAgreed || 0, s: p2 },
+        { n: 3, r: "Rekrut Member", v: d.rekrutCount || 0, s: p3 },
+        { n: 4, r: "Persetujuan (Agreement)", v: p4 ? "True" : "False", s: p4 },
+        { n: 5, r: "Saldo Akun", v: (d.saldo || 0).toLocaleString('id-ID'), s: p5 },
+        { n: 6, r: "Foto Profil & Rekening", v: p6 ? "True" : "False", s: p6 },
+        { n: 7, r: "Biaya Join", v: (d.joinFee || 0).toLocaleString('id-ID'), s: p4 }
+    ];
+
+    const allPassed = items.every(item => item.s === true);
+
+    let tableHtml = `
+        <p style="font-size: 10px; color: #64748b; margin-bottom: 15px; text-align: left; font-weight: 600;">
+            Sistem mengambil data real-time dari database pusat.
+        </p>
+        <table class="swal-eligibility-table">
+            <thead>
+                <tr>
+                    <th style="width: 40px;">NO</th>
+                    <th>PERSYARATAN</th>
+                    <th>VALUE</th>
+                    <th>STATUS</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${items.map(it => {
+                    // LOGIKA KHUSUS UNTUK BARIS NOMOR 4
+                    let statusHtml = "";
+                    if (it.n === 4 && !it.s && canSeeAgreementLink) {
+                        // Jika poin 4 belum hijau tapi syarat lain terpenuhi, munculkan Link Kuning
+                        statusHtml = `<span class="link-gold-premium" onclick="openAgreementWindow()">Agreement Link</span>`;
+                    } else {
+                        // Selain kondisi di atas, tampilkan teks standard (Hijau/Slate)
+                        statusHtml = `<span class="${it.s ? 'text-memenuhi' : 'text-slate'}">
+                                        ${it.s ? 'Memenuhi Syarat' : 'Dalam Proses...'}
+                                      </span>`;
+                    }
+
+                    return `
+                    <tr>
+                        <td style="text-align: center;">${it.n}</td>
+                        <td style="text-align: left;">${it.r}</td>
+                        <td style="text-align: center; font-weight: 800;">${it.v}</td>
+                        <td>
+                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 5px;">
+                                ${statusHtml}
+                                <i class="fas fa-info-circle" style="color:#3b82f6; cursor:pointer; font-size: 12px;" onclick="showSultanTooltip(${it.n})"></i>
+                            </div>
+                        </td>
+                    </tr>`;
+                }).join('')}
+            </tbody>
+        </table>
+    `;
+
+    Swal.fire({
+        title: '<div class="eligibility-title-box">ELIGIBILITY CHECK</div>',
+        html: tableHtml,
+        showCancelButton: true,
+        confirmButtonText: 'DASHBOARD PPN',
+        cancelButtonText: 'Cancel',
+        allowOutsideClick: false,
+        width: '550px',
+        customClass: {
+            confirmButton: 'btn-dashboard-ppn',
+            cancelButton: 'btn-cancel-grey',
+            popup: 'rounded-2xl shadow-2xl'
+        },
+        didOpen: () => {
+            if(!allPassed) {
+                const confBtn = Swal.getConfirmButton();
+                confBtn.disabled = true;
+                confBtn.style.opacity = '0.3';
+                confBtn.style.cursor = 'not-allowed';
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.promptLoginUnlock();
+        }
+    });
+}
+        function openAgreementWindow() {
             Swal.close(); 
-            changePageSultan('user_agreement'); 
+            changePageSultan('user_agreement');
         }
 
-        // ✅ MODAL LOGIN UNLOCK DENGAN USERNAME & PIN
         window.promptLoginUnlock = function() {
             Swal.fire({
                 width: '380px',
                 padding: '0 0 1em 0',
                 html: `
-                    <div style="background-color:#C4E0D9; color:black; padding:15px 20px; text-align:left; font-weight:900; font-size:13px; text-transform:uppercase; margin:-1.25em -1.25em 15px -1.25em; border-radius:15px 15px 0 0; letter-spacing:1px; border-bottom:1px solid rgba(0,0,0,0.1);">
+                    <div class="sultan-pin-header">
                         ENTRI USERNAME DAN PIN
                     </div>
                     
@@ -398,12 +335,12 @@
                     <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 0 25px;">
                         <div style="display: flex; align-items: center; justify-content: center; width: 100%; gap: 10px;">
                             <label style="font-size:11px; font-weight:900; color:#1e293b; width: 90px; text-align: left;">Username :</label>
-                            <input type="text" id="v_u" class="swal2-input" style="flex: 1; max-width: 180px; height: 35px; margin: 0; border: 2px solid #e2e8f0; border-radius: 8px; padding: 0 10px; font-size: 12px; font-weight: 700;" placeholder="Masukan Username">
+                            <input type="text" id="v_u" class="swal2-input sultan-btn-small" placeholder="Masukan Username">
                         </div>
                         
                         <div style="display: flex; align-items: center; justify-content: center; width: 100%; gap: 10px;">
                             <label style="font-size:11px; font-weight:900; color:#1e293b; width: 90px; text-align: left;">PIN Anda :</label>
-                            <input type="password" id="v_p" class="swal2-input" style="flex: 1; max-width: 180px; height: 35px; margin: 0; border: 2px solid #e2e8f0; border-radius: 8px; padding: 0 10px; font-size: 12px; font-weight: 700;" placeholder="PIN 6 Digit (Angka)" maxlength="6" inputmode="numeric">
+                            <input type="password" id="v_p" class="swal2-input sultan-btn-small" placeholder="PIN 6 Digit (Angka)" maxlength="6" inputmode="numeric">
                         </div>
                     </div>
                 `,
@@ -422,15 +359,8 @@
                     confirmBtn.style.order = '1';
                     cancelBtn.style.order = '2';
                     
-                    confirmBtn.style.padding = '8px 30px';
-                    confirmBtn.style.fontSize = '11px';
-                    confirmBtn.style.fontWeight = '900';
-                    confirmBtn.style.borderRadius = '8px';
-                    
-                    cancelBtn.style.padding = '8px 30px';
-                    cancelBtn.style.fontSize = '11px';
-                    cancelBtn.style.fontWeight = '900';
-                    cancelBtn.style.borderRadius = '8px';
+                    confirmBtn.classList.add('sultan-btn-small');
+                    cancelBtn.classList.add('sultan-btn-small');
                 },
                 preConfirm: () => { 
                     const u = document.getElementById('v_u').value.trim();
@@ -440,102 +370,93 @@
                 }
             }).then((res) => {
                 if(res.isConfirmed) {
-                    // ✅ VERIFIKASI USERNAME & PIN DI WORKER
-                    Swal.fire({ 
-                        title: 'Memverifikasi Akses...', 
-                        allowOutsideClick: false, 
-                        didOpen: () => Swal.showLoading() 
-                    });
+                    Swal.fire({ title: 'Memverifikasi Akses...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
                     
-                    // TODO: Implement verify endpoint di Worker
-                    // For now, simulate success
-                    setTimeout(() => {
-                        const isValid = true; // Replace dengan actual API call
-                        
+                    google.script.run.withSuccessHandler(function(v) {
                         Swal.close();
-                        
-                        if(isValid) {
+                        if(v) {
                             IS_MAVRO_UNLOCKED = true;
                             document.getElementById('sub_mavro').style.setProperty('display', 'block', 'important');
                             document.getElementById('mavro_lock_icon').className = "fas fa-chevron-right text-[8px] text-emerald-500";
-                            
-                            Swal.fire({ 
-                                icon: 'success', 
-                                title: 'AKSES DIBUKA!', 
-                                timer: 1500, 
-                                showConfirmButton: false 
-                            }).then(() => changePageSultan('mavro_stats'));
+                            Swal.fire({ icon: 'success', title: 'AKSES DIBUKA!', timer: 1500, showConfirmButton: false }).then(() => changePageSultan('mavro_stats'));
                         } else { 
-                            Swal.fire({ 
-                                icon: 'error', 
-                                title: 'Gagal!', 
-                                text: 'Username atau PIN salah. Periksa kembali data Anda.', 
-                                confirmButtonColor: '#800000' 
-                            }).then(() => window.promptLoginUnlock()); 
+                            Swal.fire({ icon: 'error', title: 'Gagal!', text: 'Username atau PIN salah. Periksa kembali data Anda.', confirmButtonColor: '#800000' }).then(() => window.promptLoginUnlock()); 
                         }
-                    }, 1500);
+                    }).verifyMavroFinal(USER_REF, res.value.u, res.value.p);
                 }
             });
         }
 
+        // ✅ WORKER VERSION: changePageSultan
         function changePageSultan(pageName) {
-            const container = document.getElementById('dynamic_content_area');
-            const headerTitle = document.getElementById('header_user_name');
+    if (SULTAN_HEARTBEAT) { 
+        clearInterval(SULTAN_HEARTBEAT); 
+        SULTAN_HEARTBEAT = null; 
+    }
 
-            container.innerHTML = `
-                <div class="flex flex-col items-center justify-center h-full min-h-[300px] animate-pulse">
-                    <div class="relative flex items-center justify-center">
-                        <div class="w-16 h-16 border-4 border-emerald-100 border-t-emerald-600 rounded-full animate-spin"></div>
-                        <i class="fas fa-crown absolute text-emerald-600 text-xs"></i>
-                    </div>
-                    <p class="mt-5 text-[10px] font-black text-emerald-700 uppercase tracking-[0.3em]">
-                        Memuat ${pageName}...
-                    </p>
-                </div>
-            `;
+    const container = document.getElementById('dynamic_content_area');
+    const headerTitle = document.getElementById('header_user_name');
 
-            headerTitle.innerText = "⏳ MEMPROSES " + pageName.toUpperCase() + "...";
-            
-            // ✅ LOAD PAGE VIA WORKER/GITHUB PAGES
-            if (pageName === 'user_agreement') {
-                fetch('/user_agreement.html')
-                    .then(res => res.text())
-                    .then(html => {
-                        container.innerHTML = html;
-                        headerTitle.innerText = "PERSETUJUAN ANDA";
-                        
-                        // Re-execute scripts
-                        const scripts = container.getElementsByTagName('script');
-                        for (let i = 0; i < scripts.length; i++) {
-                            const newScript = document.createElement("script");
-                            newScript.text = scripts[i].text;
-                            document.body.appendChild(newScript).parentNode.removeChild(newScript);
-                        }
-                        
-                        container.scrollTo(0, 0);
-                    })
-                    .catch(err => {
-                        container.innerHTML = `
-                            <div class="p-10 text-center">
-                                <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
-                                <p class="text-gray-600 font-bold">Gagal memuat halaman.</p>
-                            </div>
-                        `;
-                    });
-            } else {
-                // Load other pages...
-                container.innerHTML = `
-                    <div class="p-10 text-center">
-                        <p class="text-gray-600">Halaman ${pageName} belum tersedia.</p>
-                    </div>
-                `;
-                headerTitle.innerText = pageName.toUpperCase();
-            }
-        }
+    container.innerHTML = `
+        <div class="flex flex-col items-center justify-center h-full min-h-[300px] animate-pulse">
+            <div class="relative flex items-center justify-center">
+                <div class="w-16 h-16 border-4 border-emerald-100 border-t-emerald-600 rounded-full animate-spin"></div>
+                <i class="fas fa-crown absolute text-emerald-600 text-xs"></i>
+            </div>
+            <p class="mt-5 text-[10px] font-black text-emerald-700 uppercase tracking-[0.3em]">Mengambil Data ${pageName}...</p>
+        </div>
+    `;
 
-        function toggleSidebar() { 
-            document.getElementById('sidebar').classList.toggle('sidebar-hide'); 
-        }
+    headerTitle.innerText = "⏳ MEMPROSES " + pageName.toUpperCase() + "...";
+    container.classList.add('page-loading');
+
+    // ✅ DAFTAR HALAMAN YANG DIAMBIL DARI WORKER (Bukan GAS)
+    const workerPages = ['dayatahanmem', 'user_agreement'];
+
+    if (workerPages.includes(pageName)) {
+        // Tentukan file mana yang dipanggil
+        const targetFile = (pageName === 'dayatahanmem') ? '/dayatahan_mem.html' : '/user_agreement.html';
+        
+        fetch(targetFile)
+            .then(res => {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.text();
+            })
+            .then(htmlContent => {
+                container.innerHTML = htmlContent;
+                headerTitle.innerText = (pageName === 'user_agreement') ? "COMPANY AGREEMENT" : "DAYA TAHAN BISNIS";
+                container.classList.remove('page-loading');
+
+                // ✅ EKSEKUSI SCRIPT (Signature Pad & agreement.js)
+                const scripts = container.getElementsByTagName('script');
+                for (let i = 0; i < scripts.length; i++) {
+                    const newScript = document.createElement("script");
+                    newScript.text = scripts[i].text;
+                    document.body.appendChild(newScript).parentNode.removeChild(newScript);
+                }
+
+                container.scrollTo(0, 0);
+                console.log("✅ Berhasil load " + pageName + " dari Worker");
+            })
+            .catch(err => {
+                container.classList.remove('page-loading');
+                container.innerHTML = `<div class="p-10 text-center"><i class="fas fa-exclamation-triangle text-red-500 mb-4"></i><p>Gagal memuat ${pageName}</p></div>`;
+                console.error("❌ Load error:", err);
+            });
+    } else {
+        // FALLBACK: Halaman lain masih pakai GAS (jika belum migrasi)
+        google.script.run
+            .withSuccessHandler(function(htmlContent) {
+                container.innerHTML = htmlContent;
+                headerTitle.innerText = pageName.toUpperCase() + " AREA";
+                container.classList.remove('page-loading');
+                container.scrollTo(0, 0);
+            })
+            .getPageContentSultan(pageName, USER_REF);
+    }
+}
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('sidebar-hide'); }
         
         function toggleSubmenu(id) {
             var target = document.getElementById(id);
@@ -544,17 +465,79 @@
             if(!isVisible) target.style.display = 'block';
         }
         
-        function confirmLogout() {
-            Swal.fire({ 
-                title: 'Logout Sultan', 
-                icon: 'warning', 
-                showCancelButton: true, 
-                confirmButtonColor: '#10b981', 
-                confirmButtonText: 'IYA, BRO!' 
-            }).then((res) => { 
-                if (res.isConfirmed) window.location.href = '/login'; 
+        // 7. LOGOUT (Menggunakan API Worker)
+       function confirmLogout() {
+    Swal.fire({
+        title: 'KELUAR (LOGOUT)', 
+        text: "Yakin ingin keluar dari sistem?",
+        icon: 'warning',
+        iconColor: '#facc15',
+        showCancelButton: true,
+        confirmButtonColor: '#059669',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Iya, Keluar',
+        cancelButtonText: 'Batal',
+        customClass: {
+            container: 'my-swal-container',
+            popup: 'swal-popup-no-padding',
+            title: 'swal-header-hijau'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Pastikan pakai USER_REF, bukan ADMIN_REF
+            const refTujuan = USER_REF || sessionStorage.getItem('sultan_member_ref');
+            
+            fetch('/api/member/logout', { // Pastikan endpoint-nya benar
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ 
+                    ref: refTujuan, 
+                    logId: CURRENT_LOG_ID 
+                })
+            }).finally(() => {
+                // Hapus semua session dan pindah ke login
+                sessionStorage.clear();
+                window.location.href = '/login';
             });
         }
+    });
+}
+
+        // ✅ WORKER VERSION: Heartbeat
+        // var CURRENT_LOG_ID = sessionStorage.getItem('sultan_history_id');
+        CURRENT_LOG_ID = sessionStorage.getItem('sultan_history_id'); 
+
+        function initiateHeartbeat() {  
+            if (!CURRENT_LOG_ID || CURRENT_LOG_ID === "null") {
+                console.warn("⚠️ History ID masih kosong, mencoba lagi dalam 5 detik...");
+                setTimeout(initiateHeartbeat, 5000); // Coba lagi nanti
+                return;
+            }
+
+            console.log("📡 Sultan Engine: Heartbeat tersambung ke " + CURRENT_LOG_ID);
+
+            SULTAN_HEARTBEAT = setInterval(function() {
+                if (CURRENT_LOG_ID && USER_REF) {
+                    fetch('/api/member/heartbeat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ ref: USER_REF, logId: CURRENT_LOG_ID })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data && data.valid === false) {
+                            console.error("🚫 Akses diputus oleh server!");
+                            clearInterval(SULTAN_HEARTBEAT);
+                            sessionStorage.clear();
+                            window.location.href = '/login?error=Akses%20Terputus';
+                        }
+                    })
+                    .catch(err => console.error('❌ Heartbeat error:', err));
+                }
+            }, 60000); // 1 menit
+        }
+
+        setTimeout(initiateHeartbeat, 3000);
     </script>
 </body>
 </html>
