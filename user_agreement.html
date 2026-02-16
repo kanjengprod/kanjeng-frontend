@@ -512,56 +512,75 @@ if (typeof USER_REF === 'undefined') {
     }
     
     function setupSignaturePad() {
-        if (isSigned) return;
-        
-        console.log('Setting up signature pad events...');
-        
-        canvas.addEventListener('mousedown', (e) => { 
-            console.log('Mouse down detected');
-            drawing = true; 
-            hasDrawn = true; 
-            ctx.beginPath(); 
-            let p = getPos(e); 
-            ctx.moveTo(p.x, p.y); 
-        });
-        
-        canvas.addEventListener('mousemove', (e) => { 
-            if(drawing){ 
-                let p = getPos(e); 
-                ctx.lineTo(p.x, p.y); 
-                ctx.stroke(); 
-            } 
-        });
-        
-        window.addEventListener('mouseup', () => { 
-            if(drawing) console.log('Signature drawn');
-            drawing = false; 
-        });
-
-        canvas.addEventListener('touchstart', (e) => { 
-            console.log('Touch start detected');
-            drawing = true; 
-            hasDrawn = true; 
-            ctx.beginPath(); 
-            let p = getPos(e); 
-            ctx.moveTo(p.x, p.y); 
-            if(e.cancelable) e.preventDefault(); 
-        }, { passive: false });
-        
-        canvas.addEventListener('touchmove', (e) => { 
-            if(drawing){ 
-                let p = getPos(e); 
-                ctx.lineTo(p.x, p.y); 
-                ctx.stroke(); 
-            } 
-            if(e.cancelable) e.preventDefault(); 
-        }, { passive: false });
-        
-        window.addEventListener('touchend', () => { 
-            if(drawing) console.log('Signature drawn (touch)');
-            drawing = false; 
-        });
+    if (isSigned) return;
+    
+    console.log('Setting up signature pad events...');
+    
+    // ✅ CLEAR EVENT LISTENER LAMA (PREVENT DUPLICATE)
+    canvas.removeEventListener('mousedown', handleMouseDown);
+    canvas.removeEventListener('mousemove', handleMouseMove);
+    window.removeEventListener('mouseup', handleMouseUp);
+    canvas.removeEventListener('touchstart', handleTouchStart);
+    canvas.removeEventListener('touchmove', handleTouchMove);
+    window.removeEventListener('touchend', handleTouchEnd);
+    
+    // ✅ HANDLER FUNCTIONS (REUSABLE)
+    function handleMouseDown(e) {
+        console.log('Mouse down detected');
+        drawing = true; 
+        hasDrawn = true; 
+        ctx.beginPath(); 
+        let p = getPos(e); 
+        ctx.moveTo(p.x, p.y);
     }
+    
+    function handleMouseMove(e) {
+        if(drawing){ 
+            let p = getPos(e); 
+            ctx.lineTo(p.x, p.y); 
+            ctx.stroke(); 
+        }
+    }
+    
+    function handleMouseUp() {
+        if(drawing) console.log('Signature drawn');
+        drawing = false;
+    }
+    
+    function handleTouchStart(e) {
+        console.log('Touch start detected');
+        drawing = true; 
+        hasDrawn = true; 
+        ctx.beginPath(); 
+        let p = getPos(e); 
+        ctx.moveTo(p.x, p.y); 
+        if(e.cancelable) e.preventDefault();
+    }
+    
+    function handleTouchMove(e) {
+        if(drawing){ 
+            let p = getPos(e); 
+            ctx.lineTo(p.x, p.y); 
+            ctx.stroke(); 
+        } 
+        if(e.cancelable) e.preventDefault();
+    }
+    
+    function handleTouchEnd() {
+        if(drawing) console.log('Signature drawn (touch)');
+        drawing = false;
+    }
+    
+    // ✅ ATTACH EVENT LISTENERS
+    canvas.addEventListener('mousedown', handleMouseDown);
+    canvas.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+    canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+    canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('touchend', handleTouchEnd);
+    
+    console.log('✅ Signature pad events attached successfully');
+}
     
     window.resetPad = () => { 
         if(!isSigned){ 
@@ -571,11 +590,29 @@ if (typeof USER_REF === 'undefined') {
         } 
     };
     
+    // ✅ INIT DENGAN DELAY LEBIH LAMA & RE-CHECK
+function initAgreement() {
+    init();
+    setupSignaturePad();
+    console.log('Agreement.js fully loaded. Ready to sign!');
+    
+    // ✅ DOUBLE CHECK SETELAH 1 DETIK (FALLBACK)
     setTimeout(() => {
-        init();
-        setupSignaturePad();
-        console.log('Agreement.js fully loaded. Ready to sign!');
-    }, 500);
+        if (!hasDrawn && !isSigned) {
+            console.warn('⚠️ Re-initializing signature pad...');
+            setupSignaturePad();
+        }
+    }, 1000);
+}
+
+// ✅ WAIT UNTIL DOM FULLY LOADED
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(initAgreement, 500);
+    });
+} else {
+    setTimeout(initAgreement, 500);
+}
     
     window.downloadAgreementPDF = function() {
     Swal.fire({
