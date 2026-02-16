@@ -413,15 +413,28 @@ function renderMavroEligibilityModal(d) {
             container.classList.add('page-loading');
 
             // ✅ WORKER: Load dayatahanmem dari Worker
-            if (pageName === 'dayatahanmem') {
-                fetch('/dayatahan_mem.html')
+            // ✅ DAFTAR HALAMAN YANG LOAD DARI WORKER
+            const workerPages = ['dayatahanmem', 'user_agreement'];
+            
+            if (workerPages.includes(pageName)) {
+                // Tentukan file mana yang dipanggil
+                const targetFile = (pageName === 'dayatahanmem') ? '/dayatahan_mem.html' : '/user_agreement.html';
+                
+                fetch(targetFile)
                     .then(res => {
                         if (!res.ok) throw new Error('HTTP ' + res.status);
                         return res.text();
                     })
                     .then(htmlContent => {
                         container.innerHTML = htmlContent;
-                        headerTitle.innerText = "DAYA TAHAN BISNIS";
+                        
+                        // ✅ HEADER TITLE DINAMIS
+                        if (pageName === 'dayatahanmem') {
+                            headerTitle.innerText = "DAYA TAHAN BISNIS";
+                        } else if (pageName === 'user_agreement') {
+                            headerTitle.innerText = "PERSETUJUAN ANDA";
+                        }
+                        
                         container.classList.remove('page-loading');
 
                         // Execute embedded scripts
@@ -433,7 +446,7 @@ function renderMavroEligibilityModal(d) {
                         }
 
                         container.scrollTo(0, 0);
-                        console.log("✅ Page dayatahanmem loaded from Worker");
+                        console.log("✅ Page " + pageName + " loaded from Worker");
                     })
                     .catch(err => {
                         container.classList.remove('page-loading');
@@ -442,7 +455,7 @@ function renderMavroEligibilityModal(d) {
                                 <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
                                 <p class="text-gray-600 font-bold">Gagal memuat halaman dari Worker</p>
                                 <p class="text-sm text-gray-400 mt-2">${err.message}</p>
-                                <button onclick="changePageSultan('dayatahanmem')" class="mt-4 px-6 py-2 bg-emerald-600 text-white rounded-lg text-xs font-bold">COBA LAGI</button>
+                                <button onclick="changePageSultan('${pageName}')" class="mt-4 px-6 py-2 bg-emerald-600 text-white rounded-lg text-xs font-bold">COBA LAGI</button>
                             </div>
                         `;
                         console.error("❌ Load error:", err);
@@ -454,14 +467,12 @@ function renderMavroEligibilityModal(d) {
                         container.innerHTML = htmlContent;
                         headerTitle.innerText = pageName.toUpperCase() + " AREA";
                         container.classList.remove('page-loading');
-
                         const scripts = container.getElementsByTagName('script');
                         for (let i = 0; i < scripts.length; i++) {
                             const newScript = document.createElement("script");
                             newScript.text = scripts[i].text;
                             document.body.appendChild(newScript).parentNode.removeChild(newScript);
                         }
-
                         container.scrollTo(0, 0);
                         console.log("✅ Page " + pageName + " loaded from GAS");
                     })
