@@ -578,12 +578,37 @@ if (typeof USER_REF === 'undefined') {
     }, 500);
     
     window.downloadAgreementPDF = function() {
-        Swal.fire({
-            title: 'Generating PDF...',
-            html: 'Menyiapkan Akta Persetujuan Sultan...',
-            allowOutsideClick: false,
-            didOpen: () => { Swal.showLoading(); }
-        });
+    Swal.fire({
+        title: 'Generating PDF...',
+        html: 'Menyiapkan dokumen PDF...',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+    });
+
+    // ✅ PANGGIL WORKER API (bukan GAS)
+    fetch('/api/member/generate-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref: USER_REF })
+    })
+    .then(res => res.json())
+    .then(data => {
+        Swal.close();
+        if(data.success) {
+            const link = document.createElement('a');
+            link.href = 'data:application/pdf;base64,' + data.base64;
+            link.download = data.fileName;
+            link.click();
+            Swal.fire({ icon: 'success', title: 'Download Berhasil!', confirmButtonColor: '#059669' });
+        } else {
+            throw new Error(data.message);
+        }
+    })
+    .catch(err => {
+        Swal.close();
+        Swal.fire({ icon: 'error', title: 'Gagal', text: err.message });
+    });
+};
 
         setTimeout(() => {
             Swal.close();
