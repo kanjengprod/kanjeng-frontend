@@ -467,7 +467,7 @@ if (typeof USER_REF === 'undefined') {
             if(overlay) overlay.style.display = "flex";
             if(btn) {
                 btn.disabled = true;
-                btn.innerText = "✓ PROGRAM MAVRO TELAH AKTIF";
+                btn.innerText = "✓ PERSETUJUAN TELAH DISAHKAN";
                 btn.className = "w-full py-4 rounded-2xl font-black text-[12px] btn-sultan-disabled";
             }
             if(chk) {
@@ -475,6 +475,11 @@ if (typeof USER_REF === 'undefined') {
                 chk.disabled = true;
             }
             if(btnDownload) btnDownload.style.display = "flex";
+            
+            // ✅ DISABLE CANVAS (READ-ONLY MODE)
+            canvas.style.cursor = "not-allowed";
+            canvas.style.opacity = "0.5";
+            canvas.style.pointerEvents = "none";
         }
     }
 
@@ -658,25 +663,21 @@ if (typeof USER_REF === 'undefined') {
             const res = await response.json();
 
             if (res.success) {
+                // ✅ UPDATE FLAG LOKAL
+                USER_DATA.mavro_agreement = 1;
+                
                 Swal.fire({ 
                     icon: 'success', 
                     title: 'VERIFIED', 
                     text: 'Persetujuan berhasil disimpan di Cloud Firestore.',
                     confirmButtonColor: '#059669' 
                 }).then(() => { 
+                    // ✅ UPDATE GLOBAL FLAG
                     if(typeof IS_MAVRO_UNLOCKED !== 'undefined') IS_MAVRO_UNLOCKED = true;
+                    if(typeof LATEST_MAVRO_DATA !== 'undefined') LATEST_MAVRO_DATA.isAgreed = 1;
                     
-                    if(typeof changePageSultan === "function") {
-                        changePageSultan('user_agreement');
-                    } else {
-                        location.reload();
-                    }
-
-                    setTimeout(() => { 
-                        if(typeof window.promptLoginUnlock === "function") {
-                            window.promptLoginUnlock();
-                        }
-                    }, 1200);
+                    // ✅ RELOAD PAGE UNTUK TRIGGER OVERLAY "DOKUMEN SAH"
+                    location.reload();
                 }); 
             } else {
                 throw new Error(res.message || "Gagal menyimpan ke server");
