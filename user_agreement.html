@@ -617,25 +617,56 @@ if (typeof USER_REF === 'undefined') {
     } else {
         setTimeout(initAgreement, 500);
     }
-    
-    window.downloadAgreementPDF = function() {
-        Swal.fire({
-            title: 'Generating PDF...',
-            html: 'Menyiapkan dokumen PDF...',
-            allowOutsideClick: false,
-            didOpen: () => { Swal.showLoading(); }
-        });
 
-        setTimeout(() => {
-            Swal.close();
+    window.downloadAgreementPDF = function() {
+    Swal.fire({
+        title: 'Generating PDF...',
+        html: 'Menyiapkan dokumen PDF...',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+    });
+
+    // ✅ PANGGIL WORKER API
+    fetch('/api/member/generate-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref: USER_REF })
+    })
+    .then(res => {
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+            throw new Error('API generate-pdf belum tersedia di Worker');
+        }
+        return res.json();
+    })
+    .then(data => {
+        Swal.close();
+        if(data.success && data.base64) {
+            const link = document.createElement('a');
+            link.href = 'data:application/pdf;base64,' + data.base64;
+            link.download = data.fileName || 'Agreement_' + USER_REF + '.pdf';
+            link.click();
             Swal.fire({ 
-                icon: 'info', 
-                title: 'DEMO MODE', 
-                text: 'Fitur download PDF akan aktif saat terintegrasi dengan Worker API.', 
+                icon: 'success', 
+                title: 'Download Berhasil!', 
+                text: 'Dokumen PDF telah tersimpan.',
                 confirmButtonColor: '#059669' 
             });
-        }, 2000);
-    };
+        } else {
+            throw new Error(data.message || 'Gagal generate PDF');
+        }
+    })
+    .catch(err => {
+        Swal.close();
+        Swal.fire({ 
+            icon: 'error', 
+            title: 'Fitur Belum Tersedia', 
+            text: 'API generate-pdf belum diimplementasikan di Worker. Silakan hubungi admin.',
+            confirmButtonColor: '#d33'
+        });
+        console.error('PDF Generation Error:', err);
+    });
+};
 
     window.submitData = async function() {
         if(isSigned) {
