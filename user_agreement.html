@@ -632,35 +632,41 @@ if (typeof USER_REF === 'undefined') {
         body: JSON.stringify({ ref: USER_REF })
     })
     .then(res => {
-        console.log('📄 Response status:', res.status);
-        console.log('📄 Response headers:', res.headers.get('content-type'));
-        
-        // ✅ CEK APAKAH HTML ATAU JSON
         const contentType = res.headers.get("content-type");
         
         if (contentType && contentType.includes("text/html")) {
-            // ✅ JIKA HTML, BUKA DI TAB BARU
-            return res.text().then(html => {
+            // ✅ BUKA HTML DI TAB BARU
+            return res.text().then(htmlContent => {
                 Swal.close();
-                const newWindow = window.open();
-                newWindow.document.write(html);
-                newWindow.document.close();
-            });
-        } else if (contentType && contentType.includes("application/json")) {
-            // ❌ JIKA JSON, ADA ERROR
-            return res.json().then(data => {
-                throw new Error(data.message || 'Unknown error');
+                
+                // ✅ BUKA TAB BARU
+                const newWindow = window.open('', '_blank');
+                if (newWindow) {
+                    newWindow.document.open();
+                    newWindow.document.write(htmlContent);
+                    newWindow.document.close();
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'PDF Siap!',
+                        text: 'Dokumen telah dibuka di tab baru. Klik Print/Save as PDF.',
+                        confirmButtonColor: '#059669',
+                        timer: 3000
+                    });
+                } else {
+                    throw new Error('Pop-up diblokir browser. Izinkan pop-up untuk situs ini.');
+                }
             });
         } else {
-            throw new Error('Invalid response type: ' + contentType);
+            throw new Error('Response bukan HTML: ' + contentType);
         }
     })
     .catch(err => {
         Swal.close();
-        console.error('❌ Full error:', err);
+        console.error('❌ Error:', err);
         Swal.fire({ 
             icon: 'error', 
-            title: 'Error', 
+            title: 'Gagal Generate PDF', 
             text: err.message,
             confirmButtonColor: '#d33'
         });
