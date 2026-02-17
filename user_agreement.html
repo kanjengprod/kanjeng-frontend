@@ -511,76 +511,80 @@ if (typeof USER_REF === 'undefined') {
         }; 
     }
     
+    // ✅ DECLARE HANDLER FUNCTIONS DI LEVEL ATAS (AGAR BISA DI-REUSE)
+    let handleMouseDown, handleMouseMove, handleMouseUp;
+    let handleTouchStart, handleTouchMove, handleTouchEnd;
+    
     function setupSignaturePad() {
-    if (isSigned) return;
-    
-    console.log('Setting up signature pad events...');
-    
-    // ✅ CLEAR EVENT LISTENER LAMA (PREVENT DUPLICATE)
-    canvas.removeEventListener('mousedown', handleMouseDown);
-    canvas.removeEventListener('mousemove', handleMouseMove);
-    window.removeEventListener('mouseup', handleMouseUp);
-    canvas.removeEventListener('touchstart', handleTouchStart);
-    canvas.removeEventListener('touchmove', handleTouchMove);
-    window.removeEventListener('touchend', handleTouchEnd);
-    
-    // ✅ HANDLER FUNCTIONS (REUSABLE)
-    function handleMouseDown(e) {
-        console.log('Mouse down detected');
-        drawing = true; 
-        hasDrawn = true; 
-        ctx.beginPath(); 
-        let p = getPos(e); 
-        ctx.moveTo(p.x, p.y);
-    }
-    
-    function handleMouseMove(e) {
-        if(drawing){ 
+        if (isSigned) return;
+        
+        console.log('Setting up signature pad events...');
+        
+        // ✅ CLEAR EVENT LISTENER LAMA (PREVENT DUPLICATE)
+        if (handleMouseDown) canvas.removeEventListener('mousedown', handleMouseDown);
+        if (handleMouseMove) canvas.removeEventListener('mousemove', handleMouseMove);
+        if (handleMouseUp) window.removeEventListener('mouseup', handleMouseUp);
+        if (handleTouchStart) canvas.removeEventListener('touchstart', handleTouchStart);
+        if (handleTouchMove) canvas.removeEventListener('touchmove', handleTouchMove);
+        if (handleTouchEnd) window.removeEventListener('touchend', handleTouchEnd);
+        
+        // ✅ HANDLER FUNCTIONS (REUSABLE)
+        handleMouseDown = function(e) {
+            console.log('Mouse down detected');
+            drawing = true; 
+            hasDrawn = true; 
+            ctx.beginPath(); 
             let p = getPos(e); 
-            ctx.lineTo(p.x, p.y); 
-            ctx.stroke(); 
-        }
-    }
-    
-    function handleMouseUp() {
-        if(drawing) console.log('Signature drawn');
-        drawing = false;
-    }
-    
-    function handleTouchStart(e) {
-        console.log('Touch start detected');
-        drawing = true; 
-        hasDrawn = true; 
-        ctx.beginPath(); 
-        let p = getPos(e); 
-        ctx.moveTo(p.x, p.y); 
-        if(e.cancelable) e.preventDefault();
-    }
-    
-    function handleTouchMove(e) {
-        if(drawing){ 
+            ctx.moveTo(p.x, p.y);
+        };
+        
+        handleMouseMove = function(e) {
+            if(drawing){ 
+                let p = getPos(e); 
+                ctx.lineTo(p.x, p.y); 
+                ctx.stroke(); 
+            }
+        };
+        
+        handleMouseUp = function() {
+            if(drawing) console.log('Signature drawn');
+            drawing = false;
+        };
+        
+        handleTouchStart = function(e) {
+            console.log('Touch start detected');
+            drawing = true; 
+            hasDrawn = true; 
+            ctx.beginPath(); 
             let p = getPos(e); 
-            ctx.lineTo(p.x, p.y); 
-            ctx.stroke(); 
-        } 
-        if(e.cancelable) e.preventDefault();
+            ctx.moveTo(p.x, p.y); 
+            if(e.cancelable) e.preventDefault();
+        };
+        
+        handleTouchMove = function(e) {
+            if(drawing){ 
+                let p = getPos(e); 
+                ctx.lineTo(p.x, p.y); 
+                ctx.stroke(); 
+            } 
+            if(e.cancelable) e.preventDefault();
+        };
+        
+        handleTouchEnd = function() {
+            if(drawing) console.log('Signature drawn (touch)');
+            drawing = false;
+        };
+        
+        // ✅ ATTACH EVENT LISTENERS
+        canvas.addEventListener('mousedown', handleMouseDown);
+        canvas.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mouseup', handleMouseUp);
+        canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+        canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+        window.addEventListener('touchend', handleTouchEnd);
+        
+        console.log('✅ Signature pad events attached successfully');
     }
-    
-    function handleTouchEnd() {
-        if(drawing) console.log('Signature drawn (touch)');
-        drawing = false;
-    }
-    
-    // ✅ ATTACH EVENT LISTENERS
-    canvas.addEventListener('mousedown', handleMouseDown);
-    canvas.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-    canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
-    canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
-    window.addEventListener('touchend', handleTouchEnd);
-    
-    console.log('✅ Signature pad events attached successfully');
-}
     
     window.resetPad = () => { 
         if(!isSigned){ 
@@ -591,78 +595,43 @@ if (typeof USER_REF === 'undefined') {
     };
     
     // ✅ INIT DENGAN DELAY LEBIH LAMA & RE-CHECK
-function initAgreement() {
-    init();
-    setupSignaturePad();
-    console.log('Agreement.js fully loaded. Ready to sign!');
-    
-    // ✅ DOUBLE CHECK SETELAH 1 DETIK (FALLBACK)
-    setTimeout(() => {
-        if (!hasDrawn && !isSigned) {
-            console.warn('⚠️ Re-initializing signature pad...');
-            setupSignaturePad();
-        }
-    }, 1000);
-}
+    function initAgreement() {
+        init();
+        setupSignaturePad();
+        console.log('Agreement.js fully loaded. Ready to sign!');
+        
+        // ✅ DOUBLE CHECK SETELAH 1 DETIK (FALLBACK)
+        setTimeout(() => {
+            if (!hasDrawn && !isSigned) {
+                console.warn('⚠️ Re-initializing signature pad...');
+                setupSignaturePad();
+            }
+        }, 1000);
+    }
 
-// ✅ WAIT UNTIL DOM FULLY LOADED
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
+    // ✅ WAIT UNTIL DOM FULLY LOADED
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(initAgreement, 500);
+        });
+    } else {
         setTimeout(initAgreement, 500);
-    });
-} else {
-    setTimeout(initAgreement, 500);
-}
+    }
     
     window.downloadAgreementPDF = function() {
-    Swal.fire({
-        title: 'Generating PDF...',
-        html: 'Menyiapkan dokumen PDF...',
-        allowOutsideClick: false,
-        didOpen: () => { Swal.showLoading(); }
-    });
-
-    // ✅ PANGGIL WORKER API (bukan GAS)
-    fetch('/api/member/generate-pdf', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ref: USER_REF })
-    })
-    .then(res => res.json())
-    .then(data => {
-        Swal.close();
-        if(data.success) {
-            const link = document.createElement('a');
-            link.href = 'data:application/pdf;base64,' + data.base64;
-            link.download = data.fileName || 'Agreement_' + USER_REF + '.pdf';
-            link.click();
-            Swal.fire({ 
-                icon: 'success', 
-                title: 'Download Berhasil!', 
-                text: 'Dokumen PDF telah tersimpan.',
-                confirmButtonColor: '#059669' 
-            });
-        } else {
-            throw new Error(data.message || 'Gagal generate PDF');
-        }
-    })
-    .catch(err => {
-        Swal.close();
-        Swal.fire({ 
-            icon: 'error', 
-            title: 'Gagal Generate PDF', 
-            text: err.message,
-            confirmButtonColor: '#d33'
+        Swal.fire({
+            title: 'Generating PDF...',
+            html: 'Menyiapkan dokumen PDF...',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
         });
-    });
-};
 
-           setTimeout(() => {
+        setTimeout(() => {
             Swal.close();
             Swal.fire({ 
                 icon: 'info', 
                 title: 'DEMO MODE', 
-                text: 'Fitur download PDF akan aktif saat terintegrasi dengan Google Apps Script.', 
+                text: 'Fitur download PDF akan aktif saat terintegrasi dengan Worker API.', 
                 confirmButtonColor: '#059669' 
             });
         }, 2000);
@@ -726,16 +695,14 @@ if (document.readyState === 'loading') {
                 })
             });
 
-            // ✅ CEK CONTENT-TYPE SEBELUM PARSE JSON
             const contentType = response.headers.get("content-type");
             if (!contentType || !contentType.includes("application/json")) {
-                throw new Error('Route /api/member/save-agreement belum ada di Worker! Server return HTML instead of JSON.');
+                throw new Error('Route /api/member/save-agreement belum ada di Worker!');
             }
 
             const res = await response.json();
 
             if (res.success) {
-                // ✅ UPDATE FLAG LOKAL
                 USER_DATA.mavro_agreement = 1;
                 
                 Swal.fire({ 
@@ -747,15 +714,12 @@ if (document.readyState === 'loading') {
                     timerProgressBar: true,
                     showConfirmButton: false
                 }).then(() => { 
-                    // ✅ UPDATE GLOBAL FLAG
                     if(typeof IS_MAVRO_UNLOCKED !== 'undefined') IS_MAVRO_UNLOCKED = true;
                     if(typeof LATEST_MAVRO_DATA !== 'undefined') LATEST_MAVRO_DATA.isAgreed = 1;
                     
-                    // ✅ LANGSUNG PANGGIL PROMPT USERNAME & PIN (TIDAK RELOAD)
                     if(typeof window.promptLoginUnlock === "function") {
                         window.promptLoginUnlock();
                     } else {
-                        // Fallback jika function tidak ada (standalone mode)
                         console.warn('promptLoginUnlock function not found, reloading page instead');
                         location.reload();
                     }
